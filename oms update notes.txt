@@ -1,0 +1,51 @@
+Update Notes OMS
+
+Select DISTINCT areadelivered from orders;
+
+-- if no record found
+
+Alter TABLE orders drop COLUMN areadelivered;
+
+ALTER TABLE `orders` ADD COLUMN `ordered_area` double;
+
+
+ALTER TABLE `users_quota` ADD COLUMN alloc_sv_quota double precision;
+
+ALTER TABLE `users_quota` ADD COLUMN alloc_neo_quota double precision;
+
+UPDATE `users_quota` SET alloc_sv_quota='450000', alloc_neo_quota ='30000' WHERE username='MIDte@GHQ';
+UPDATE `users_quota` SET alloc_sv_quota='450000', alloc_neo_quota ='30000' WHERE username='477ASGE@GHQ';
+UPDATE `users_quota` SET alloc_sv_quota='600000', alloc_neo_quota ='30000' WHERE username='SDte@AHQ';
+UPDATE `users_quota` SET alloc_sv_quota='300000', alloc_neo_quota ='22500' WHERE username='NIDte@NHQ';
+UPDATE `users_quota` SET alloc_sv_quota='450000', alloc_neo_quota ='22500' WHERE username='ISIC@ISI';
+UPDATE `users_quota` SET alloc_sv_quota='450000', alloc_neo_quota ='100000' WHERE username='SIDte@SPD';
+INSERT INTO `users_quota`(id, username, sv_quota, neo_quota) VALUES(99, 'Ctgy', '300000', '15000');
+
+
+
+DROP TABLE `temp_order_factor`;
+CREATE TABLE `temp_order_factor` AS
+SELECT t1.orderid, t1.`order_priority`, CASE t1.`order_priority` WHEN 'Standard' THEN t2.standard WHEN 'Priority' THEN t2.priority WHEN priority='Emergency'THEN emergency END AS pri FROM `orders` t1, `order_priority_factor` t2 WHERE t2.`type`=concat('PleiadesNeo_', t1.`acq_mode`)
+UNION
+SELECT t1.orderid, t1.`order_priority`, CASE t1.`order_priority` WHEN 'Standard' THEN t2.standard WHEN 'Priority' THEN t2.priority WHEN priority='Emergency'THEN emergency END AS pri FROM `orders` t1, `order_priority_factor` t2 WHERE t2.`type`=concat('SV_', t1.`acq_mode`)
+
+
+UPDATE orders set ordered_area = 0 where ordered_area is null;
+
+
+
+Select a.orderid, u.username,
+IF(c.prssarea != 0, 'PRSS',
+   IF(c.spotarea != 0, 'SPOT',
+      IF(c.pleiadesarea != 0, 'Pleiades',
+         IF(c.pleiadesneoarea != 0, 'Pleiades Neo',
+            IF(c.svarea != 0, 'SuperView',
+               IF(c.sararea != 0, 'SAR', '')))))) as sensor,
+               IF(c.prssarea != 0, prssarea,
+                  IF(c.spotarea != 0, spotarea,
+                     IF(c.pleiadesarea != 0, pleiadesarea,
+                        IF(c.pleiadesneoarea != 0, pleiadesneoarea,
+                           IF(c.svarea != 0, svarea, IF(c.sararea != 0, sararea, '')))))) as sensorarea, a.date, a.cloud_cover, c.prssarea from orders as a, status as b, users as u, orders_products as c where a.status_id=b.id and (u.id = '16' OR u.id ='22') and a.userid=u.id and a.orderid = c.orderid and a.status_id = '1' and a.type='fresh' and (c.spotarea != 0 OR c.pleiadesneoarea != 0) and (STR_TO_DATE(a.date,'%d/%m/%Y') BETWEEN '2023-01-02' AND '2023-05-31') order by (STR_TO_DATE(a.date,'%d/%m/%Y')) desc
+
+
+UPDATE users_quota q INNER JOIN orders o ON o.userid = q.id INNER JOIN orders_products op ON o.orderid = op.orderid set neo_quota = CASE (SELECT IF(((SELECT COUNT(*) FROM orders WHERE orderid = '1680256820204_16_3132023' and pneo is not null) > 0), 'PNEO','SV')) WHEN 'PNEO' THEN q.neo_quota + (o.ordered_area - op.pleiadesneoarea) ELSE neo_quota END, sv_quota = CASE (SELECT IF(((SELECT COUNT(*) FROM orders WHERE orderid = '1680256820204_16_3132023' and pneo is not null) > 0), 'PNEO','SV')) WHEN 'SV' THEN q.sv_quota + (o.ordered_area - op.svarea) ELSE sv_quota END WHERE o.orderid = '1680256820204_16_3132023'
