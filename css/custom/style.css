@@ -1745,7 +1745,10 @@ table.dataTable td {
 
 /* orbitography section */
 .dvOrbitography-panel{
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
   width: 500px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
   margin-top: 150px;
   position: absolute;
   height: 100%;
@@ -1753,11 +1756,6 @@ table.dataTable td {
   z-index: 500;
   overflow-y: scroll;
   overflow: hidden;
-}
-.dvOrbitography-wrapper {
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  width: 500px;
-
 }
 
 .dvOrbitography-header-action{
@@ -1772,4 +1770,172 @@ table.dataTable td {
   font-weight: 700;
   font-size: 15px;
   border-bottom: 2px solid #000;
+}
+
+.dvOrbitography-content{
+  height: calc(100% - 80px);
+}
+.dvOrbitography-content-wrapper{
+  box-sizing:border-box ;
+}
+
+.orbitography-search-form{
+  padding: 25px 15px;
+  position: relative;
+  background-color: #F6F6F6;
+  margin-top: 20px;
+}
+
+.orbito-element{
+  padding-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.orbito-search-form .aoi-gestion {
+  padding-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.aoi-select{
+  width: 90%;
+}
+
+.aoi-select label{
+  width: 10%;
+  font-weight: bold;
+  line-height: 1.42857143;
+  color: #333738;
+    
+}
+
+.aoi-select .drs-select{
+  width: 85%;
+  display: inline-block;
+  height: 36px;
+  border: 1px solid #919191;
+  background-color: #FEFEFE;
+  color: #222325;
+  outline: none;
+  border-radius: 4px;
+
+}
+
+.toggle-control-label-wrapper{
+  margin: 0 !important;
+}
+
+.reat-toggle{
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.ract-toggle-track{
+  width: 40px !important;
+  height: 18px !important;
+}
+
+.react-toggle-track-check{
+  position: absolute;
+  width: 14px;
+  height: 10px;
+  top: 0px;
+  bottom: 0px;
+  margin-top: auto;
+  margin-bottom: auto;
+  line-height: 0;
+  left: 8px;
+  opacity: 0;
+  -webkit-transition: opacity 0.25s ease;
+  -moz-transition: opacity 0.25s ease;
+  transition: opacity 0.25s ease;
+}
+
+.toggle-control svg
+{
+  display: none;
+}
+
+.react-toggle-track-x{
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 0px;
+  bottom: 0px;
+  margin-top: auto;
+  margin-bottom: auto;
+  line-height: 0;
+  right: 10px;
+  opacity: 1;
+  -webkit-transition: opacity 0.25s ease;
+  -moz-transition: opacity 0.25s ease;
+  transition: opacity 0.25s ease;
+}
+
+.react-toggle-thumb{
+  width: 16px !important;
+  height: 16px !important;
+}
+
+input[type="checkbox"], input[type="radio"]
+{
+  margin: 4px 0 0;
+  margin-top: 1px\9;
+  line-height: normal;
+}
+
+.orbito-date-column{
+  padding: 12px 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.start-date
+{
+  width: 48%;
+  position: relative;
+  align-items: center;
+}
+
+.form-label{
+  display: inline-block;
+  margin: 0;
+  padding-right: 10px;
+  max-width: 100%;
+  font-weight: bold;
+  font-size: 14px;
+
+}
+
+
+
+.input-date-picker
+{
+  display: flex;
+  align-items: center;
+}
+
+.start-date input
+{
+  cursor: pointer !important;
+}
+
+.end-date{
+  align-items: center;
+  width: 40%;
+}
+
+
+.orbito-search-form {
+  padding: 25px 15px;
+  position: relative;
+  background-color: #F6F6F6;
+  margin-top: 20px;
 }

@@ -127,18 +127,78 @@ if (!isset($_SESSION['Username_OMS'])) {
             </div>
         </div>
     </div>
-    <div id=dvOrbitography-panel class="dvOrbitography-panel" style="background-color:green;display:none">
+    <div id=dvOrbitography-panel class="dvOrbitography-panel" style="display:none">
         <div id="dvOrbitography-wrapper" class="dvOrbitography-wrapper">
             <div class="dvOrbitography-header">
                 <div class="dvOrbitography-header-action">
-                    <span style="float:right"><i class="fas fa-times"></i></span>
+                    <span id="iconClose" style="float:right"><i class="fas fa-times"></i></span>
                 </div>
                 <div class="dvOrbitography-header-title">Orbitography</div>
 
             </div>
-            <div class="dvOrbitography-content"></div>
+            <div class="dvOrbitography-content">
+                <div class="dvOrbitography-content-wrapper">
+                    <div class="orbitography-search-form-wrapper">
+                        <form action="" class="orbito-search-form">
+                            <div class="aoi-gestion orbito-element">
+                                <div class="aoi-select form-label">
+                                    <label for="">AOI</label>
+                                    <select name="" id="" class="drs-select">
+                                        <option value="">AOI:</option>
+                                    </select>
+                                </div>
+                                <div class="toggle-control">
+                                    <label for="" class="toggle-control-label-wrapper">
+                                        <div class="react-toggle">
+                                            <div class="react-toggle-track">
+                                                <div class="react-toggle-track-check">
+                                                    <svg width="14" height="11" viewBox="0 0 14 11">
+                                                        <title>switch-check</title>
+                                                        <path d="M11.264 0L5.26 6.004 2.103 2.847 0 4.95l5.26 5.26 8.108-8.107L11.264 0" fill="#fff" fill-rule="evenodd"></path>
+                                                    </svg>
+                                                </div>
+                                                <div class="react-toggle-track-x">
+                                                    <svg width="10" height="10" viewBox="0 0 10 10">
+                                                        <title>switch-x</title>
+                                                        <path d="M9.9 2.12L7.78 0 4.95 2.828 2.12 0 0 2.12l2.83 2.83L0 7.776 2.123 9.9 4.95 7.07 7.78 9.9 9.9 7.776 7.072 4.95 9.9 2.12" fill="#fff" fill-rule="evenodd"></path>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div class="react-toggle-thumb"></div>
+                                            <input type="checkbox" class="react-toggle-screenreader-only" value="on">
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            <!-- date section -->
+                            <div class="orbito-date-column">
+                                <div class="start-date orbito-element">
+                                    <label for="" class="form-label">Start:</label>
+                                    <span style="float: left;">
+                                        <div id="datepickerOrbitoStart" class="input-group date" data-date-format="mm-dd-yyyy">
+                                            <input id="startdate" class="form-control" type="text" style="height: 35px; font-size: 15px;" readonly />
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="end-date orbito-element">
+                                    <label for="" class="form-label">End:</label>
+                                    <span style="float: left;">
+                                        <div id="datepickerOrbitoEnd" class="input-group date" data-date-format="mm-dd-yyyy">
+                                            <input id="startdate" class="form-control" type="text" style="height:35px; font-size: 15px;" readonly />
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
 
         </div>
+
+    </div>
     </div>
     <div class="divControls" style="display:none;">
         <button id="togglemenu" data-toggle="tooltip" title="Archived Images" data-placement="right" class="controls" onclick="toggleMenu('Archive')">
