@@ -1792,6 +1792,10 @@ table.dataTable td {
   justify-content: space-between;
 }
 
+.orbito-element .container{
+  width: 18%;
+}
+
 .orbito-search-form .aoi-gestion {
   padding-bottom: 15px;
   display: flex;
@@ -1820,66 +1824,6 @@ table.dataTable td {
   outline: none;
   border-radius: 4px;
 
-}
-
-.toggle-control-label-wrapper{
-  margin: 0 !important;
-}
-
-.reat-toggle{
-  display: inline-block;
-  position: relative;
-  cursor: pointer;
-  background-color: transparent;
-  border: 0;
-  padding: 0;
-}
-
-.ract-toggle-track{
-  width: 40px !important;
-  height: 18px !important;
-}
-
-.react-toggle-track-check{
-  position: absolute;
-  width: 14px;
-  height: 10px;
-  top: 0px;
-  bottom: 0px;
-  margin-top: auto;
-  margin-bottom: auto;
-  line-height: 0;
-  left: 8px;
-  opacity: 0;
-  -webkit-transition: opacity 0.25s ease;
-  -moz-transition: opacity 0.25s ease;
-  transition: opacity 0.25s ease;
-}
-
-.toggle-control svg
-{
-  display: none;
-}
-
-.react-toggle-track-x{
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  top: 0px;
-  bottom: 0px;
-  margin-top: auto;
-  margin-bottom: auto;
-  line-height: 0;
-  right: 10px;
-  opacity: 1;
-  -webkit-transition: opacity 0.25s ease;
-  -moz-transition: opacity 0.25s ease;
-  transition: opacity 0.25s ease;
-}
-
-.react-toggle-thumb{
-  width: 16px !important;
-  height: 16px !important;
 }
 
 input[type="checkbox"], input[type="radio"]
@@ -1939,3 +1883,130 @@ input[type="checkbox"], input[type="radio"]
   background-color: #F6F6F6;
   margin-top: 20px;
 }
+
+.orbito-satellite-selection .bootstrap-select{
+  width: 100% !important;
+}
+
+.orbito-satellite-selection .bootstrap-select .btn{ 
+  background-color: #fff;
+  border: 1px solid #000;
+}
+
+.orbito-satellite-selection .bootstrap-select .filter-option-inner-inner{
+  color: #000;
+}
+
+#datepickerOrbitoStart input{
+  color: #000;
+}
+
+.orbito-satellite-selection .bootstrap-select .dropdown-menu li a{
+  font-size: 16px;
+}
+
+.orbito-satellite-selection .dropdown-item:focus, .dropdown-item:hover{
+background-color:#ebf5ff;
+}
+
+.orbito-angle-column {
+  display: flex;
+  padding: 0 0 12px 0;
+  justify-content: space-between;
+}
+
+.orbito-angle-column .max-roll-angle {
+  /* display: flex; */
+  /* justify-content: right; */
+  padding-left: 30px;
+}
+
+.max-roll-angle .form-label {
+  margin-right: 18px;
+  margin-top: 6px;
+}
+
+.orbito-search-form .react-numeric-input {
+  float: left;
+  border: 1px solid #929292;
+  background-color: white;
+  padding-left: 10px;
+  padding-right: 8px;
+  border: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0px !important;
+  padding: 0 !important;
+  
+}
+
+.orbito-satellite-column{
+  padding: 12px 0 !important;
+}
+
+.orbito-action {
+  text-align: right;
+  width: 25%;
+  clear: both;
+}
+
+.orbito-action button {
+  border-radius: 5px;
+  box-shadow: none;
+  border: none;
+  padding: 7px 0;
+}
+
+.search-button[disabled] {
+  background-color: #9d9e9e;
+  border-color: #9d9e9e;
+  cursor: not-allowed;
+}
+
+.search-button{
+  width: 100%;
+}
+
+.satellite-name{
+  border-radius: 1rem;
+  /* font-size: .75rem;
+  font-weight: 700; */
+  padding: .35rem .5rem;
+  text-align: center;
+  width: 4rem;
+}
+
+.toggle-orbit{
+  border: none;
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: 0px;
+}
+
+.toggle-orbit-active{
+  fill:#22b1ec !important;
+}
+
+.toggle-orbit:hover{
+  fill:#22b1ec !important;
+}
+
+.toggle-corridor{
+  border: none;
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: 0px;
+}
+
+.toggle-corridor-active{
+  fill:#22b1ec !important;
+}
+
+.toggle-corridor:hover{
+  fill:#22b1ec !important;
+}
+
+
+
+
+

@@ -59,6 +59,13 @@ $(document).ready(function() {
     eraseCookie('shown');
   });
  
+  // orbitography rollangle section
+  document.getElementById("rollAngle").addEventListener("change", function(){
+      let v = parseInt(this.value);
+      if (v < 1) this.value = 1;
+      if (v > 45) this.value = 45;
+})
+
   });
 var areaDrawn = 0;
 var plieadesObj = [];
@@ -585,6 +592,32 @@ var resultVector = new ol.layer.Vector({
   }
 });
 
+// orbito section
+var resultVectorSPOT6orbito = new ol.layer.Vector({
+  displayInLayerSwitcher: false,
+  style: function(f) {
+    // var olFeature = geojsonFormat.writeFeatureObject(f);  
+    var orbitId = f.get('orbitNumber');
+      return new ol.style.Style({
+        stroke: new ol.style.Stroke({
+          color: '#f36e2c',
+          width: 3
+        }),
+        text: new ol.style.Text({
+          font: '18px Calibri,sans-serif',
+          fill: new ol.style.Fill({
+            color: 'Red'
+          }),
+          stroke: new ol.style.Stroke({
+            color: '#FFFF00',
+            width: 3
+          }), 
+          text: "SPOT6 ("+orbitId+")"        
+        })
+      })
+  }
+});
+
 var formatArea = function(polygon) {
   var area = ol.Sphere.getArea(polygon);
   var output;
@@ -695,6 +728,7 @@ function init() {
       mapThird,
       vector,
       resultVector,
+      resultVectorSPOT6orbito,            
       vectorClipped,
       vectorPoints
     ],
@@ -1581,6 +1615,14 @@ function getCenterOfExtent(Extent) {
   return [X, Y];
 }
 
+function toggleOrbito(val){
+  if (!$('#' + val).hasClass("toggle-orbit-active")) {
+    $('#' + val).addClass('toggle-orbit-active');
+  } else {
+      $('#' + val).removeClass('toggle-orbit-active');
+  }
+}
+
 function functionalites(val) {
   if (!$('#' + val).hasClass("selectedIcon")) {
     $('#' + val).addClass('selectedIcon');
@@ -1890,6 +1932,8 @@ function toggleFooter() {
 
 $(function() {
   var dateToday = new Date();
+
+  
   $("#datepicker3").datepicker({
     autoclose: true,
     todayHighlight: true
@@ -1909,16 +1953,19 @@ $(function() {
   $("#datepickerOrbitoStart").datepicker({
     autoclose: true,
     todayHighlight: true,
-    minDate: dateToday+7,
-    showButtonPanel: true
+    minDate: dateToday,
+    showButtonPanel: true,
+    format:'yyyy-mm-dd'
   }).datepicker('update', new Date());
 
   $("#datepickerOrbitoEnd").datepicker({
+    
     autoclose: true,
     todayHighlight: true,
     minDate: dateToday,
-    showButtonPanel: true
-  }).datepicker('setDate', dateToday.setDate(dateToday.getDate() + 7));
+    showButtonPanel: true,
+    format:'yyyy-mm-dd'
+  }).datepicker('update', new Date());
 
 });
 
@@ -2134,6 +2181,10 @@ function processOrder(type) {
   var currentdate = new Date();
   var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   $(document).ready(function() {
+
+    $(".selectpicker").selectpicker({
+      noneSelectedText : 'Satellites' // by this default 'Nothing selected' -->will change to Satellites
+  });
     $('#orderdate').text(currentdate.getDate() + "/" + (currentdate.getMonth() + 1) + "/" + currentdate.getFullYear());
     $('#freshorderdate').text(currentdate.getDate() + "/" + (currentdate.getMonth() + 1) + "/" + currentdate.getFullYear());
     $('#ordertime').text(currentdate.toLocaleString('en-US', {
@@ -4476,6 +4527,116 @@ function getCurrentQuota() {
       }
     });
   });
+}
+
+// orbitography section
+function getOrbitoData(){//alert("called");
+  var orbitoStartDate=$("#orbitoStartDate").val();
+  var orbitoEndDate=$("#orbitoEndDate").val();
+
+  var satellites=$("#dropDownOrbitoSatellites").val();
+  var rollAngle=$("#rollAngle").val();
+
+  var spot6='';
+  var pleiades='';
+  var pneo='';
+  var prss='';
+  var taijing='';
+  var sv1='';
+  var sv2='';
+  var sv3='';
+  var sv4='';
+  var sv5='';
+
+  var orbitoCriteria='';
+
+  if(satellites.includes('SPOT-6'))
+    spot6='yes';
+  
+  if(satellites.includes('Pleiades'))
+    pleiades='yes';
+
+  if(satellites.includes('PNeo'))
+    pneo='yes';
+
+  if(satellites.includes('PRSS'))
+    prss='yes';
+
+  if(satellites.includes('Taijing'))
+    taijing='yes';
+
+  if(satellites.includes('SV-1'))
+    sv1='yes';
+
+  if(satellites.includes('SV-2'))
+    sv2='yes';
+
+  if(satellites.includes('SV-3'))
+    sv3='yes';
+
+  if(satellites.includes('SV-4'))
+    sv4='yes';
+
+  if(satellites.includes('SV-5'))
+    sv5='yes';
+    
+  orbitoCriteria += "(date1 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
+                    "OR (date2 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
+                    "OR (date3 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
+                    "OR (date4 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
+                    "OR (date5 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
+                    "OR (date6 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
+                    "OR (date7 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
+                    "OR (date8 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
+                    "OR (date9 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
+                    "OR (date10 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
+                    "OR (date11 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
+                    "OR (date12 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
+                    "OR (date13 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
+                    "OR (date14 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
+                    "OR (date15 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " ;
+
+  var testsourceOrbito = new ol.source.Vector({   
+    url: "server_scripts/azo.php?orbitoCriteria=" + orbitoCriteria + "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv1=" + sv1 + "&sv2=" + sv2 + "&sv3=" + sv3 +"&sv4=" + sv4 + "&sv5=" + sv5 +  "&pneo=" + pneo + "&taijing="+taijing,
+    format: new ol.format.GeoJSON(),       
+});
+
+
+resultVectorSPOT6orbito.setSource(testsourceOrbito);
+  testsourceOrbito.once('change', function(e) {
+      if (testsourceOrbito.getState() === 'ready') {
+          //move(feature.getGeometry().getExtent());
+         resultFeatures = testsourceOrbito.getFeatures(); 
+         if (resultFeatures.length > 0) {   
+          var info;
+          var content;
+          tableData = "";
+          tableData += '<table id="table_id" class="table table-striped table-bordered tablesorter" style="width:100%">';
+          tableData += "<thead> <tr><th>Satellite</th><th>Orbit</th><th>Date</th>	<th>Time</th> <th class='no-sort'><i class='fas fa-search-location'></i></th></tr> </thead>";
+          tableData += "<tbody id='tablebody'>"; 
+          
+          for (var i = 0; i < resultFeatures.length; i++) {
+          tableData += "<tr>" +
+            "<td><span class='satellite-name' style='color: rgb(75, 183, 85); background-color: rgba(75, 183, 85, 0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>" +
+            "<td>"+ resultFeatures[i].get("orbitNumber") +"</td>" +
+            "<td><strong>Date</strong></td>" +
+            "<td>Time</td>" +
+            "<td><button class='toggle-orbit' onclick='toggleOrbito(this.id);'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><path d='M16.5,1c-3.7,0-7.1,1.4-9.8,3.6C6.2,4.3,5.5,4.1,4.9,4.1c-2.4,0-4.4,2-4.4,4.4C0.5,9.8,1,11,2,11.8 c-0.4,1.4-0.6,2.7-0.6,4.2c0,8.3,6.7,15,15,15s15.1-6.7,15.1-15S24.8,1,16.5,1z M16.5,28.5C9.6,28.5,4,22.9,4,16 c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,7.8,9,7,8.6,6.3c2.1-1.7,4.8-2.7,7.8-2.7 c6.8,0,12.5,5.6,12.5,12.5C28.9,22.8,23.3,28.5,16.5,28.5z' class='cz-color-3684147'></path></svg></button><button class='toggle-corridor'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><g class='cz-color-3684147'><path d='M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z' class='cz-color-3684147'></path><path d='M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z' class='cz-color-3684147'></path><path d='M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z' class='cz-color-3684147'></path><path d='M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z' class='cz-color-3684147'></path></g></svg></button><i id='' '_visibility' style='color:#c1392b;margin-left: 5px;' class='fas fa-search-location' onclick='functionalites(this.id);'></i></td>"
+            "</tr>";
+          }
+          tableData += "</tbody>";
+          tableData += "</table>";
+          
+          $("#dataOrbito").show();
+          $("#dataOrbito").html('');
+          $("#dataOrbito").append(tableData);
+        }
+        else {
+          $("#menu h3").text("Total Results: 0");
+        }        
+      }
+    });
+  // console.log(orbitoCriteria);
 }
 
 

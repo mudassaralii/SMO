@@ -41,6 +41,8 @@ if (!isset($_SESSION['Username_OMS'])) {
     <link rel="stylesheet" type="text/css" href="css/libs/toastr.min.css" />
     <link rel="stylesheet" type="text/css" href="css/libs/overhang.min.css" />
     <link rel="stylesheet" type="text/css" href="css/custom/style.css" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="css/libs/bootstrap-select.min.css">
 
     <script type="text/javascript" src="js/libs/jquery.js"></script>
     <script type="text/javascript" src="js/libs/jquery-ui.js"></script>
@@ -64,6 +66,8 @@ if (!isset($_SESSION['Username_OMS'])) {
     <script type="text/javascript" src="js/libs/toastr.min.js"></script>
     <script type="text/javascript" src="js/libs/overhang.min.js"></script>
     <script type="text/javascript" src="js/libs/jquery.tickerNews.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="js/libs/bootstrap-select.min.js"></script>
     <!-- Custom Coding block -->
     <script type="text/javascript" src="js/custom/Script.js"></script>
 </head>
@@ -147,26 +151,10 @@ if (!isset($_SESSION['Username_OMS'])) {
                                         <option value="">AOI:</option>
                                     </select>
                                 </div>
-                                <div class="toggle-control">
-                                    <label for="" class="toggle-control-label-wrapper">
-                                        <div class="react-toggle">
-                                            <div class="react-toggle-track">
-                                                <div class="react-toggle-track-check">
-                                                    <svg width="14" height="11" viewBox="0 0 14 11">
-                                                        <title>switch-check</title>
-                                                        <path d="M11.264 0L5.26 6.004 2.103 2.847 0 4.95l5.26 5.26 8.108-8.107L11.264 0" fill="#fff" fill-rule="evenodd"></path>
-                                                    </svg>
-                                                </div>
-                                                <div class="react-toggle-track-x">
-                                                    <svg width="10" height="10" viewBox="0 0 10 10">
-                                                        <title>switch-x</title>
-                                                        <path d="M9.9 2.12L7.78 0 4.95 2.828 2.12 0 0 2.12l2.83 2.83L0 7.776 2.123 9.9 4.95 7.07 7.78 9.9 9.9 7.776 7.072 4.95 9.9 2.12" fill="#fff" fill-rule="evenodd"></path>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                            <div class="react-toggle-thumb"></div>
-                                            <input type="checkbox" class="react-toggle-screenreader-only" value="on">
-                                        </div>
+                                <div class="container">
+                                    <label class="switch" for="chkSnowCriteria" style=" float: left; margin-left: 8%;">
+                                        <input type="checkbox" id="chkSnowCriteria" unchecked />
+                                        <div class="sliderchk round"></div>
                                     </label>
                                 </div>
                             </div>
@@ -176,7 +164,7 @@ if (!isset($_SESSION['Username_OMS'])) {
                                     <label for="" class="form-label">Start:</label>
                                     <span style="float: left;">
                                         <div id="datepickerOrbitoStart" class="input-group date" data-date-format="mm-dd-yyyy">
-                                            <input id="startdate" class="form-control" type="text" style="height: 35px; font-size: 15px;" readonly />
+                                            <input id="orbitoStartDate" class="form-control" type="text" style="height: 35px; font-size: 15px;" readonly />
                                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                         </div>
                                     </span>
@@ -185,15 +173,54 @@ if (!isset($_SESSION['Username_OMS'])) {
                                     <label for="" class="form-label">End:</label>
                                     <span style="float: left;">
                                         <div id="datepickerOrbitoEnd" class="input-group date" data-date-format="mm-dd-yyyy">
-                                            <input id="startdate" class="form-control" type="text" style="height:35px; font-size: 15px;" readonly />
+                                            <input id="orbitoEndDate" class="form-control" type="text" style="height:35px; font-size: 15px;" readonly />
                                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                         </div>
                                     </span>
                                 </div>
                             </div>
+                            <!-- satellite selection -->
+                            <div class="orbito-satellite-column">
+                                <div class="Select orbito-satellite-selection">
+                                    <select id="dropDownOrbitoSatellites" class="selectpicker" multiple title="Satellites">
+                                        <option>SPOT-6</option>
+                                        <option>Pleiades</option>
+                                        <option>PNeo</option>
+
+                                        <option>PRSS</option>
+                                        <option>Taijing</option>
+                                        <option>SV-1</option>
+
+                                        <option>SV-2</option>
+                                        <option>SV-3</option>
+                                        <option>SV-4</option>
+
+                                        <option>SV-5</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- angle column -->
+                            <div class="orbito-angle-column">
+                                <div class="max-roll-angle orbito-element">
+                                    <label class="form-label">Max roll angle (°)</label>
+                                    <span class="react-numeric-input" style="position: relative; display: inline-block;">
+                                        <input id="rollAngle" type="text" min="1" max="45" value="30" min=0 max=45 style="font-size:16px;padding-right: 3ex; box-sizing: border-box; border: 1px solid rgb(204, 204, 204); border-radius: 5px; padding-left: 4px; display: block; appearance: none; line-height: normal;width:60px;height:40px" pattern=".*">
+                                        <b onclick="if(document.querySelector('#rollAngle').value < 45) {document.querySelector('#rollAngle').value++}" style="cursor:pointer;position: absolute; right: 2px; width: 2.26ex; border-color: rgba(0, 0, 0, 0.1); border-style: solid; text-align: center; cursor: default; transition: all 0.1s ease 0s; background: rgba(0, 0, 0, 0.1); box-shadow: rgba(0, 0, 0, 0.1) -1px -1px 3px inset, rgba(255, 255, 255, 0.7) 1px 1px 3px inset; top: 2px; bottom: 50%; border-radius: 2px 2px 0px 0px; border-width: 1px 1px 0px;">
+                                            <i style="position: absolute; top: 50%; left: 50%; width: 0px; height: 0px; border-width: 0px 1ex 1ex; border-color: transparent transparent rgba(0, 0, 0, 0.7); border-style: solid; margin: -0.3ex 0px 0px -0.94ex;"></i>
+                                        </b>
+                                        <b onclick="if(document.querySelector('#rollAngle').value > 0) {document.querySelector('#rollAngle').value--}" style="cursor:pointer;position: absolute; right: 2px; width: 2.26ex; border-color: rgba(0, 0, 0, 0.1); border-style: solid; text-align: center; cursor: default; transition: all 0.1s ease 0s; background: rgba(0, 0, 0, 0.1); box-shadow: rgba(0, 0, 0, 0.1) -1px -1px 3px inset, rgba(255, 255, 255, 0.7) 1px 1px 3px inset; top: 50%; bottom: 2px; border-radius: 0px 0px 2px 2px; border-width: 0px 1px 1px;">
+                                            <i style="position: absolute; top: 50%; left: 50%; width: 0px; height: 0px; border-width: 1ex 1ex 0px; border-color: rgba(0, 0, 0, 0.7) transparent transparent; border-style: solid; margin: -0.3ex 0px 0px -0.94ex;"></i>
+                                        </b>
+                                    </span>
+                                </div>
+                                <div class="submit orbito-element orbito-action">
+                                    <button onclick="getOrbitoData()" class="search-button btn btnGetOrbitoData" type="button" name="search">Search</button>
+                                </div>
+                            </div>
                     </div>
                     </form>
                 </div>
+                <div id="dataOrbito"></divv>
             </div>
 
         </div>
@@ -1182,7 +1209,7 @@ if (!isset($_SESSION['Username_OMS'])) {
                     <h2 style="margin-left: 44%;">Cart</h2>
                     </br>
                     <h2 style=" float: left;">Items</h2>
-                    <h2 style="float: right; right; margin-left: 44%;">
+                    <h2 style="float: right;margin-left: 44%;">
                         Unit Price <br />
                         <p style="font-size: 11px;text-align: center;">(Per km<sup>2</sup>)</p>
                     </h2>
