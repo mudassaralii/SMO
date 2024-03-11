@@ -43,9 +43,14 @@ if ($spot == "yes") {
 	$queryc1 = pg_query($db_pg, $c1); //or die('Query failed: ' . pg_last_error());
 
 	while ($edgec1 = pg_fetch_assoc($queryc1)) {
+
 		//getting dayNumber and calling DB to get orbit features
-		$c2 = 'select *, ST_AsGeoJSON(geom) AS geojson from public."d' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
-		$queryc2 = pg_query($db_pg, $c2); //or die('Query failed: ' . pg_last_error());
+		if (str_word_count($edgec1['dayNumber']) > 1) //As in DB there are no leadding zero from day 1 to 9
+			$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson from public."d' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
+		else
+			$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson from public."d0' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
+		//$c2 = 'select *, ST_AsGeoJSON(geom) AS geojson from public."d01_spot_lines"'; //d20_spot_lines
+		$queryc2 = pg_query($db_pg, $c2) or die('Query failed: ' . pg_last_error());
 		while ($edgec2 = pg_fetch_assoc($queryc2)) {
 			$feature = array(
 				'type' => 'Feature',
@@ -59,7 +64,8 @@ if ($spot == "yes") {
 					'gid' => $edgec2['gid'],
 					'geom' => $edgec2['geom'],
 					'orbitNumber' => $edgec2['name'],
-					'satellite' => "SPOT6"
+					'satellite' => "SPOT6",
+					'hidden' => 'true',
 				)
 			);
 			array_push($geojson['features'], $feature);

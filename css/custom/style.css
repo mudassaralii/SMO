@@ -1989,6 +1989,7 @@ background-color:#ebf5ff;
 
 .toggle-orbit:hover{
   fill:#22b1ec !important;
+  cursor: pointer;
 }
 
 .toggle-corridor{
@@ -2004,8 +2005,25 @@ background-color:#ebf5ff;
 
 .toggle-corridor:hover{
   fill:#22b1ec !important;
+  cursor: pointer;
 }
 
+tr.orbitoRowData:hover{
+  box-shadow: 0 7px 8px -4px #0003,0 12px 17px 2px #00000024,0 5px 22px 4px #0000001f;
+}
+
+#dataOrbito tbody tr:nth-of-type(2n+1) {
+  background-color: rgba(0,0,0,0);
+}
+
+.orbitoRowData span{
+  display: block;
+  margin: 0 auto;
+}
+
+#dataOrbito td{
+  vertical-align: middle;
+}
 
 
 
