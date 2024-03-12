@@ -68,6 +68,10 @@ if (!isset($_SESSION['Username_OMS'])) {
     <script type="text/javascript" src="js/libs/jquery.tickerNews.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="js/libs/bootstrap-select.min.js"></script>
+
+    <!-- <script src="js/libs/turf.min.js"></script> -->
+    <!-- <script src="https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js"></script> -->
+
     <!-- Custom Coding block -->
     <script type="text/javascript" src="js/custom/Script.js"></script>
 </head>
@@ -220,12 +224,13 @@ if (!isset($_SESSION['Username_OMS'])) {
                     </div>
                     </form>
                 </div>
-                <div id="dataOrbito"></divv>
+                <div id="dataOrbito">
+                    </divv>
+                </div>
+
             </div>
 
         </div>
-
-    </div>
     </div>
     <div class="divControls" style="display:none;">
         <button id="togglemenu" data-toggle="tooltip" title="Archived Images" data-placement="right" class="controls" onclick="toggleMenu('Archive')">
