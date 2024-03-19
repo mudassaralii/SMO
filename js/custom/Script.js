@@ -595,6 +595,7 @@ var resultVector = new ol.layer.Vector({
 // orbito section
 var toggleOrbitSelected=[];
 var toggleOrbitCorridorSelected=[];
+var ftr=null;
 
 var resultVectorSPOT6orbito = new ol.layer.Vector({
   displayInLayerSwitcher: false,
@@ -1648,15 +1649,16 @@ function showOrbitPath(row){
   var ftr=null;
   //console.log(row.childNodes[0].innerText+"_"+row.childNodes[1].innerText+"_orbitoVisibility");
   var orbitoDataID = row.childNodes[0].innerText+"_"+row.childNodes[1].innerText+"_orbitoVisibility";
-  //console.log(orbitoDataID);
+  //var orbitoCorridorDataID = row.childNodes[0].innerText+"_"+row.childNodes[1].innerText+"_corridorVisibility";
+  //console.log(orbitoCorridorDataID);
   var totalFeatures = resultVectorSPOT6orbito.getSource().getFeatures();
   var highlightedFeatureSPOT6;
 
-  //console.log(totalFeatures);
+  // console.log(totalFeatures);
 
   for (var i = 0; i < totalFeatures.length; i++) {
     if (totalFeatures[i].get('satellite')+"_"+totalFeatures[i].get('orbitNumber')+"_orbitoVisibility" == orbitoDataID) {
-      highlightedFeature = totalFeatures[i];
+      highlightedFeature = totalFeatures[i];      
       
       //for corridor display
       ftr=totalFeatures[i];
@@ -1664,7 +1666,7 @@ function showOrbitPath(row){
     }
   }  
   
-  //for corridor dislay
+  //for corridor dislay on mouse enter
   ftr.set("type", 'simpleline');
   var pp = (new ol.format.GeoJSON({
     defaultDataProjection: 'EPSG:4326',
@@ -1688,16 +1690,17 @@ function showOrbitPath(row){
   resultVectorSPOT6corridor.setSource(vectorSourceSPOT6corridor);
 }
 
-function hideOrbitPath(row){    
+function hideOrbitPath(row){  
     //console.log(row.childNodes[0].innerText+"_"+row.childNodes[1].innerText+"_orbitoVisibility");
     var orbitoDataID = row.childNodes[0].innerText+"_"+row.childNodes[1].innerText+"_orbitoVisibility";
-    var orbitoCorridorDataID = row.childNodes[0].innerText+"_"+row.childNodes[1].innerText+"_corridorVisibility";
+    var corridorDataID = row.childNodes[0].innerText+"_"+row.childNodes[1].innerText+"_corridorVisibility";
     //console.log(orbitoDataID);
 
     //find this orbitoDataID in toggleOrbitSelected, to check whether to hide this or not(if user selected toggle orbit button)
     var index = toggleOrbitSelected.indexOf(orbitoDataID);
-    var indexCorridor = toggleOrbitCorridorSelected.indexOf(orbitoCorridorDataID);
-    console.log(indexCorridor); //start from here
+    var indexCorridor = toggleOrbitCorridorSelected.indexOf(corridorDataID);
+    console.log(corridorDataID+" "+indexCorridor); 
+    // console.log(index);
     
     if(index == -1){
       var totalFeatures = resultVectorSPOT6orbito.getSource().getFeatures();
@@ -1709,9 +1712,24 @@ function hideOrbitPath(row){
         if (totalFeatures[i].get('satellite')+"_"+totalFeatures[i].get('orbitNumber')+"_orbitoVisibility" == orbitoDataID) {
           highlightedFeature = totalFeatures[i];
           totalFeatures[i].set("hidden", "true");
-        }
+        }       
       }
     }
+
+    //start from here
+    // if(indexCorridor == -1){
+    //   var totalFeaturesCorridor = resultVectorSPOT6corridor.getSource().getFeatures();
+    //   var highlightedFeatureSPOT6corridor;
+
+    //   //console.log(totalFeaturesCorridor);
+
+    //   for (var i = 0; i < totalFeaturesCorridor.length; i++) {
+    //     if (totalFeatures[i].get('satellite')+"_"+totalFeatures[i].get('orbitNumber')+"_corridorVisibility" == corridorDataID) {
+    //       highlightedFeatureSPOT6corridor = totalFeaturesCorridor[i];
+    //       totalFeaturesCorridor[i].set("hidden", "true");
+    //     }       
+    //   }
+    // }
 }
 
 function toggleOrbito(val){
@@ -1757,67 +1775,22 @@ function toggleOrbito(val){
 }
 
 function toggleCorridor(val){
-  var ftr=null;
+  
+  var corridorDataID = val.toString();
+  var totalFeatures = resultVectorSPOT6orbito.getSource().getFeatures();
+  var corridorDataID = val.toString();
     if (!$('#' + val).hasClass("toggle-corridor-active")) {
     $('#' + val).addClass('toggle-corridor-active');
+      //add this element to array
+      toggleOrbitCorridorSelected.push(corridorDataID);
+      console.log(toggleOrbitCorridorSelected);    
+
   } else {
       $('#' + val).removeClass('toggle-corridor-active');
-  }
-
-  //get selected feature
-  var orbitoCorridorDataID = val.toString();
-  
-  var totalFeatures = resultVectorSPOT6orbito.getSource().getFeatures();
-
-  //get this corridor path feature
-  for (var i = 0; i < totalFeatures.length; i++) {
-    if (totalFeatures[i].get('satellite')+"_"+totalFeatures[i].get('orbitNumber')+"_corridorVisibility" == orbitoCorridorDataID) {
-      highlightedFeature = totalFeatures[i];
-      //totalFeatures[i].set("hidden", "false");
-    }
-  } 
-
-  var vectorSourceSPOT6corridor=null;
-  if (val.indexOf("corridorVisibility") !== -1) {//console.log(val.indexOf("corridorVisibility"));
-    for (var i = 0; i < totalFeatures.length; i++) {
-      if (totalFeatures[i] == highlightedFeature) {
-        ftr=totalFeatures[i];
-
-        ftr.set("type", 'simpleline');
-        var pp = (new ol.format.GeoJSON({
-          defaultDataProjection: 'EPSG:4326',
-          featureProjection: 'EPSG:3857'
-        })).writeGeometry(ftr.getGeometry());
-        var ppJson = JSON.parse(pp);
-        var line = turf.lineString(ppJson.coordinates[0]);
-        var buffered = turf.buffer(line, 50, {
-          units: 'kilometers'
-        });
-        
-        ftr = (new ol.format.GeoJSON({
-          defaultDataProjection: 'EPSG:4326',
-          featureProjection: 'EPSG:3857'
-        })).readFeature(buffered);
-        ftr.set("count", drawCount);
-        
-        vectorSourceSPOT6corridor = new ol.source.Vector({
-          features: [ftr]
-        }); 
-        resultVectorSPOT6corridor.setSource(vectorSourceSPOT6corridor);       
-      } 
-
-      if ($($("#" + val)).attr('data-click-state') == 1) {
-        $($("#" + val)).attr('data-click-state', 0);
-        //remove from array  
-        toggleOrbitCorridorSelected.splice(toggleOrbitCorridorSelected.indexOf(orbitoCorridorDataID),1);     
-      } else {
-        $($("#" + val)).attr('data-click-state', 1);
-        //add to array
-        toggleOrbitCorridorSelected.push(orbitoCorridorDataID);    
-      }
-    }
-    console.log(toggleOrbitCorridorSelected);
-  }      
+          //remove this element from array
+          toggleOrbitCorridorSelected.splice(toggleOrbitCorridorSelected.indexOf(corridorDataID),1);
+          console.log(toggleOrbitCorridorSelected);
+  }   
 }
 
 function functionalites(val) {

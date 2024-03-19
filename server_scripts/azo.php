@@ -31,6 +31,7 @@ $spot = $_GET['spot'];
 $geojson = array(
 	'type'      => 'FeatureCollection',
 	'features'  => array()
+
 );
 
 if ($spot == "yes") {
@@ -46,8 +47,10 @@ if ($spot == "yes") {
 
 		//getting dayNumber and calling DB to get orbit features
 		if (str_word_count($edgec1['dayNumber']) > 1) //As in DB there are no leadding zero from day 1 to 9
-			$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson from public."d' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
+			// $c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_Buffer(geom,0.55) AS buffer,ST_AsGeoJSON(st_collect(ST_AsGeoJSON(geom),ST_Buffer(geom,0.55))) As pathWithCorridor from public."d' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
+			$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,from public."d' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
 		else
+			// $c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_Buffer(geom,0.55) AS buffer,ST_AsGeoJSON(st_collect(ST_AsGeoJSON(geom),ST_Buffer(geom,0.55))) As pathwithcorridor from public."d0' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
 			$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson from public."d0' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
 		//$c2 = 'select *, ST_AsGeoJSON(geom) AS geojson from public."d01_spot_lines"'; //d20_spot_lines
 		$queryc2 = pg_query($db_pg, $c2) or die('Query failed: ' . pg_last_error());
