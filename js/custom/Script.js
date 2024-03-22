@@ -345,6 +345,7 @@ var map;
 var canvas1;
 var screenshot;
 var resultFeatures;
+var resultFeaturesCorridor;
 var zoom = 5;
 var center = [8566491, 3215057];
 var rotation = 0;
@@ -1688,6 +1689,7 @@ function showOrbitPath(row){
     features: [ftr]
   });
   resultVectorSPOT6corridor.setSource(vectorSourceSPOT6corridor);
+  
 }
 
 function hideOrbitPath(row){  
@@ -1699,7 +1701,7 @@ function hideOrbitPath(row){
     //find this orbitoDataID in toggleOrbitSelected, to check whether to hide this or not(if user selected toggle orbit button)
     var index = toggleOrbitSelected.indexOf(orbitoDataID);
     var indexCorridor = toggleOrbitCorridorSelected.indexOf(corridorDataID);
-    console.log(corridorDataID+" "+indexCorridor); 
+    //console.log(corridorDataID+" "+indexCorridor); 
     // console.log(index);
     
     if(index == -1){
@@ -1778,19 +1780,66 @@ function toggleCorridor(val){
   
   var corridorDataID = val.toString();
   var totalFeatures = resultVectorSPOT6orbito.getSource().getFeatures();
+  var totalFeaturesCorridor = resultVectorSPOT6corridor.getSource().getFeatures();
+  
   var corridorDataID = val.toString();
     if (!$('#' + val).hasClass("toggle-corridor-active")) {
     $('#' + val).addClass('toggle-corridor-active');
       //add this element to array
       toggleOrbitCorridorSelected.push(corridorDataID);
-      console.log(toggleOrbitCorridorSelected);    
+      
+      //toggleOrbitCorridorSelected.forEach((element) => console.log(element));   
 
   } else {
       $('#' + val).removeClass('toggle-corridor-active');
           //remove this element from array
           toggleOrbitCorridorSelected.splice(toggleOrbitCorridorSelected.indexOf(corridorDataID),1);
-          console.log(toggleOrbitCorridorSelected);
-  }   
+          //console.log(toggleOrbitCorridorSelected);
+  }
+
+  console.log(totalFeaturesCorridor.length); 
+
+  // var totalFeaturesCorridor = resultVectorSPOT6corridor.getSource().getFeatures();console.log(totalFeaturesCorridor.length);
+  // for (var i = 0; i < totalFeaturesCorridor.length; i++) {
+  //   // if (totalFeaturesCorridor[i].get('satellite')+"_"+totalFeaturesCorridor[i].get('orbitNumber')+"_orbitoVisibility" == orbitoDataID) {
+  //   //   highlightedFeature = totalFeaturesCorridor[i];
+  //   //   //totalFeaturesCorridor[i].set("hidden", "true");
+  //   //}
+  // } 
+  
+  // //get satellite path and generate corridor
+  // for (var i = 0; i < totalFeatures.length; i++) {
+  //   if (totalFeatures[i].get('satellite')+"_"+totalFeatures[i].get('orbitNumber')+"_orbitoVisibility" == orbitoDataID) {
+  //     highlightedFeature = totalFeatures[i];      
+      
+  //     //for corridor display
+  //     ftr=totalFeatures[i];
+  //     //totalFeatures[i].set("hidden", "false");
+  //   }
+  // }  
+  
+    // //for corridor dislay on mouse enter
+    // ftr.set("type", 'simpleline');
+    // var pp = (new ol.format.GeoJSON({
+    //   defaultDataProjection: 'EPSG:4326',
+    //   featureProjection: 'EPSG:3857'
+    // })).writeGeometry(ftr.getGeometry());
+    // var ppJson = JSON.parse(pp);
+    // var line = turf.lineString(ppJson.coordinates[0]);
+    // var buffered = turf.buffer(line, 50, {
+    //   units: 'kilometers'
+    // });
+    
+    // ftr = (new ol.format.GeoJSON({
+    //   defaultDataProjection: 'EPSG:4326',
+    //   featureProjection: 'EPSG:3857'
+    // })).readFeature(buffered);
+    // ftr.set("count", drawCount);
+
+    // var vectorSourceSPOT6corridor = new ol.source.Vector({
+    //   features: [ftr]
+    // });
+    // resultVectorSPOT6corridor.setSource(vectorSourceSPOT6corridor);
 }
 
 function functionalites(val) {
@@ -4767,7 +4816,7 @@ function getOrbitoData(){
                     "OR (date15 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " ;
   console.log(orbitoCriteria);
   var testsourceOrbito = new ol.source.Vector({   
-    url: "server_scripts/azo.php?orbitoCriteria=" + orbitoCriteria + "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv1=" + sv1 + "&sv2=" + sv2 + "&sv3=" + sv3 +"&sv4=" + sv4 + "&sv5=" + sv5 +  "&pneo=" + pneo + "&taijing="+taijing,
+    url: "server_scripts/azo.php?orbitoCriteria=" + orbitoCriteria +"&startDate="+$("#orbitoStartDate").val()+"&endDate="+$("#orbitoEndDate").val()+ "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv1=" + sv1 + "&sv2=" + sv2 + "&sv3=" + sv3 +"&sv4=" + sv4 + "&sv5=" + sv5 +  "&pneo=" + pneo + "&taijing="+taijing,
     format: new ol.format.GeoJSON(),       
 });
 
@@ -4777,6 +4826,36 @@ resultVectorSPOT6orbito.setSource(testsourceOrbito);
       if (testsourceOrbito.getState() === 'ready') {
           //move(feature.getGeometry().getExtent());
          resultFeatures = testsourceOrbito.getFeatures(); 
+         console.log(resultFeatures);
+         
+
+        //  //generating corridors
+        //  for (var i = 0; i < resultFeatures.length; i++) {          
+        //      ftr=resultFeatures[i];
+        //     //console.log(resultFeatures.length);
+        //     ftr.set("type", 'simpleline');
+        //     var pp = (new ol.format.GeoJSON({
+        //       defaultDataProjection: 'EPSG:4326',
+        //       featureProjection: 'EPSG:3857'
+        //     })).writeGeometry(ftr.getGeometry());
+        //     var ppJson = JSON.parse(pp);
+        //     var line = turf.lineString(ppJson.coordinates[0]);
+        //     var buffered = turf.buffer(line, 50, {
+        //       units: 'kilometers'
+        //     });
+            
+        //     ftr = (new ol.format.GeoJSON({
+        //       defaultDataProjection: 'EPSG:4326',
+        //       featureProjection: 'EPSG:3857'
+        //     })).readFeature(buffered);
+        //     ftr.set("count", drawCount);
+
+        //     resultFeaturesCorridor = new ol.source.Vector({
+        //       features: [ftr]
+        //     });
+        //   }         
+         
+
          if (resultFeatures.length > 0) {   
           var info;
           var content;
@@ -4789,7 +4868,7 @@ resultVectorSPOT6orbito.setSource(testsourceOrbito);
           tableData += "<tr class='orbitoRowData' onmousemove='showOrbitPath(this)' onmouseleave='hideOrbitPath(this)'>" +
             "<td><span class='satellite-name' style='color: rgb(243, 110, 44); background-color: rgba(243, 110, 44, 0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>" +
             "<td>"+ resultFeatures[i].get("orbitNumber") +"</td>" +
-            "<td><strong>Date</strong></td>" +
+            "<td><strong>"+resultFeatures[i].get("date")+"</strong></td>" +
             "<td>Time</td>" +
             "<td><button id='"+resultFeatures[i].get("satellite")+'_'+resultFeatures[i].get("orbitNumber")+"_orbitoVisibility' class='toggle-orbit' title='Toggle orbit' onclick='toggleOrbito(this.id);'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><path d='M16.5,1c-3.7,0-7.1,1.4-9.8,3.6C6.2,4.3,5.5,4.1,4.9,4.1c-2.4,0-4.4,2-4.4,4.4C0.5,9.8,1,11,2,11.8 c-0.4,1.4-0.6,2.7-0.6,4.2c0,8.3,6.7,15,15,15s15.1-6.7,15.1-15S24.8,1,16.5,1z M16.5,28.5C9.6,28.5,4,22.9,4,16 c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,7.8,9,7,8.6,6.3c2.1-1.7,4.8-2.7,7.8-2.7 c6.8,0,12.5,5.6,12.5,12.5C28.9,22.8,23.3,28.5,16.5,28.5z' class='cz-color-3684147'></path></svg></button><button id='"+resultFeatures[i].get("satellite")+'_'+resultFeatures[i].get("orbitNumber")+"_corridorVisibility' class='toggle-corridor' title='Toggle corridor' onclick='toggleCorridor(this.id);'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><g class='cz-color-3684147'><path d='M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z' class='cz-color-3684147'></path><path d='M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z' class='cz-color-3684147'></path><path d='M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z' class='cz-color-3684147'></path><path d='M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z' class='cz-color-3684147'></path></g></svg></button><i id='' '_visibility' style='color:#c1392b;margin-left: 5px;' class='fas fa-search-location' onclick='functionalites(this.id);'></i></td>"
             "</tr>";
@@ -4808,5 +4887,3 @@ resultVectorSPOT6orbito.setSource(testsourceOrbito);
     });
   // console.log(orbitoCriteria);
 }
-
-

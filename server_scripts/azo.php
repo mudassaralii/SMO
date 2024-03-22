@@ -18,6 +18,8 @@ include('db_pg_orbito.php');
 $spotDays;
 $orbitoCriteria = $_GET['orbitoCriteria'];
 $spot = $_GET['spot'];
+$startDate = $_GET['startDate'];
+$endDate = $_GET['endDate'];
 // $pleiades = $_GET['pleiades'];
 // $pneo = $_GET['pneo'];
 // $prss = $_GET['prss'];
@@ -46,32 +48,40 @@ if ($spot == "yes") {
 	while ($edgec1 = pg_fetch_assoc($queryc1)) {
 
 		//getting dayNumber and calling DB to get orbit features
-		if (str_word_count($edgec1['dayNumber']) > 1) //As in DB there are no leadding zero from day 1 to 9
-			// $c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_Buffer(geom,0.55) AS buffer,ST_AsGeoJSON(st_collect(ST_AsGeoJSON(geom),ST_Buffer(geom,0.55))) As pathWithCorridor from public."d' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
-			$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,from public."d' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
+
+		if ((str_word_count($edgec1['dayNumber']) >= 0) and (str_word_count($edgec1['dayNumber']) < 10)) //As in DB there are no leadding zero from day 1 to 9
+			//$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public."d' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
+			$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public."d' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
 		else
-			// $c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_Buffer(geom,0.55) AS buffer,ST_AsGeoJSON(st_collect(ST_AsGeoJSON(geom),ST_Buffer(geom,0.55))) As pathwithcorridor from public."d0' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
-			$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson from public."d0' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
+			//$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public."d0' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
+			$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public."d0' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
 		//$c2 = 'select *, ST_AsGeoJSON(geom) AS geojson from public."d01_spot_lines"'; //d20_spot_lines
 		$queryc2 = pg_query($db_pg, $c2) or die('Query failed: ' . pg_last_error());
+		$counter = 1;
 		while ($edgec2 = pg_fetch_assoc($queryc2)) {
-			$feature = array(
-				'type' => 'Feature',
-				'geometry' => json_decode($edgec2['geojson'], true),
-				'crs' => array(
-					'type' => 'EPSG',
-					'properties' => array('code' => '4326')
-				),
-				'geometry_name' => 'geom',
-				'properties' => array(
-					'gid' => $edgec2['gid'],
-					'geom' => $edgec2['geom'],
-					'orbitNumber' => $edgec2['name'],
-					'satellite' => "SPOT6",
-					'hidden' => 'true',
-				)
-			);
-			array_push($geojson['features'], $feature);
+			if (($edgec1['date' . $counter] >= $startDate) && ($edgec1['date' . $counter] <= $endDate)) {
+				$feature = array(
+					'type' => 'Feature',
+					'geometry' => json_decode($edgec2['geojson'], true),
+					'buffer' => json_decode($edgec2['buffer'], true),
+					'crs' => array(
+						'type' => 'EPSG',
+						'properties' => array('code' => '4326')
+					),
+					'geometry_name' => 'geom',
+					'properties' => array(
+						'gid' => $edgec2['gid'],
+						'geom' => $edgec2['geom'],
+						'buffer' => $edgec2['buffer'],
+						'orbitNumber' => $edgec2['name'],
+						'satellite' => "SPOT6",
+						'date' => $edgec1['date' . $counter],
+						'hidden' => 'true',
+					)
+				);
+				array_push($geojson['features'], $feature);
+				$counter++;
+			}
 		}
 	}
 }
