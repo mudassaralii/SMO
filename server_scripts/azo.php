@@ -20,6 +20,7 @@ $orbitoCriteria = $_GET['orbitoCriteria'];
 $spot = $_GET['spot'];
 $startDate = $_GET['startDate'];
 $endDate = $_GET['endDate'];
+$resultDate = null;
 // $pleiades = $_GET['pleiades'];
 // $pneo = $_GET['pneo'];
 // $prss = $_GET['prss'];
@@ -58,30 +59,38 @@ if ($spot == "yes") {
 		//$c2 = 'select *, ST_AsGeoJSON(geom) AS geojson from public."d01_spot_lines"'; //d20_spot_lines
 		$queryc2 = pg_query($db_pg, $c2) or die('Query failed: ' . pg_last_error());
 		$counter = 1;
+
+		// //get date
+		// while ($edgec3 = pg_fetch_assoc($queryc2)) {
+		// 	if (($edgec1['date' . $counter] >= $startDate) or ($edgec1['date' . $counter] <= $endDate))
+		// 		$resultDate = $edgec1['date' . $counter];
+		// 	$counter++;
+		// }
+
 		while ($edgec2 = pg_fetch_assoc($queryc2)) {
-			if (($edgec1['date' . $counter] >= $startDate) && ($edgec1['date' . $counter] <= $endDate)) {
-				$feature = array(
-					'type' => 'Feature',
-					'geometry' => json_decode($edgec2['geojson'], true),
-					'buffer' => json_decode($edgec2['buffer'], true),
-					'crs' => array(
-						'type' => 'EPSG',
-						'properties' => array('code' => '4326')
-					),
-					'geometry_name' => 'geom',
-					'properties' => array(
-						'gid' => $edgec2['gid'],
-						'geom' => $edgec2['geom'],
-						'buffer' => $edgec2['buffer'],
-						'orbitNumber' => $edgec2['name'],
-						'satellite' => "SPOT6",
-						'date' => $edgec1['date' . $counter],
-						'hidden' => 'true',
-					)
-				);
-				array_push($geojson['features'], $feature);
-				$counter++;
-			}
+			// if (($edgec1['date' . $counter] >= $startDate) && ($edgec1['date' . $counter] <= $endDate)) {
+			$feature = array(
+				'type' => 'Feature',
+				'geometry' => json_decode($edgec2['geojson'], true),
+				'buffer' => json_decode($edgec2['buffer'], true),
+				'crs' => array(
+					'type' => 'EPSG',
+					'properties' => array('code' => '4326')
+				),
+				'geometry_name' => 'geom',
+				'properties' => array(
+					'gid' => $edgec2['gid'],
+					'geom' => $edgec2['geom'],
+					'buffer' => $edgec2['buffer'],
+					'orbitNumber' => $edgec2['name'],
+					'satellite' => "SPOT6",
+					'date' => $edgec1['date' . $counter], // $resultDate, //
+					'hidden' => 'true',
+				)
+			);
+			array_push($geojson['features'], $feature);
+
+			//}
 		}
 	}
 }
