@@ -1754,8 +1754,8 @@ table.dataTable td {
   height: 100%;
   padding: 0 20px;
   z-index: 500;
-  overflow-y: scroll;
-  overflow: hidden;
+  overflow-y: auto;
+  /* overflow: hidden; */
 }
 
 .dvOrbitography-header-action{
@@ -1973,7 +1973,7 @@ background-color:#ebf5ff;
   font-weight: 700; */
   padding: .35rem .5rem;
   text-align: center;
-  width: 4rem;
+  width: 7.3rem;
 }
 
 .toggle-orbit{

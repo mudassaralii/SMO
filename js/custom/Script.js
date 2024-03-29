@@ -598,54 +598,139 @@ var toggleOrbitSelected=[];
 var toggleOrbitCorridorSelected=[];
 var ftr=null;
 
+//SPOT6, Pleiades styling
 var resultVectorSPOT6orbito = new ol.layer.Vector({
   displayInLayerSwitcher: false,
   style: function(f) {
-    // var olFeature = geojsonFormat.writeFeatureObject(f);  
+    var satellite=f.get('satellite');
+    var fillColor, strokeColor,textColor,textStrokeColor;
     var orbitId = f.get('orbitNumber');
+
+    // Set different colors based on the satellite property
+    if (satellite == 'SPOT6') {
+      fillColor = 'rgba(243, 110, 44,0.1)';
+      strokeColor = 'rgba(243, 110, 44)';
+      textColor='Red';
+      textStrokeColor='#FFFF00';
+     } else if (satellite == 'Pleiades-1A' || satellite === 'Pleiades-1B') {
+      fillColor = 'rgba(220, 12, 203,0.1)';
+      strokeColor = 'rgba(220, 12, 203)';
+      textStrokeColor='#FFFF00';//#FFFF00
+      textColor='rgba(220, 12, 203)';
+    } 
+    else if (satellite == 'PNEO3' || satellite === 'PNEO4') {
+      fillColor = 'rgb(106, 49, 220,0.1)';
+      strokeColor = 'rgb(106, 49, 220)';
+      textStrokeColor='#FFFF00';//#FFFF00
+      textColor='rgb(106, 49, 220)';
+    } 
+    
     if (f.get('hidden') == "true")
       return null;
     else
       return new ol.style.Style({
         stroke: new ol.style.Stroke({
-          color: '#f36e2c',
+          color: strokeColor,
           width: 4
         }),
         text: new ol.style.Text({
           font: '18px Calibri,sans-serif',
           overflow:true,
           fill: new ol.style.Fill({
-            color: 'Red'
+            color: textColor
           }),
           stroke: new ol.style.Stroke({
-            color: '#FFFF00',
+            color: textStrokeColor,
             width: 3
           }), 
-          text: "SPOT6 ("+orbitId+")"        
+          text: satellite + "("+orbitId+")"        
         })
       })
+
   }
 });
 
 var resultVectorSPOT6corridor = new ol.layer.Vector({
   displayInLayerSwitcher: false,
   style: function(f) {
-    // var olFeature = geojsonFormat.writeFeatureObject(f);  
-    //var orbitId = f.get('orbitNumber');
+    var satellite=f.get('satellite');
+    var fillColor, color;
+     
+    //Set different colors based on the satellite property
+    // if (satellite === 'SPOT6') {
+    //   color = 'rgba(243, 110, 44)';
+    //   fillColor = 'rgba(243, 110, 44,0.1)';      
+    //  } else if (satellite === 'Pleiades-1A' || satellite === 'Pleiades-1B') {
+    //   fillColor = 'rgba(220, 12, 203,0.1)';
+    //   strokeColor = 'rgba(220, 12, 203)';
+     
+    // } 
+
     if (f.get('hidden') == "true")
       return null;
-    else
+    else 
       return new ol.style.Style({
         stroke: new ol.style.Stroke({
-          color: 'rgba(243, 110, 44)',
+          color: 'rgba(243, 110, 44)',          
           width: 1
         }),
         fill: new ol.style.Fill({
-          color:'rgba(243, 110, 44, 0.1)'
+          color:'rgba(243, 110, 44,0.1)'
         }),        
-      })
+      })    
   }
 });
+
+
+// //Pleiades styling
+// var resultVectorPleiadesorbito = new ol.layer.Vector({
+//   displayInLayerSwitcher: false,
+//   style: function(f) {
+//     // var olFeature = geojsonFormat.writeFeatureObject(f);  
+//     var orbitId = f.get('orbitNumber');
+//     if (f.get('hidden') == "true")
+//       return null;
+//     else
+//       return new ol.style.Style({
+//         stroke: new ol.style.Stroke({
+//           color: '#dc0ccb',
+//           width: 4
+//         }),
+//         text: new ol.style.Text({
+//           font: '18px Calibri,sans-serif',
+//           overflow:true,
+//           fill: new ol.style.Fill({
+//             color: 'Red'
+//           }),
+//           stroke: new ol.style.Stroke({
+//             color: '#FFFF00',
+//             width: 3
+//           }), 
+//           text: "Pleiades ("+orbitId+")"        
+//         })
+//       })
+//   }
+// });
+
+// var resultVectorPleiadescorridor = new ol.layer.Vector({
+//   displayInLayerSwitcher: false,
+//   style: function(f) {
+//     // var olFeature = geojsonFormat.writeFeatureObject(f);  
+//     //var orbitId = f.get('orbitNumber');
+//     if (f.get('hidden') == "true")
+//       return null;
+//     else
+//       return new ol.style.Style({
+//         stroke: new ol.style.Stroke({
+//           color: 'rgba(220, 12, 203)',
+//           width: 1
+//         }),
+//         fill: new ol.style.Fill({
+//           color:'rgba(220, 12, 203, 0.1)'
+//         }),        
+//       })
+//   }
+// });
 
 var formatArea = function(polygon) {
   var area = ol.Sphere.getArea(polygon);
@@ -1685,8 +1770,9 @@ function showOrbitPath(row){
   })).readFeature(buffered);
   ftr.set("count", drawCount);
 
+
   var vectorSourceSPOT6corridor = new ol.source.Vector({
-    features: [ftr]
+    features: [ftr]    
   });
   resultVectorSPOT6corridor.setSource(vectorSourceSPOT6corridor);
   
@@ -4855,47 +4941,32 @@ resultVectorSPOT6orbito.setSource(testsourceOrbito);
       if (testsourceOrbito.getState() === 'ready') {
           //move(feature.getGeometry().getExtent());
          resultFeatures = testsourceOrbito.getFeatures(); 
-         console.log(resultFeatures);
-         
+         console.log(resultFeatures);        
 
-        //  //generating corridors
-        //  for (var i = 0; i < resultFeatures.length; i++) {          
-        //      ftr=resultFeatures[i];
-        //     //console.log(resultFeatures.length);
-        //     ftr.set("type", 'simpleline');
-        //     var pp = (new ol.format.GeoJSON({
-        //       defaultDataProjection: 'EPSG:4326',
-        //       featureProjection: 'EPSG:3857'
-        //     })).writeGeometry(ftr.getGeometry());
-        //     var ppJson = JSON.parse(pp);
-        //     var line = turf.lineString(ppJson.coordinates[0]);
-        //     var buffered = turf.buffer(line, 50, {
-        //       units: 'kilometers'
-        //     });
-            
-        //     ftr = (new ol.format.GeoJSON({
-        //       defaultDataProjection: 'EPSG:4326',
-        //       featureProjection: 'EPSG:3857'
-        //     })).readFeature(buffered);
-        //     ftr.set("count", drawCount);
-
-        //     resultFeaturesCorridor = new ol.source.Vector({
-        //       features: [ftr]
-        //     });
-        //   }         
-         
-
+        
          if (resultFeatures.length > 0) {   
           var info;
           var content;
           tableData = "";
           tableData += '<table id="table_id" class="table table-striped table-bordered tablesorter" style="width:100%">';
-          tableData += "<thead> <tr><th>Satellite</th><th>Orbit</th><th>Date</th><th><button id='btnToggleAllOrbits' class='toggle-orbit' title='Toggle all orbits' onclick='toggleAllOrbits();'><svg viewBox='0 0 32 32' class='pictos' style='width: 1.9rem; height: 1.9rem;'><g><path d='M19.9,6.5c-2.7,0-5.4,1-7.3,2.7C12.3,9.1,11.9,9,11.4,9c-2,0-3.6,1.6-3.6,3.6c0,0.9,0.4,1.8,1,2.6 c-0.3,1.1-0.5,2.1-0.5,3c0,6.3,5.1,11.5,11.5,11.5s11.6-5.1,11.6-11.5S26.3,6.5,19.9,6.5z M19.9,27c-5,0-9.1-4-9.1-9 c0-0.5,0.1-1.1,0.2-1.6c0-0.2,0-0.3,0.1-0.5c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c5,0,9.1,4.1,9.1,9.1C29,23.1,24.9,27,19.9,27z'></path><path d='M3.7,11.8c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c1.1,0,2.1,0.2,3,0.5h0.1h0.1c1.1-0.2,2.3-0.4,3.3-0.4h0.7l-0.7-0.4c-1.9-1.4-4.2-2.1-6.7-2.1c-2.7,0-5.4,0.9-7.3,2.7 C4.8,4.9,4.4,4.9,4,4.9C2,4.9,0.5,6.4,0.5,8.3c0,0.9,0.4,1.8,1,2.6c-0.3,1-0.5,2-0.5,3c0,4.1,2.1,7.8,5.7,9.9l0.5,0.3l-0.2-1 c-0.2-0.7-0.3-1.5-0.4-2.1v-0.1l-0.1-0.1c-2-1.7-3.1-4.3-3.1-6.9c0-0.5,0.1-1.1,0.2-1.6C3.6,12.1,3.7,11.9,3.7,11.8z'></path></g></svg></button><button id='btnToggleAllCorridors' class='toggle-orbit' title='Toggle all corridors' onclick='toggleAllCorridors();'><svg viewBox='0 0 32 32' class='pictos' style='width: 1.9rem; height: 1.9rem;'><g><path d='M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z'></path><path d='M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z'></path><path d='M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z'></path><path d='M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z'></path></g></svg></button></th></tr> </thead>";
+          tableData += "<thead> <tr><th style='font-weight: bold;font-size: 1.5rem'>Satellite</th><th style='font-weight: bold;font-size: 1.5rem'>Orbit</th><th style='font-weight: bold;font-size: 1.5rem'>Date</th><th><button id='btnToggleAllOrbits' class='toggle-orbit' title='Toggle all orbits' onclick='toggleAllOrbits();'><svg viewBox='0 0 32 32' class='pictos' style='width: 1.9rem; height: 1.9rem;'><g><path d='M19.9,6.5c-2.7,0-5.4,1-7.3,2.7C12.3,9.1,11.9,9,11.4,9c-2,0-3.6,1.6-3.6,3.6c0,0.9,0.4,1.8,1,2.6 c-0.3,1.1-0.5,2.1-0.5,3c0,6.3,5.1,11.5,11.5,11.5s11.6-5.1,11.6-11.5S26.3,6.5,19.9,6.5z M19.9,27c-5,0-9.1-4-9.1-9 c0-0.5,0.1-1.1,0.2-1.6c0-0.2,0-0.3,0.1-0.5c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c5,0,9.1,4.1,9.1,9.1C29,23.1,24.9,27,19.9,27z'></path><path d='M3.7,11.8c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c1.1,0,2.1,0.2,3,0.5h0.1h0.1c1.1-0.2,2.3-0.4,3.3-0.4h0.7l-0.7-0.4c-1.9-1.4-4.2-2.1-6.7-2.1c-2.7,0-5.4,0.9-7.3,2.7 C4.8,4.9,4.4,4.9,4,4.9C2,4.9,0.5,6.4,0.5,8.3c0,0.9,0.4,1.8,1,2.6c-0.3,1-0.5,2-0.5,3c0,4.1,2.1,7.8,5.7,9.9l0.5,0.3l-0.2-1 c-0.2-0.7-0.3-1.5-0.4-2.1v-0.1l-0.1-0.1c-2-1.7-3.1-4.3-3.1-6.9c0-0.5,0.1-1.1,0.2-1.6C3.6,12.1,3.7,11.9,3.7,11.8z'></path></g></svg></button><button id='btnToggleAllCorridors' class='toggle-orbit' title='Toggle all corridors' onclick='toggleAllCorridors();'><svg viewBox='0 0 32 32' class='pictos' style='width: 1.9rem; height: 1.9rem;'><g><path d='M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z'></path><path d='M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z'></path><path d='M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z'></path><path d='M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z'></path></g></svg></button></th></tr> </thead>";
           tableData += "<tbody id='tablebody'>"; 
           
           for (var i = 0; i < resultFeatures.length; i++) {
+            if((resultFeatures[i].get('satellite')=='SPOT6'))
+            {
+              $satelliteNameTD="<td><span class='satellite-name' style='color: rgb(243, 110, 44); background-color: rgba(243, 110, 44, 0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>";
+            }
+            if((resultFeatures[i].get('satellite')=='Pleiades-1A') || (resultFeatures[i].get('satellite')=='Pleiades-1B'))
+            {
+              $satelliteNameTD="<td><span class='satellite-name' style='color: rgb(220, 12, 203); background-color: rgba(220, 12, 203, 0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>";
+            }
+            if((resultFeatures[i].get('satellite')=='PNEO3') || (resultFeatures[i].get('satellite')=='PNEO4'))
+            {
+              $satelliteNameTD="<td><span class='satellite-name' style='color: rgb(106, 49, 220); background-color: rgb(106, 49, 220,0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>";
+            }
           tableData += "<tr class='orbitoRowData' onmousemove='showOrbitPath(this)' onmouseleave='hideOrbitPath(this)'>" +
-            "<td><span class='satellite-name' style='color: rgb(243, 110, 44); background-color: rgba(243, 110, 44, 0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>" +
+          $satelliteNameTD +
             "<td>"+ resultFeatures[i].get("orbitNumber").bold() +"</td>" +
             "<td><strong>"+resultFeatures[i].get("date")+"</strong></td>" +            
             "<td><button id='"+resultFeatures[i].get("satellite")+'_'+resultFeatures[i].get("orbitNumber")+"_orbitoVisibility' class='toggle-orbit toggleOrbit' title='Toggle orbit' onclick='toggleOrbito(this.id);'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><path d='M16.5,1c-3.7,0-7.1,1.4-9.8,3.6C6.2,4.3,5.5,4.1,4.9,4.1c-2.4,0-4.4,2-4.4,4.4C0.5,9.8,1,11,2,11.8 c-0.4,1.4-0.6,2.7-0.6,4.2c0,8.3,6.7,15,15,15s15.1-6.7,15.1-15S24.8,1,16.5,1z M16.5,28.5C9.6,28.5,4,22.9,4,16 c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,7.8,9,7,8.6,6.3c2.1-1.7,4.8-2.7,7.8-2.7 c6.8,0,12.5,5.6,12.5,12.5C28.9,22.8,23.3,28.5,16.5,28.5z' class='cz-color-3684147'></path></svg></button><button id='"+resultFeatures[i].get("satellite")+'_'+resultFeatures[i].get("orbitNumber")+"_corridorVisibility' class='toggle-corridor' title='Toggle corridor' onclick='toggleCorridor(this.id);'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><g class='cz-color-3684147'><path d='M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z' class='cz-color-3684147'></path><path d='M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z' class='cz-color-3684147'></path><path d='M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z' class='cz-color-3684147'></path><path d='M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z' class='cz-color-3684147'></path></g></svg></button></td>"
