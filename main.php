@@ -193,13 +193,13 @@ if (!isset($_SESSION['Username_OMS'])) {
 
                                         <option>PRSS</option>
                                         <option>Taijing</option>
-                                        <option>SV-1</option>
+                                        <option>SuperView</option>
 
-                                        <option>SV-2</option>
+                                        <!-- <option>SV-2</option>
                                         <option>SV-3</option>
                                         <option>SV-4</option>
 
-                                        <option>SV-5</option>
+                                        <option>SV-5</option> -->
                                     </select>
                                 </div>
                             </div>
@@ -208,11 +208,11 @@ if (!isset($_SESSION['Username_OMS'])) {
                                 <div class="max-roll-angle orbito-element">
                                     <label class="form-label">Max roll angle (°)</label>
                                     <span class="react-numeric-input" style="position: relative; display: inline-block;">
-                                        <input id="rollAngle" type="text" min="1" max="45" value="30" min=0 max=45 style="font-size:16px;padding-right: 3ex; box-sizing: border-box; border: 1px solid rgb(204, 204, 204); border-radius: 5px; padding-left: 4px; display: block; appearance: none; line-height: normal;width:60px;height:40px" pattern=".*">
-                                        <b onclick="if(document.querySelector('#rollAngle').value < 45) {document.querySelector('#rollAngle').value++}" style="cursor:pointer;position: absolute; right: 2px; width: 2.26ex; border-color: rgba(0, 0, 0, 0.1); border-style: solid; text-align: center; cursor: default; transition: all 0.1s ease 0s; background: rgba(0, 0, 0, 0.1); box-shadow: rgba(0, 0, 0, 0.1) -1px -1px 3px inset, rgba(255, 255, 255, 0.7) 1px 1px 3px inset; top: 2px; bottom: 50%; border-radius: 2px 2px 0px 0px; border-width: 1px 1px 0px;">
+                                        <input id="rollAngle" type="text" readonly="readonly" min="5" max="45" step="5" value="5" style="font-size:16px;padding-right: 3ex; box-sizing: border-box; border: 1px solid rgb(204, 204, 204); border-radius: 5px; padding-left: 4px; display: block; appearance: none; line-height: normal;width:60px;height:40px" pattern=".*">
+                                        <b onclick="if(document.querySelector('#rollAngle').value < 45) {document.querySelector('#rollAngle').value=parseInt(document.querySelector('#rollAngle').value) + 5}" style="cursor:pointer;position: absolute; right: 2px; width: 2.26ex; border-color: rgba(0, 0, 0, 0.1); border-style: solid; text-align: center; cursor: default; transition: all 0.1s ease 0s; background: rgba(0, 0, 0, 0.1); box-shadow: rgba(0, 0, 0, 0.1) -1px -1px 3px inset, rgba(255, 255, 255, 0.7) 1px 1px 3px inset; top: 2px; bottom: 50%; border-radius: 2px 2px 0px 0px; border-width: 1px 1px 0px;">
                                             <i style="position: absolute; top: 50%; left: 50%; width: 0px; height: 0px; border-width: 0px 1ex 1ex; border-color: transparent transparent rgba(0, 0, 0, 0.7); border-style: solid; margin: -0.3ex 0px 0px -0.94ex;"></i>
                                         </b>
-                                        <b onclick="if(document.querySelector('#rollAngle').value > 0) {document.querySelector('#rollAngle').value--}" style="cursor:pointer;position: absolute; right: 2px; width: 2.26ex; border-color: rgba(0, 0, 0, 0.1); border-style: solid; text-align: center; cursor: default; transition: all 0.1s ease 0s; background: rgba(0, 0, 0, 0.1); box-shadow: rgba(0, 0, 0, 0.1) -1px -1px 3px inset, rgba(255, 255, 255, 0.7) 1px 1px 3px inset; top: 50%; bottom: 2px; border-radius: 0px 0px 2px 2px; border-width: 0px 1px 1px;">
+                                        <b onclick="if(document.querySelector('#rollAngle').value > 0) {document.querySelector('#rollAngle').value=parseInt(document.querySelector('#rollAngle').value) - 5}" style="cursor:pointer;position: absolute; right: 2px; width: 2.26ex; border-color: rgba(0, 0, 0, 0.1); border-style: solid; text-align: center; cursor: default; transition: all 0.1s ease 0s; background: rgba(0, 0, 0, 0.1); box-shadow: rgba(0, 0, 0, 0.1) -1px -1px 3px inset, rgba(255, 255, 255, 0.7) 1px 1px 3px inset; top: 50%; bottom: 2px; border-radius: 0px 0px 2px 2px; border-width: 0px 1px 1px;">
                                             <i style="position: absolute; top: 50%; left: 50%; width: 0px; height: 0px; border-width: 1ex 1ex 0px; border-color: rgba(0, 0, 0, 0.7) transparent transparent; border-style: solid; margin: -0.3ex 0px 0px -0.94ex;"></i>
                                         </b>
                                     </span>
@@ -225,7 +225,7 @@ if (!isset($_SESSION['Username_OMS'])) {
                     </form>
                 </div>
                 <div id="dataOrbito">
-                    </divv>
+
                 </div>
 
             </div>
@@ -590,16 +590,23 @@ if (!isset($_SESSION['Username_OMS'])) {
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <button type="button" id="placeFreshOrder" data-toggle="button" aria-pressed="true" autocomplete="off" class="btn btn-primary" onclick="FreshOrder();" style="padding: 4px; min-width: 40px; background: white; border: 1px solid #0d5881; color: #0d5881;">
-                                    Place Order <i style="font-size: 28px; color: #0d5881;" class="fas fa-shopping-cart"></i>
-                                </button>
-                                <button type="button" id="showPDF" data-toggle="button" aria-pressed="true" autocomplete="off" class="btn btn-primary" onclick="FreshPDF();" style="padding: 4px; min-width: 40px; background: white; border: 1px solid #0d5881; color: #0d5881;">
-                                    Generate Order <i style="color: red; font-size: 28px;" class="fas fa-file-pdf"></i>
-                                </button>
+                                <button type="button" id="displayUpcomingAttempts" data-toggle="button" aria-pressed="true" autocomplete="off" class="btn btn-primary" onclick="displayUpcomingAttempts();" style="padding: 4px; min-width: 40px; background: white; border: 1px solid #0d5881; color: #0d5881;">
+                                    Upcoming Attempts
+                                    <svg xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle" viewBox="0 0 24 24" fit="" height="24px" width="24px" preserveAspectRatio="xMidYMid meet" focusable="false">
+                                        <path d="M18.36 2.64c1.64 0 3 1.36 3 3 0 1.65-1.36 3-3 3-1.65 0-3-1.35-3-3 0-.3.05-.58.14-.84-1.07-.51-2.25-.8-3.5-.8a8 8 0 00-8 8l.04.84-1.99.21L2 12A10 10 0 0112 2c1.69 0 3.28.42 4.67 1.16.49-.33 1.07-.52 1.69-.52m0 2a1 1 0 00-1 1 1 1 0 001 1c.56 0 1-.45 1-1 0-.56-.44-1-1-1M5.64 15.36c1.65 0 3 1.35 3 3 0 .3-.05.58-.14.84 1.07.51 2.25.8 3.5.8a8 8 0 008-8l-.04-.84 1.99-.21L22 12a10 10 0 01-10 10c-1.69 0-3.28-.42-4.67-1.16-.49.33-1.07.52-1.69.52-1.64 0-3-1.36-3-3 0-1.65 1.36-3 3-3m0 2c-.56 0-1 .45-1 1 0 .56.44 1 1 1a1 1 0 001-1 1 1 0 00-1-1M12 8a4 4 0 014 4 4 4 0 01-4 4 4 4 0 01-4-4 4 4 0 014-4z"></path>
+                                    </svg>
+                                    <button type="button" id="placeFreshOrder" data-toggle="button" aria-pressed="true" autocomplete="off" class="btn btn-primary" onclick="FreshOrder();" style="padding: 4px; min-width: 40px; background: white; border: 1px solid #0d5881; color: #0d5881;">
+                                        Place Order <i style="font-size: 28px; color: #0d5881;" class="fas fa-shopping-cart"></i>
+                                    </button>
+                                    <button type="button" id="showPDF" data-toggle="button" aria-pressed="true" autocomplete="off" class="btn btn-primary" onclick="FreshPDF();" style="padding: 4px; min-width: 40px; background: white; border: 1px solid #0d5881; color: #0d5881;">
+                                        Generate Order <i style="color: red; font-size: 28px;" class="fas fa-file-pdf"></i>
+                                    </button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div id="dataOrbitoUpcoming">
             </div>
             <div id="dataOnDemand" style="display:none">
                 <table class="table table-striped table-bordered tablesorter" style="margin-top: 7%;">
