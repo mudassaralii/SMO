@@ -66,7 +66,8 @@ if (!isset($_SESSION['Username_OMS'])) {
     <script type="text/javascript" src="js/libs/toastr.min.js"></script>
     <script type="text/javascript" src="js/libs/overhang.min.js"></script>
     <script type="text/javascript" src="js/libs/jquery.tickerNews.min.js"></script>
-    <!-- Latest compiled and minified JavaScript -->
+    <!-- Latest compiled and minified JavaScript 
+        -->
     <script src="js/libs/bootstrap-select.min.js"></script>
 
     <!-- <script src="js/libs/turf.min.js"></script> -->
@@ -516,9 +517,30 @@ if (!isset($_SESSION['Username_OMS'])) {
                             </td>
                             <td>
                                 <div style="width: 50%; height: 50%; float:left; margin-left: -15px;">
-                                    <input type="number" step="5" min="0" max="45" name="points" id="freshAngleLower" class="form-control input-sm input-slider input-slider-left ng-pristine ng-valid ng-valid-min ng-valid-max ng-touched step" value="0">
+                                    <!-- <input type="number" step="5" min="0" max="45" name="points" id="freshAngleLower" class="form-control input-sm input-slider input-slider-left ng-pristine ng-valid ng-valid-min ng-valid-max ng-touched step" value="0">
                                     <span style="font-size: 20px; padding-left: 10px;">-</span>
-                                    <input type="number" step="5" min="0" max="45" name="points" id="freshAngleUpper" class="form-control input-sm input-slider input-slider-left ng-pristine ng-valid ng-valid-min ng-valid-max ng-touched step" value="25">
+                                    <input type="number" step="5" min="0" max="45" name="points" id="freshAngleUpper" class="form-control input-sm input-slider input-slider-left ng-pristine ng-valid ng-valid-min ng-valid-max ng-touched step" value="25"> -->
+
+                                    <span class="numeric-input" style="position: relative; display: inline-block;">
+                                        <input id="freshAngleLower" class="form-control input-sm" type="text" readonly="readonly" min="0" max="45" step="5" value="0" style="font-size:16px;padding-right: 3ex; box-sizing: border-box; border: 1px solid rgb(204, 204, 204); border-radius: 5px; padding-left: 4px; display: block; appearance: none; line-height: normal;width:60px;height:40px" pattern=".*">
+                                        <b onclick="if(document.querySelector('#freshAngleLower').value < 45) {document.querySelector('#freshAngleLower').value=parseInt(document.querySelector('#freshAngleLower').value) + 5}" style="cursor:pointer;position: absolute; right: 2px; width: 2.26ex; border-color: rgba(0, 0, 0, 0.1); border-style: solid; text-align: center; cursor: default; transition: all 0.1s ease 0s; background: rgba(0, 0, 0, 0.1); box-shadow: rgba(0, 0, 0, 0.1) -1px -1px 3px inset, rgba(255, 255, 255, 0.7) 1px 1px 3px inset; top: 2px; bottom: 50%; border-radius: 2px 2px 0px 0px; border-width: 1px 1px 0px;">
+                                            <i style="position: absolute; top: 50%; left: 50%; width: 0px; height: 0px; border-width: 0px 1ex 1ex; border-color: transparent transparent rgba(0, 0, 0, 0.7); border-style: solid; margin: -0.3ex 0px 0px -0.94ex;"></i>
+                                        </b>
+                                        <b onclick="if(document.querySelector('#freshAngleLower').value > 0) {document.querySelector('#freshAngleLower').value=parseInt(document.querySelector('#freshAngleLower').value) - 5}" style="cursor:pointer;position: absolute; right: 2px; width: 2.26ex; border-color: rgba(0, 0, 0, 0.1); border-style: solid; text-align: center; cursor: default; transition: all 0.1s ease 0s; background: rgba(0, 0, 0, 0.1); box-shadow: rgba(0, 0, 0, 0.1) -1px -1px 3px inset, rgba(255, 255, 255, 0.7) 1px 1px 3px inset; top: 50%; bottom: 2px; border-radius: 0px 0px 2px 2px; border-width: 0px 1px 1px;">
+                                            <i style="position: absolute; top: 50%; left: 50%; width: 0px; height: 0px; border-width: 1ex 1ex 0px; border-color: rgba(0, 0, 0, 0.7) transparent transparent; border-style: solid; margin: -0.3ex 0px 0px -0.94ex;"></i>
+                                        </b>
+                                    </span>
+                                    <span style="font-size: 20px; padding-left: 10px;">-</span>
+                                    <span class="numeric-input" style="position: relative; display: inline-block;">
+                                        <!-- upper -->
+                                        <input id="freshAngleUpper" class="form-control input-sm" type="text" readonly="readonly" min="0" max="45" step="5" value="25" style="font-size:16px;padding-right: 3ex; box-sizing: border-box; border: 1px solid rgb(204, 204, 204); border-radius: 5px; padding-left: 4px; display: block; appearance: none; line-height: normal;width:60px;height:40px" pattern=".*">
+                                        <b onclick="if(document.querySelector('#freshAngleUpper').value < 45) {document.querySelector('#freshAngleUpper').value=parseInt(document.querySelector('#freshAngleUpper').value) + 5}" style="cursor:pointer;position: absolute; right: 2px; width: 2.26ex; border-color: rgba(0, 0, 0, 0.1); border-style: solid; text-align: center; cursor: default; transition: all 0.1s ease 0s; background: rgba(0, 0, 0, 0.1); box-shadow: rgba(0, 0, 0, 0.1) -1px -1px 3px inset, rgba(255, 255, 255, 0.7) 1px 1px 3px inset; top: 2px; bottom: 50%; border-radius: 2px 2px 0px 0px; border-width: 1px 1px 0px;">
+                                            <i style="position: absolute; top: 50%; left: 50%; width: 0px; height: 0px; border-width: 0px 1ex 1ex; border-color: transparent transparent rgba(0, 0, 0, 0.7); border-style: solid; margin: -0.3ex 0px 0px -0.94ex;"></i>
+                                        </b>
+                                        <b onclick="if(document.querySelector('#freshAngleUpper').value > 0) {document.querySelector('#freshAngleUpper').value=parseInt(document.querySelector('#freshAngleUpper').value) - 5}" style="cursor:pointer;position: absolute; right: 2px; width: 2.26ex; border-color: rgba(0, 0, 0, 0.1); border-style: solid; text-align: center; cursor: default; transition: all 0.1s ease 0s; background: rgba(0, 0, 0, 0.1); box-shadow: rgba(0, 0, 0, 0.1) -1px -1px 3px inset, rgba(255, 255, 255, 0.7) 1px 1px 3px inset; top: 50%; bottom: 2px; border-radius: 0px 0px 2px 2px; border-width: 0px 1px 1px;">
+                                            <i style="position: absolute; top: 50%; left: 50%; width: 0px; height: 0px; border-width: 1ex 1ex 0px; border-color: rgba(0, 0, 0, 0.7) transparent transparent; border-style: solid; margin: -0.3ex 0px 0px -0.94ex;"></i>
+                                        </b>
+                                    </span>
                                 </div>
                                 <div style="width: 50%; height: 50%; float:left;">
                                     <div class="price-slider" id="fresh-angle-slider">

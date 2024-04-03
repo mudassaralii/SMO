@@ -45,7 +45,7 @@ html, body {
   transition: all 0.25s;
   border-radius: 10px;
   z-index: 5000;
-  overflow: hidden;
+  /* overflow: hidden; */
   min-width: 37%;
 }
 
@@ -2027,6 +2027,32 @@ tr.orbitoRowData:hover{
 #dataOrbito td{
   vertical-align: middle;
 }
+
+#dataOrbitoUpcoming tbody tr:nth-of-type(2n+1) {
+  background-color: rgba(0,0,0,0);
+}
+
+#dataOrbitoUpcoming td{
+  vertical-align: middle;
+  font-size: 15px;
+}
+
+#dataOrbitoUpcoming thead {
+  background-color: #0d5881 !important;
+  color: white;
+  font-size: 18px;
+  vertical-align: middle;
+}
+
+#dataOrbitoUpcoming .satellite-name{
+  width:9.5rem;
+}
+
+#dataOrbitoUpcoming {
+  padding-bottom:12rem;
+}
+
+
 
 
 
