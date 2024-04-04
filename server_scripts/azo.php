@@ -23,7 +23,7 @@ $endDate = $_GET['endDate'];
 $resultDate = null;
 $pleiades = $_GET['pleiades'];
 $pneo = $_GET['pneo'];
-// $prss = $_GET['prss'];
+$prss = $_GET['prss'];
 // $sv1 = $_GET['sv1'];
 // $sv2 = $_GET['sv2'];
 // $sv3 = $_GET['sv3'];
@@ -446,168 +446,45 @@ FROM crosstab (
 	}
 }
 
-// if ($prss == "yes") {
-// 	$c2 = "select *, ST_AsGeoJSON(geom) AS geojson, geom from prss WHERE ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , geom) and (" . $prsscriteria . ") order by cast(imageingstarttime as date) desc;";
-// 	// echo $c2;
-// 	$queryc2 = pg_query($db_pg, $c2);
-// 	while ($edgec2 = pg_fetch_assoc($queryc2)) {
-// 		if ($edgec2['cloudcoverage'] == "-1.000000000000000") {
-// 			$cloud = "0";
-// 		} else {
-// 			$cloud = $edgec2['cloudcoverage'];
-// 		}
-// 		$date = new DateTime($edgec2['imageingstarttime']);
-// 		$feature = array(
-// 			'type' => 'Feature',
-// 			'geometry' => json_decode($edgec2['geojson'], true),
-// 			'crs' => array(
-// 				'type' => 'EPSG',
-// 				'properties' => array('code' => '4326')
-// 			),
-// 			'geometry_name' => 'geom',
-// 			'properties' => array(
-// 				'gid' => $edgec2['gid'],
-// 				'data_id' => $edgec2['metadataid'],
-// 				'geom' => $edgec2['geom'],
-// 				'hidden' => 'true',
-// 				'platform_name' => $edgec2['satellitei'],
-// 				'platform_s_no' => 'N/A',
-// 				'data_strip_type' => $edgec2['sensorid'],
-// 				'date' => $date->format('M d, Y'),
-// 				// 'time' => $edgec2['time'],
-// 				'global_incidence' => 'N/A',
-// 				'sun_ele' => 'N/A',
-// 				'scene_id' => $edgec2['sceneid'],
-// 				'file_name' => 'N/A',
-// 				'band_order' => 'N/A',
-// 				'cloud_notation' => $cloud,
-// 				'cloud_reli_ind' => 'N/A',
-// 				'thumbnail' => str_replace('_THUMB.jpg', '_Browse.png', $edgec2['thumbname']),
-// 				'resolutoin' => "0.98"
-// 			),
-// 		);
-// 		array_push($geojson['features'], $feature);
-// 	}
-// }
-// if ($sv == "yes") {
-// 	// $c2 = "select *, ST_AsGeoJSON(geom) AS geojson, geom from superview WHERE ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , geom) and (" . $svcriteria . ") order by cast(starttime as date) desc;";
-// 	$c2 = "select *, ST_AsGeoJSON(geom) AS geojson, geom from superview WHERE ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , geom) order by cast(starttime as date) desc;";
-// 	// echo $c2;
-// 	$queryc2 = pg_query($db_pg, $c2);
-// 	while ($edgec2 = pg_fetch_assoc($queryc2)) {
-// 		if ($edgec2['cloudpercent'] == "-1.000000000000000") {
-// 			$cloud = "0";
-// 		} else {
-// 			$cloud = $edgec2['cloudpercent'];
-// 		}
-// 		$cloud = "0";
-// 		$date = new DateTime($edgec2['starttime']);
-// 		$feature = array(
-// 			'type' => 'Feature',
-// 			'geometry' => json_decode($edgec2['geojson'], true),
-// 			'crs' => array(
-// 				'type' => 'EPSG',
-// 				'properties' => array('code' => '4326')
-// 			),
-// 			'geometry_name' => 'geom',
-// 			'properties' => array(
-// 				'gid' => $edgec2['gid'],
-// 				'data_id' => $edgec2['name'],
-// 				'geom' => $edgec2['geom'],
-// 				'hidden' => 'true',
-// 				'platform_name' => $edgec2['satelliteid'],
-// 				'platform_s_no' => 'N/A',
-// 				// 'data_strip_type' => $edgec2['sensorid'],
-// 				'constellation' => $edgec2['constellation'],
-// 				'date' => $date->format('M d, Y'),
-// 				// 'time' => $edgec2['time'],
-// 				'global_incidence' => 'incidenceangle',
-// 				// 'sun_ele' => 'N/A',
-// 				'solarazimuth' => 'solarazimuth',
-// 				'scene_id' => $edgec2['sceneid'],
-// 				'file_name' => 'N/A',
-// 				'band_order' => 'N/A',
-// 				'cloud_notation' => $cloud,
-// 				'cloud_reli_ind' => 'N/A',
-// 				'bands' => 'bands',
-// 				// 'thumbnail' => str_replace('_THUMB.jpg', '_Browse.png',$edgec2['thumbfileloc']),
-// 				'thumbnail' => $edgec2['thumbfile'],
-// 				'resolutoin' => "0.5"
-// 			),
-// 		);
-// 		array_push($geojson['features'], $feature);
-// 	}
-// }
-// if ($pneo == "yes") {
-// 	//$c5 = "select *, ST_AsGeoJSON(geom) AS geojson, geom from pleiadesneo WHERE ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , geom) order by cast(productiondate as date) desc;";
-// 	$c5 = "select *, ST_AsGeoJSON(geom) AS geojson, geom from pleiadesneo WHERE ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , geom);";
-// 	// echo $c5;
-// 	$queryc5 = pg_query($db_pg, $c5);
-// 	while ($edgec5 = pg_fetch_assoc($queryc5)) {
-// 		$date = new DateTime($edgec5['productiondate']);
-// 		$feature = array(
-// 			'type' => 'Feature',
-// 			'geometry' => json_decode($edgec5['geojson'], true),
-// 			'crs' => array(
-// 				'type' => 'EPSG',
-// 				'properties' => array('code' => '4326')
-// 			),
-// 			'geometry_name' => 'geom',
-// 			'properties' => array(
-// 				'gid' => $edgec5['gid'],
-// 				'data_id' => $edgec5['dataset_name'],
-// 				// 'data_id' => 'PHR_'.$edgec5['gid'],
-// 				'dataset_name' => $edgec5['dataset_name'],
-// 				'geom' => $edgec5['geom'],
-// 				'hidden' => 'true',
-// 				'platform_name' => 'Pleiades Neo',
-// 				// 'platform_s_no' => 'PHR',
-// 				// 'data_strip_type' => $edgec5['data_strip_type'],
-// 				'date' => $date->format('M d, Y'),
-// 				'time' => $edgec5['imaging_time'],
-// 				'global_incidence' => $edgec5['incidenceangle'],
-// 				'scene_id' => $edgec5['sourceid'],
-// 				//'file_name' => $edgec5['file_name'],
-// 				//'band_order' => $edgec5['band_order'],
-// 				//'cloud_notation' => $edgec5['cloud_notation'],
-// 				//'cloud_reli_ind' => $edgec5['cloud_reli_ind'],
-// 				'thumbnail' => $edgec5['datasetqlpath'],
-// 				'resolutoin' => "0.3"
-// 			)
-// 		);
-// 		array_push($geojson['features'], $feature);
-// 	}
-// }
-// if($sar == "yes") {
-// $c6 = "select *, ST_AsGeoJSON(geom) AS geojson, geom from sar WHERE ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , geom) order by cast(acq_date as date) desc;";
-// $queryc6 = pg_query($db_pg,$c6);
-// while($edgec6=pg_fetch_assoc($queryc6)) {
-// $date = new DateTime($edgec6['acq_date']);
-// $feature = array
-// (
-// 'type' => 'Feature',
-// 'geometry' => json_decode($edgec6['geojson'], true),
-// 'crs' => array(
-// 'type' => 'EPSG',
-// 'properties' => array('code' => '4326')
-// ),
-// 'geometry_name' => 'geom',
-// 'properties' => array
-// (
-// 'gid' => $edgec6['gid'],
-// 'data_id' => 'SAR-'.$edgec6['id'],
-// 'target_name' => $edgec6['trgt_name'],
-// 'geom' => $edgec6['geom'],
-// 'hidden' => 'true',
-// 'platform_name' => 'SAR',
-// 'date' => $date->format('M d, Y'),
-// 'resolutoin' => 'N/A',
-// 'scene_id' => 'SAR-'.$edgec6['id']
-// )
-// );
-// array_push($geojson['features'], $feature);
-// }
-// }
+if ($prss == "yes") {
+
+	// $startDateprss = explode("-", $startDate)[2] + "-" + explode("-", $startDate)[1] + explode("-", $startDate)[0];
+	// $endDateprss = explode("-", $endDate)[2] + "-" + explode("-", $endDate)[1] + explode("-", $endDate)[0];
+
+	$startDateprss = '04-04-2024';
+	$endDateprss = '04-04-2024';
+
+	$c1prss = 'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.tbl_prss WHERE name between \'' . $startDateprss . '\' AND \'' . $endDateprss . '\'';
+
+	$queryc1prss = pg_query($db_pg, $c1prss); //or die('Query failed: ' . pg_last_error());
+
+	while ($edgec2prss = pg_fetch_assoc($queryc1prss)) {
+		// if (($edgec1['date' . $counter] >= $startDate) && ($edgec1['date' . $counter] <= $endDate)) {
+		$feature = array(
+			'type' => 'Feature',
+			'geometry' => json_decode($edgec2prss['geojson'], true),
+			'buffer' => json_decode($edgec2prss['buffer'], true),
+			'crs' => array(
+				'type' => 'EPSG',
+				'properties' => array('code' => '4326')
+			),
+			'geometry_name' => 'geom',
+			'properties' => array(
+				'gid' => $edgec2prss['gid'],
+				'geom' => $edgec2prss['geom'],
+				'buffer' => $edgec2prss['buffer'],
+				//'orbitNumber' => $edgec2prss['name'],
+				'satellite' => 'PRSS',
+				'date' => $edgec2prss['name'], //$edgec1['date' . $counter], // $resultDate,  //
+				'hidden' => 'true',
+			)
+		);
+		array_push($geojson['features'], $feature);
+
+		//}
+	}
+}
+
 pg_close($db_pg);
 header('Content-type: application/json', true);
 echo json_encode($geojson);
