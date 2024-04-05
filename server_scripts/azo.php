@@ -448,11 +448,13 @@ FROM crosstab (
 
 if ($prss == "yes") {
 
-	// $startDateprss = explode("-", $startDate)[2] + "-" + explode("-", $startDate)[1] + explode("-", $startDate)[0];
-	// $endDateprss = explode("-", $endDate)[2] + "-" + explode("-", $endDate)[1] + explode("-", $endDate)[0];
 
-	$startDateprss = '04-04-2024';
-	$endDateprss = '04-04-2024';
+	$startDateprss = date("d-m-Y", strtotime($startDate));
+	$endDateprss = date("d-m-Y", strtotime($endDate));
+	// echo $startDateprss;
+	// $startDateprss = '04-04-2024';
+	// $endDateprss = '04-04-2024';
+
 
 	$c1prss = 'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.tbl_prss WHERE name between \'' . $startDateprss . '\' AND \'' . $endDateprss . '\'';
 
@@ -473,7 +475,7 @@ if ($prss == "yes") {
 				'gid' => $edgec2prss['gid'],
 				'geom' => $edgec2prss['geom'],
 				'buffer' => $edgec2prss['buffer'],
-				//'orbitNumber' => $edgec2prss['name'],
+				'orbitNumber' => $edgec2prss['gid'], //as orbit number is not mentioned in PRSS orbit file
 				'satellite' => 'PRSS',
 				'date' => $edgec2prss['name'], //$edgec1['date' . $counter], // $resultDate,  //
 				'hidden' => 'true',

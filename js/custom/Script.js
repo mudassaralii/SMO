@@ -597,6 +597,7 @@ var resultVector = new ol.layer.Vector({
 var toggleOrbitSelected=[];
 var toggleOrbitCorridorSelected=[];
 var ftr=null;
+var rollAngle=null;
 
 //SPOT6, Pleiades styling
 var resultVectorSPOT6orbito = new ol.layer.Vector({
@@ -1746,8 +1747,8 @@ function showOrbitPath(row){
   var totalFeatures = resultVectorSPOT6orbito.getSource().getFeatures();
   var highlightedFeatureSPOT6;
 
-  // console.log(totalFeatures);
-
+  //console.log(totalFeatures);
+  //console.log(orbitoDataID);
   for (var i = 0; i < totalFeatures.length; i++) {
     if (totalFeatures[i].get('satellite')+"_"+totalFeatures[i].get('orbitNumber')+"_orbitoVisibility" == orbitoDataID) {
       highlightedFeature = totalFeatures[i];      
@@ -1760,12 +1761,8 @@ function showOrbitPath(row){
   
   //for corridor dislay on mouse enter
   var satelliteName=row.childNodes[0].innerText;
-  var rollAngle=null;
-  if($("#freshAngleUpper").val()==null)
-      rollAngle=$("#rollAngle").val();
-  else
-      rollAngle=$("#freshAngleUpper").val();
-  console.log(rollAngle);
+  
+  //console.log(rollAngle);
   var bufferDistance=null;
   if(satelliteName==="SPOT6"){
     if(rollAngle=="5")
@@ -2860,11 +2857,11 @@ function FreshOrder() {
 }
 
 //upcomiong attempts section
-function displayUpcomingAttempts(){
+function displayUpcomingAttempts(freshAngleUpperValue){
   var satellite=$('#satSelect').val();
   var startDate=$('#freshStartDate').val().split('/')[2]+'-'+$('#freshStartDate').val().split('/')[1]+'-'+$('#freshStartDate').val().split('/')[0]; //changing date format from 02/04/2024' to 2024-04-02'
   var endDate=$('#freshEndDate').val().split('/')[2]+'-'+$('#freshEndDate').val().split('/')[1]+'-'+$('#freshEndDate').val().split('/')[0]; //changing date format from 02/04/2024' to 2024-04-02'
-  var rollAngle=$('#freshAngleUpper').val();
+  rollAngle=freshAngleUpperValue;
 
   // console.log(satellite);
   // console.log(startDate);
@@ -5101,12 +5098,13 @@ function getCurrentQuota() {
 }
 
 // orbitography section
-function getOrbitoData(){
+function getOrbitoData(rollAngleValue){
   var orbitoStartDate=$("#orbitoStartDate").val();
   var orbitoEndDate=$("#orbitoEndDate").val();
 
   var satellites=$("#dropDownOrbitoSatellites").val();
-  var rollAngle=$("#rollAngle").val();
+  rollAngle=rollAngleValue;
+  //console.log(rollAngle);
 
   var spot6='';
   var pleiades='';
@@ -5208,7 +5206,7 @@ resultVectorSPOT6orbito.setSource(testsourceOrbito);
             }
           tableData += "<tr class='orbitoRowData' onmousemove='showOrbitPath(this)' onmouseleave='hideOrbitPath(this)'>" +
           $satelliteNameTD +
-            "<td style='color:#000 !important'>"+ resultFeatures[i].get("satellite").bold() +"</td>" +
+            "<td style='color:#000 !important'>"+ resultFeatures[i].get("orbitNumber").bold() +"</td>" +
             "<td style='color:#000 !important'><strong>"+resultFeatures[i].get("date")+"</strong></td>" +            
             "<td><button id='"+resultFeatures[i].get("satellite")+'_'+resultFeatures[i].get("orbitNumber")+"_orbitoVisibility' class='toggle-orbit toggleOrbit' title='Toggle orbit' onclick='toggleOrbito(this.id);'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><path d='M16.5,1c-3.7,0-7.1,1.4-9.8,3.6C6.2,4.3,5.5,4.1,4.9,4.1c-2.4,0-4.4,2-4.4,4.4C0.5,9.8,1,11,2,11.8 c-0.4,1.4-0.6,2.7-0.6,4.2c0,8.3,6.7,15,15,15s15.1-6.7,15.1-15S24.8,1,16.5,1z M16.5,28.5C9.6,28.5,4,22.9,4,16 c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,7.8,9,7,8.6,6.3c2.1-1.7,4.8-2.7,7.8-2.7 c6.8,0,12.5,5.6,12.5,12.5C28.9,22.8,23.3,28.5,16.5,28.5z' class='cz-color-3684147'></path></svg></button><button id='"+resultFeatures[i].get("satellite")+'_'+resultFeatures[i].get("orbitNumber")+"_corridorVisibility' class='toggle-corridor' title='Toggle corridor' onclick='toggleCorridor(this.id);'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><g class='cz-color-3684147'><path d='M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z' class='cz-color-3684147'></path><path d='M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z' class='cz-color-3684147'></path><path d='M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z' class='cz-color-3684147'></path><path d='M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z' class='cz-color-3684147'></path></g></svg></button></td>"
             "</tr>";
