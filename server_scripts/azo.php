@@ -491,9 +491,10 @@ if ($sv == "yes") {
 	$endDateSV = date("d-m-Y", strtotime($endDate));
 
 	$csv1_03 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.tbl_sv1_03 WHERE name between \'' . $startDateSV . '\' AND \'' . $endDateSV . '\'';
+	$csv2_gfdm =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.tbl_sv2_gfdm WHERE name between \'' . $startDateSV . '\' AND \'' . $endDateSV . '\'';
 	//echo $edgec3A['date1'];
 	$querycsv1_03 = pg_query($db_pg, $csv1_03) or die('Query failed: ' . pg_last_error());
-
+	$querycsv2_gfdm = pg_query($db_pg, $csv2_gfdm) or die('Query failed: ' . pg_last_error());
 
 	while ($edgecsv1_03 = pg_fetch_assoc($querycsv1_03)) {
 		// if (($edgec1['date' . $counter] >= $startDate) && ($edgec1['date' . $counter] <= $endDate)) {
@@ -512,7 +513,7 @@ if ($sv == "yes") {
 				'buffer' => $edgecsv1_03['buffer'],
 				'orbitNumber' => $edgecsv1_03['gid'],
 				'satellite' => 'SuperView', //SV1_03
-				'date' => $edgecsv1_03['name'], //$edgec1['date' . $counter], // $resultDate,  //
+				'date' => $edgecsv1_03['name'],
 				'hidden' => 'true',
 			)
 		);
@@ -520,40 +521,28 @@ if ($sv == "yes") {
 	}
 
 
-	// //for SV2_gfdm
-	// while ($edgec4A = pg_fetch_assoc($queryc4A)) {
-
-
-	// 	$c4A =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public."d' . $edgec4A['rowid'] . '_pneo"';
-	// 	// echo $c3A;
-	// 	$queryc44A = pg_query($db_pg, $c4A) or die('Query failed: ' . pg_last_error());
-
-
-	// 	while ($edgec4B = pg_fetch_assoc($queryc44A)) {
-	// 		// if (($edgec1['date' . $counter] >= $startDate) && ($edgec1['date' . $counter] <= $endDate)) {
-	// 		$feature = array(
-	// 			'type' => 'Feature',
-	// 			'geometry' => json_decode($edgec4B['geojson'], true),
-	// 			'buffer' => json_decode($edgec4B['buffer'], true),
-	// 			'crs' => array(
-	// 				'type' => 'EPSG',
-	// 				'properties' => array('code' => '4326')
-	// 			),
-	// 			'geometry_name' => 'geom',
-	// 			'properties' => array(
-	// 				'gid' => $edgec4B['gid'],
-	// 				'geom' => $edgec4B['geom'],
-	// 				'buffer' => $edgec4B['buffer'],
-	// 				'orbitNumber' => $edgec4B['name'],
-	// 				'satellite' => 'PNEO4',
-	// 				'date' => $edgec4A['date1'], //$edgec1['date' . $counter], // $resultDate,  //
-	// 				'hidden' => 'true',
-	// 			)
-	// 		);
-	// 		array_push($geojson['features'], $feature);
-
-	// 		//}
-	// 	}
+	// // //for SV2_gfdm
+	// while ($edgecsv2_gfdm = pg_fetch_assoc($querycsv2_gfdm)) {
+	// 	$feature = array(
+	// 		'type' => 'Feature',
+	// 		'geometry' => json_decode($edgecsv2_gfdm['geojson'], true),
+	// 		'buffer' => json_decode($edgecsv2_gfdm['buffer'], true),
+	// 		'crs' => array(
+	// 			'type' => 'EPSG',
+	// 			'properties' => array('code' => '4326')
+	// 		),
+	// 		'geometry_name' => 'geom',
+	// 		'properties' => array(
+	// 			'gid' => $edgecsv2_gfdm['gid'],
+	// 			'geom' => $edgecsv2_gfdm['geom'],
+	// 			'buffer' => $edgecsv2_gfdm['buffer'],
+	// 			'orbitNumber' => $edgecsv2_gfdm['gid'],
+	// 			'satellite' => 'SuperView', //SV2_gfdm
+	// 			'date' => $edgecsv2_gfdm['name'],
+	// 			'hidden' => 'true',
+	// 		)
+	// 	);
+	// 	array_push($geojson['features'], $feature);
 	// }
 }
 
