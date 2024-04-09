@@ -511,7 +511,7 @@ if ($sv == "yes") {
 				'gid' => $edgecsv1_03['gid'],
 				'geom' => $edgecsv1_03['geom'],
 				'buffer' => $edgecsv1_03['buffer'],
-				'orbitNumber' => $edgecsv1_03['gid'],
+				'orbitNumber' => $edgecsv1_03['gid'] . "_sv1",
 				'satellite' => 'SuperView', //SV1_03
 				'date' => $edgecsv1_03['name'],
 				'hidden' => 'true',
@@ -521,29 +521,66 @@ if ($sv == "yes") {
 	}
 
 
-	// // //for SV2_gfdm
-	// while ($edgecsv2_gfdm = pg_fetch_assoc($querycsv2_gfdm)) {
-	// 	$feature = array(
-	// 		'type' => 'Feature',
-	// 		'geometry' => json_decode($edgecsv2_gfdm['geojson'], true),
-	// 		'buffer' => json_decode($edgecsv2_gfdm['buffer'], true),
-	// 		'crs' => array(
-	// 			'type' => 'EPSG',
-	// 			'properties' => array('code' => '4326')
-	// 		),
-	// 		'geometry_name' => 'geom',
-	// 		'properties' => array(
-	// 			'gid' => $edgecsv2_gfdm['gid'],
-	// 			'geom' => $edgecsv2_gfdm['geom'],
-	// 			'buffer' => $edgecsv2_gfdm['buffer'],
-	// 			'orbitNumber' => $edgecsv2_gfdm['gid'],
-	// 			'satellite' => 'SuperView', //SV2_gfdm
-	// 			'date' => $edgecsv2_gfdm['name'],
-	// 			'hidden' => 'true',
-	// 		)
-	// 	);
-	// 	array_push($geojson['features'], $feature);
-	// }
+	// //for SV2_gfdm
+	while ($edgecsv2_gfdm = pg_fetch_assoc($querycsv2_gfdm)) {
+		$feature = array(
+			'type' => 'Feature',
+			'geometry' => json_decode($edgecsv2_gfdm['geojson'], true),
+			'buffer' => json_decode($edgecsv2_gfdm['buffer'], true),
+			'crs' => array(
+				'type' => 'EPSG',
+				'properties' => array('code' => '4326')
+			),
+			'geometry_name' => 'geom',
+			'properties' => array(
+				'gid' => $edgecsv2_gfdm['gid'],
+				'geom' => $edgecsv2_gfdm['geom'],
+				'buffer' => $edgecsv2_gfdm['buffer'],
+				'orbitNumber' => $edgecsv2_gfdm['gid'] . "_sv2",
+				'satellite' => 'SuperView', //SV2_gfdm
+				'date' => $edgecsv2_gfdm['name'],
+				'hidden' => 'true',
+			)
+		);
+		array_push($geojson['features'], $feature);
+	}
+}
+
+//taijing
+if ($taijing == "yes") {
+
+	$startDateTaijing = date("d-m-Y", strtotime($startDate));
+	$endDateTaijing = date("d-m-Y", strtotime($endDate));
+
+	$cTaijing_4 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.tbl_taijing WHERE name between \'' . $startDateTaijing . '\' AND \'' . $endDateTaijing . '\'';
+
+	//echo $edgec3A['date1'];
+	$querycTaijing_4 = pg_query($db_pg, $cTaijing_4) or die('Query failed: ' . pg_last_error());
+
+
+	while ($edgecTaijing_4 = pg_fetch_assoc($querycTaijing_4)) {
+		// if (($edgec1['date' . $counter] >= $startDate) && ($edgec1['date' . $counter] <= $endDate)) {
+		$feature = array(
+			'type' => 'Feature',
+			'geometry' => json_decode($edgecTaijing_4['geojson'], true),
+			'buffer' => json_decode($edgecTaijing_4['buffer'], true),
+			'crs' => array(
+				'type' => 'EPSG',
+				'properties' => array('code' => '4326')
+			),
+			'geometry_name' => 'geom',
+			'properties' => array(
+				'gid' => $edgecTaijing_4['gid'],
+				'geom' => $edgecTaijing_4['geom'],
+				'buffer' => $edgecTaijing_4['buffer'],
+				'orbitNumber' => $edgecTaijing_4['gid'],
+				'satellite' => 'Taijing', //Taijing
+				'date' => $edgecTaijing_4['name'],
+				'hidden' => 'true',
+			)
+		);
+		array_push($geojson['features'], $feature);
+	}
 }
 
 pg_close($db_pg);

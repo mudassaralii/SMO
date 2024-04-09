@@ -607,6 +607,7 @@ var resultVectorSatelliteOrbito = new ol.layer.Vector({
     var fillColor, strokeColor,textColor,textStrokeColor;
     var orbitId = f.get('orbitNumber');
 
+    //console.log(satellite);
     // Set different colors based on the satellite property
     if (satellite == 'SPOT6') {
       fillColor = 'rgba(243, 110, 44,0.1)';
@@ -639,7 +640,7 @@ var resultVectorSatelliteOrbito = new ol.layer.Vector({
     } 
     else if (satellite == 'Taijing') {
       fillColor = 'rgb(0,0,0,0.1)';
-      strokeColor = 'rgb(0,134,49, 220)';
+      strokeColor = 'rgb(0,0,0, 220)';
       textStrokeColor='#FFFF00';//#FFFF00
       textColor='rgb(0,0,0)';
     } 
@@ -1974,9 +1975,9 @@ function toggleOrbito(val){
   }
 
   var orbitoDataID = val.toString();
-  //console.log(orbitoDataID);
+  console.log(orbitoDataID);
   var totalFeatures = resultVectorSatelliteOrbito.getSource().getFeatures();
-  var highlightedFeatureSPOT6;
+  var highlightedFeature;
 
   for (var i = 0; i < totalFeatures.length; i++) {
     if (totalFeatures[i].get('satellite')+"_"+totalFeatures[i].get('orbitNumber')+"_orbitoVisibility" == orbitoDataID) {
@@ -2913,7 +2914,7 @@ function displayUpcomingAttempts(freshAngleUpperValue){
     format: new ol.format.GeoJSON(),       
 });
 
-console.log(satellite);
+//console.log(satellite);
 resultVectorSatelliteOrbito.setSource(testsourceOrbito);
   testsourceOrbito.once('change', function(e) {
       if (testsourceOrbito.getState() === 'ready') {
@@ -2926,9 +2927,9 @@ resultVectorSatelliteOrbito.setSource(testsourceOrbito);
           var info;
           var content;
           tableData = "";
-          tableData += '<span>'+resultFeatures.length+' items</span>';
+          tableData += '<div class="orbito-results-header" style="width:90%;margin:0 auto;margin-bottom:1rem"><div class="orbito-results-header-left"><div class="orbito-nb-items" style="font-size:1.3rem">'+resultFeatures.length+' items</div></div><div class="orbito-results-header-right" style="margin-right:3rem"><div class="orbito-export"><!--<button class="export-button" name="export" type="button" value="export" title="Launch export"><svg viewBox="0 0 32 32" class="pictos " style="width: 1.9rem; height: 1.9rem;"><g><path d="M22.491 13.166h-3.84v-6.583h-5.029v6.583h-3.749l6.309 6.309z"></path><path d="M28.709 18.834v0c-1.097 0-2.011 0.914-2.011 2.011v3.749h-21.303v-3.474c0-1.097-0.914-2.011-2.011-2.011s-2.011 0.914-2.011 2.011v7.589h29.44v-7.771c0-1.189-0.914-2.103-2.103-2.103z"></path></g></svg></button>--></div><div class="orbito-all-orbits"><button id="btnToggleAllOrbits" class="toggle-orbit" title="Toggle all orbits" onclick="toggleAllOrbits();"><svg viewBox="0 0 32 32" class="pictos " style="width: 1.9rem; height: 1.9rem;"><g><path d="M19.9,6.5c-2.7,0-5.4,1-7.3,2.7C12.3,9.1,11.9,9,11.4,9c-2,0-3.6,1.6-3.6,3.6c0,0.9,0.4,1.8,1,2.6 c-0.3,1.1-0.5,2.1-0.5,3c0,6.3,5.1,11.5,11.5,11.5s11.6-5.1,11.6-11.5S26.3,6.5,19.9,6.5z M19.9,27c-5,0-9.1-4-9.1-9 c0-0.5,0.1-1.1,0.2-1.6c0-0.2,0-0.3,0.1-0.5c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c5,0,9.1,4.1,9.1,9.1C29,23.1,24.9,27,19.9,27z"></path><path d="M3.7,11.8c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c1.1,0,2.1,0.2,3,0.5h0.1h0.1c1.1-0.2,2.3-0.4,3.3-0.4h0.7l-0.7-0.4c-1.9-1.4-4.2-2.1-6.7-2.1c-2.7,0-5.4,0.9-7.3,2.7 C4.8,4.9,4.4,4.9,4,4.9C2,4.9,0.5,6.4,0.5,8.3c0,0.9,0.4,1.8,1,2.6c-0.3,1-0.5,2-0.5,3c0,4.1,2.1,7.8,5.7,9.9l0.5,0.3l-0.2-1 c-0.2-0.7-0.3-1.5-0.4-2.1v-0.1l-0.1-0.1c-2-1.7-3.1-4.3-3.1-6.9c0-0.5,0.1-1.1,0.2-1.6C3.6,12.1,3.7,11.9,3.7,11.8z"></path></g></svg></button></div><div class="orbito-all-corridors"><button id="btnToggleAllCorridors" class="toggle-orbit" title="Toggle all corridors" onclick="toggleAllCorridors();"><svg viewBox="0 0 32 32" class="pictos " style="width: 1.9rem; height: 1.9rem;"><g><path d="M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z"></path><path d="M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z"></path><path d="M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z"></path><path d="M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z"></path></g></svg></button></div></div></div>';
           tableData += '<table id="table_id" class="table table-striped table-bordered tablesorter" style="width:90%;margin:0 auto">';
-          tableData += "<thead> <tr><th style='font-weight: bold;font-size: 1.5rem'>Satellite</th><th style='font-weight: bold;font-size: 1.5rem'>Orbit</th><th style='font-weight: bold;font-size: 1.5rem'>Date</th><th><button id='btnToggleAllOrbits' class='toggle-orbit' title='Toggle all orbits' onclick='toggleAllOrbits();'><svg viewBox='0 0 32 32' class='pictos' style='width: 1.9rem; height: 1.9rem;'><g><path d='M19.9,6.5c-2.7,0-5.4,1-7.3,2.7C12.3,9.1,11.9,9,11.4,9c-2,0-3.6,1.6-3.6,3.6c0,0.9,0.4,1.8,1,2.6 c-0.3,1.1-0.5,2.1-0.5,3c0,6.3,5.1,11.5,11.5,11.5s11.6-5.1,11.6-11.5S26.3,6.5,19.9,6.5z M19.9,27c-5,0-9.1-4-9.1-9 c0-0.5,0.1-1.1,0.2-1.6c0-0.2,0-0.3,0.1-0.5c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c5,0,9.1,4.1,9.1,9.1C29,23.1,24.9,27,19.9,27z'></path><path d='M3.7,11.8c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c1.1,0,2.1,0.2,3,0.5h0.1h0.1c1.1-0.2,2.3-0.4,3.3-0.4h0.7l-0.7-0.4c-1.9-1.4-4.2-2.1-6.7-2.1c-2.7,0-5.4,0.9-7.3,2.7 C4.8,4.9,4.4,4.9,4,4.9C2,4.9,0.5,6.4,0.5,8.3c0,0.9,0.4,1.8,1,2.6c-0.3,1-0.5,2-0.5,3c0,4.1,2.1,7.8,5.7,9.9l0.5,0.3l-0.2-1 c-0.2-0.7-0.3-1.5-0.4-2.1v-0.1l-0.1-0.1c-2-1.7-3.1-4.3-3.1-6.9c0-0.5,0.1-1.1,0.2-1.6C3.6,12.1,3.7,11.9,3.7,11.8z'></path></g></svg></button><button id='btnToggleAllCorridors' class='toggle-orbit' title='Toggle all corridors' onclick='toggleAllCorridors();'><svg viewBox='0 0 32 32' class='pictos' style='width: 1.9rem; height: 1.9rem;'><g><path d='M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z'></path><path d='M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z'></path><path d='M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z'></path><path d='M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z'></path></g></svg></button></th></tr> </thead>";
+          tableData += "<thead> <tr><th style='font-weight: bold;font-size: 1.5rem'>Satellite</th><th style='font-weight: bold;font-size: 1.5rem'>Orbit</th><th style='font-weight: bold;font-size: 1.5rem'>Date</th><th></th></tr> </thead>";
           tableData += "<tbody id='tablebody'>"; 
           
           for (var i = 0; i < resultFeatures.length; i++) {
