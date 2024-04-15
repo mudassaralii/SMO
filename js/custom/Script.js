@@ -2909,8 +2909,17 @@ function displayUpcomingAttempts(freshAngleUpperValue){
   if(satellite=='SV')
     sv='yes';
   
+  //get activated polygon AOI
+  var totalFeatures = vector.getSource().getFeatures();
+  for (var i = 0; i < totalFeatures.length; i++) {
+    if (totalFeatures[i].get('count') == $("#polygons").val()) {
+      var wkt = format.writeGeometry(totalFeatures[i].getGeometry());
+      }
+  }
+  //console.log(wkt);
+
   var testsourceOrbito = new ol.source.Vector({   
-    url: "server_scripts/azo.php?&startDate="+startDate+"&endDate="+endDate+ "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv=" + sv +"&pneo=" + pneo + "&taijing="+taijing,
+    url: "server_scripts/azo.php?&geom="+wkt+"&startDate="+startDate+"&endDate="+endDate+ "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv=" + sv +"&pneo=" + pneo + "&taijing="+taijing,
     format: new ol.format.GeoJSON(),       
 });
 

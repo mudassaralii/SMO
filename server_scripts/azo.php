@@ -17,6 +17,7 @@ include('db_pg_orbito.php');
 
 $spotDays;
 // $orbitoCriteria = $_GET['orbitoCriteria'];
+$geom = $_GET['geom'];
 $spot = $_GET['spot'];
 $startDate = $_GET['startDate'];
 $endDate = $_GET['endDate'];
@@ -95,10 +96,10 @@ if ($spot == "yes") {
 		//rowid is dayNumber
 		if ((str_word_count($edgec1['rowid']) >= 0) and (str_word_count($edgec1['rowid']) < 10)) //As in DB there are no leadding zero from day 1 to 9
 			//$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public."d' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
-			$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public."d' . $edgec1['rowid'] . '_spot_lines"'; //d20_spot_lines
+			$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public."d' . $edgec1['rowid'] . '_spot_lines" WHERE ST_Intersects(ST_Transform(ST_GeomFromText("' . $geom . '",3857),4326) , geom)'; //d20_spot_lines
 		else
 			//$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public."d0' . $edgec1['dayNumber'] . '_spot_lines"'; //d20_spot_lines
-			$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public."d0' . $edgec1['rowid'] . '_spot_lines"'; //d20_spot_lines
+			$c2 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public."d0' . $edgec1['rowid'] . '_spot_lines" WHERE ST_Intersects(ST_Transform(ST_GeomFromText("' . $geom . '",3857),4326) , geom)'; //d20_spot_lines
 		//$c2 = 'select *, ST_AsGeoJSON(geom) AS geojson from public."d01_spot_lines"'; //d20_spot_lines
 		$queryc2 = pg_query($db_pg, $c2) or die('Query failed: ' . pg_last_error());
 
