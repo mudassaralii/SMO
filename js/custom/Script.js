@@ -2909,17 +2909,17 @@ function displayUpcomingAttempts(freshAngleUpperValue){
   if(satellite=='SV')
     sv='yes';
   
-  //get activated polygon AOI
-  var totalFeatures = vector.getSource().getFeatures();
-  for (var i = 0; i < totalFeatures.length; i++) {
-    if (totalFeatures[i].get('count') == $("#polygons").val()) {
-      var wkt = format.writeGeometry(totalFeatures[i].getGeometry());
-      }
-  }
-  //console.log(wkt);
+  // //get activated polygon AOI
+  // var totalFeatures = vector.getSource().getFeatures();
+  // for (var i = 0; i < totalFeatures.length; i++) {
+  //   if (totalFeatures[i].get('count') == $("#polygons").val()) {
+  //     var wkt = format.writeGeometry(totalFeatures[i].getGeometry());
+  //     }
+  // }
+  // //console.log(wkt);
 
   var testsourceOrbito = new ol.source.Vector({   
-    url: "server_scripts/azo.php?&geom="+wkt+"&startDate="+startDate+"&endDate="+endDate+ "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv=" + sv +"&pneo=" + pneo + "&taijing="+taijing,
+    url: "server_scripts/azo.php?&startDate="+startDate+"&endDate="+endDate+ "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv=" + sv +"&pneo=" + pneo + "&taijing="+taijing,
     format: new ol.format.GeoJSON(),       
 });
 
@@ -5179,7 +5179,18 @@ function getOrbitoData(rollAngleValue){
   if(satellites.includes('SuperView'))  
     sv='yes';
   
-    
+  //get activated polygon AOI
+  var totalFeatures = vector.getSource().getFeatures();
+  for (var i = 0; i < totalFeatures.length; i++) {
+    if (totalFeatures[i].get('count') == $("#polygons").val()) {
+      var wkt = format.writeGeometry(totalFeatures[i].getGeometry());
+      }
+  }
+  //console.log(wkt);
+  
+  //check search by AOI is checked or not
+  var searchByAOI=document.getElementById('chkSearchByAOI').checked
+  
   // orbitoCriteria += "(date1 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
   //                   "OR (date2 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
   //                   "OR (date3 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
@@ -5196,8 +5207,9 @@ function getOrbitoData(rollAngleValue){
   //                   "OR (date14 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " +
   //                   "OR (date15 between '" + $("#orbitoStartDate").val() + "' AND '" + $("#orbitoEndDate").val() + "') " ;
   // //console.log(orbitoCriteria);
+
   var testsourceOrbito = new ol.source.Vector({   
-    url: "server_scripts/azo.php?&startDate="+$("#orbitoStartDate").val()+"&endDate="+$("#orbitoEndDate").val()+ "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv=" + sv + "&pneo=" + pneo + "&taijing="+taijing,
+    url: "server_scripts/azo.php?geom="+wkt+"&searchByAOI="+searchByAOI+"&rollAngle="+rollAngle+"&startDate="+$("#orbitoStartDate").val()+"&endDate="+$("#orbitoEndDate").val()+ "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv=" + sv + "&pneo=" + pneo + "&taijing="+taijing,
     format: new ol.format.GeoJSON(),       
 });
 

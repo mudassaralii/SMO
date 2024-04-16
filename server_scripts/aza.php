@@ -34,7 +34,7 @@ $geojson = array(
 
 if ($spot == "yes") {
 	$c1 = "select *, ST_AsGeoJSON(geom) AS geojson, geom from spot WHERE ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , geom) and (" . $spotcriteria . ") order by cast(date as date) desc";
-	//echo $c1;
+	//cho $c1;
 	//echo 'PHP version: ' . phpversion();
 	//echo $spotcriteria;
 

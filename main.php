@@ -157,8 +157,8 @@ if (!isset($_SESSION['Username_OMS'])) {
                                     </select>
                                 </div>
                                 <div class="container">
-                                    <label class="switch" for="chkSnowCriteria" style=" float: left; margin-left: 8%;">
-                                        <input type="checkbox" id="chkSnowCriteria" unchecked />
+                                    <label class="switch" for="chkSearchByAOI" style=" float: left; margin-left: 8%;">
+                                        <input type="checkbox" id="chkSearchByAOI" unchecked />
                                         <div class="sliderchk round"></div>
                                     </label>
                                 </div>
