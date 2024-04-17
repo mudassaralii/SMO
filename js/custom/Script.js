@@ -5144,6 +5144,9 @@ function getCurrentQuota() {
 
 // orbitography section
 function getOrbitoData(rollAngleValue){
+  $("#dataOrbito").hide();
+  $("#loadingIcon").show();
+    
   var orbitoStartDate=$("#orbitoStartDate").val();
   var orbitoEndDate=$("#orbitoEndDate").val();
 
@@ -5215,11 +5218,12 @@ function getOrbitoData(rollAngleValue){
 
 
 resultVectorSatelliteOrbito.setSource(testsourceOrbito);
-  testsourceOrbito.once('change', function(e) {
+  testsourceOrbito.once('change', function(e) { 
       if (testsourceOrbito.getState() === 'ready') {
+          $("#loadingIcon").hide();
           //move(feature.getGeometry().getExtent());
-         resultFeatures = testsourceOrbito.getFeatures(); 
-         //console.log(resultFeatures);        
+          resultFeatures = testsourceOrbito.getFeatures(); 
+          //console.log(resultFeatures);        
 
         
          if (resultFeatures.length > 0) {  //console.log(resultFeatures.length);

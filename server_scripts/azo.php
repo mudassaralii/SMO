@@ -340,6 +340,25 @@ FROM crosstab (
 }
 
 if ($pneo == "yes") {
+	if ($rollAngle == "5")
+		$bufferDistance = "0.55";
+	else if ($rollAngle == "10")
+		$bufferDistance = "1.132";
+	else if ($rollAngle == "15")
+		$bufferDistance = "1.732";
+	else if ($rollAngle == "20")
+		$bufferDistance = "2.36";
+	else if ($rollAngle == "25")
+		$bufferDistance = "3.034";
+	else if ($rollAngle == "30")
+		$bufferDistance = "3.781";
+	else if ($rollAngle == "35")
+		$bufferDistance = "4.652";
+	else if ($rollAngle == "40")
+		$bufferDistance = "5.619";
+	else if ($rollAngle == "45")
+		$bufferDistance = "6.875";
+
 	//comprehensive query to get only day number and its date when it is passing
 	$c3A = "
 	SELECT *
@@ -425,9 +444,11 @@ FROM crosstab (
 	// $counter = 1;
 
 	while ($edgec3A = pg_fetch_assoc($queryc3A)) {
+		if ($searchByAOI == 'true')
+			$c3A =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.d" . $edgec3A["rowid"] . "_pneo WHERE ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . ")))";
+		else
+			$c3A =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.d" . $edgec3A["rowid"] . "_pneo";
 
-
-		$c3A =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public."d' . $edgec3A['rowid'] . '_pneo"';
 		//echo $edgec3A['date1'];
 		$queryc33A = pg_query($db_pg, $c3A) or die('Query failed: ' . pg_last_error());
 
@@ -459,10 +480,12 @@ FROM crosstab (
 
 	//for PNEO4
 	while ($edgec4A = pg_fetch_assoc($queryc4A)) {
+		if ($searchByAOI == 'true')
+			$c4A =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.d" . $edgec4A["rowid"] . "_pneo WHERE ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . ")))";
+		else
+			$c4A =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.d" . $edgec4A["rowid"] . "_pneo";
 
-
-		$c4A =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public."d' . $edgec4A['rowid'] . '_pneo"';
-		// echo $c3A;
+		// echo $c4A;
 		$queryc44A = pg_query($db_pg, $c4A) or die('Query failed: ' . pg_last_error());
 
 
@@ -496,6 +519,24 @@ FROM crosstab (
 
 if ($prss == "yes") {
 
+	if ($rollAngle == "5")
+		$bufferDistance = "1";
+	else if ($rollAngle == "10")
+		$bufferDistance = "2";
+	else if ($rollAngle == "15")
+		$bufferDistance = "3.52";
+	else if ($rollAngle == "20")
+		$bufferDistance = "4.89";
+	else if ($rollAngle == "25")
+		$bufferDistance = "6.16";
+	else if ($rollAngle == "30")
+		$bufferDistance = "7.41";
+	else if ($rollAngle == "35")
+		$bufferDistance = "8.62";
+	else if ($rollAngle == "40")
+		$bufferDistance = "9.84";
+	else if ($rollAngle == "45")
+		$bufferDistance = "11.05";
 
 	$startDateprss = date("d-m-Y", strtotime($startDate));
 	$endDateprss = date("d-m-Y", strtotime($endDate));
@@ -503,9 +544,13 @@ if ($prss == "yes") {
 	// $startDateprss = '04-04-2024';
 	// $endDateprss = '04-04-2024';
 
+	if ($searchByAOI == 'true')
+		$c1prss = "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_prss WHERE ((name between '" . $startDateprss . "' AND '" . $endDateprss . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . "))))";
+	else
+		$c1prss = "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_prss WHERE name between '" . $startDateprss . "' AND '" . $endDateprss . "'";
 
-	$c1prss = 'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.tbl_prss WHERE name between \'' . $startDateprss . '\' AND \'' . $endDateprss . '\'';
 
+	//echo $c1prss;
 	$queryc1prss = pg_query($db_pg, $c1prss); //or die('Query failed: ' . pg_last_error());
 
 	while ($edgec2prss = pg_fetch_assoc($queryc1prss)) {
@@ -537,10 +582,36 @@ if ($prss == "yes") {
 
 //SuperView
 if ($sv == "yes") {
+
+	if ($rollAngle == "5")
+		$bufferDistance = "0.55";
+	else if ($rollAngle == "10")
+		$bufferDistance = "1.132";
+	else if ($rollAngle == "15")
+		$bufferDistance = "1.732";
+	else if ($rollAngle == "20")
+		$bufferDistance = "2.36";
+	else if ($rollAngle == "25")
+		$bufferDistance = "3.034";
+	else if ($rollAngle == "30")
+		$bufferDistance = "3.781";
+	else if ($rollAngle == "35")
+		$bufferDistance = "4.652";
+	else if ($rollAngle == "40")
+		$bufferDistance = "5.619";
+	else if ($rollAngle == "45")
+		$bufferDistance = "6.875";
+
 	//comprehensive query to get only day number and its date when it is passing
 
 	$startDateSV = date("d-m-Y", strtotime($startDate));
 	$endDateSV = date("d-m-Y", strtotime($endDate));
+
+	if ($searchByAOI == 'true')
+		$csv1_03 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.tbl_sv1_03 WHERE ((name between '" . $startDateSV . "' AND '" . $endDateSV . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . "))))";
+	else
+		$csv1_03 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.tbl_sv1_03 WHERE name between '" . $startDateSV . "' AND '" . $endDateSV . "')";
+
 
 	$csv1_03 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.tbl_sv1_03 WHERE name between \'' . $startDateSV . '\' AND \'' . $endDateSV . '\'';
 	$csv2_gfdm =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.tbl_sv2_gfdm WHERE name between \'' . $startDateSV . '\' AND \'' . $endDateSV . '\'';

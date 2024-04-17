@@ -2089,6 +2089,11 @@ tr.orbitoRowData:hover{
   margin-right: 15px;
 }
 
+#loadingIcon{
+  width: 10%;
+  margin: 0 auto;
+}
+
 
 
 

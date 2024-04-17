@@ -225,6 +225,10 @@ if (!isset($_SESSION['Username_OMS'])) {
                     </div>
                     </form>
                 </div>
+                <div id="loadingIcon" style="display: none;">
+                    <span style="margin:0 auto"><i style="font-size:40px" class="fas fa-solid fa-spinner fa-spin fa-5x"></i></span>
+                </div>
+
                 <div id="dataOrbito">
 
                 </div>
