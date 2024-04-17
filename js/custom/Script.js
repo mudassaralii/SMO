@@ -1664,7 +1664,7 @@ function addAOI(ftr, val, event) {
     areaDrawn = 0;
     var endCoords = ftr.getGeometry().getCoordinates();
     areaDrawn = measureAOIArea(ftr);
-    console.log(areaDrawn);
+    //console.log(areaDrawn);
     // Record AOI Area
     if (measureTooltipElement) {
       try {
@@ -1975,7 +1975,7 @@ function toggleOrbito(val){
   }
 
   var orbitoDataID = val.toString();
-  console.log(orbitoDataID);
+  //console.log(orbitoDataID);
   var totalFeatures = resultVectorSatelliteOrbito.getSource().getFeatures();
   var highlightedFeature;
 
@@ -5271,7 +5271,25 @@ resultVectorSatelliteOrbito.setSource(testsourceOrbito);
           $("#dataOrbito").append(tableData);
         }
         else {
-          $("#menu h3").text("Total Results: 0");
+          var info;
+          var content;
+          tableData = "";
+          tableData += '<div class="orbito-results-header"><div class="orbito-results-header-left"><div class="orbito-nb-items">'+resultFeatures.length+' items</div></div><div class="orbito-results-header-right"></div></div>';
+          tableData += '<table id="table_id" class="table table-striped table-bordered tablesorter" style="width:100%">';
+          tableData += "<thead> <tr><th style='font-weight: bold;font-size: 1.5rem'>Satellite</th><th style='font-weight: bold;font-size: 1.5rem'>Orbit</th><th style='font-weight: bold;font-size: 1.5rem'>Date</th><th></th></tr> </thead>";
+          tableData += "<tbody id='tablebody'>"; 
+          tableData += "<tr>" +    
+            "<td colspan='3' style='color:#000 !important'><strong>No data found.</strong></td>" +            
+            "<td>"
+            "</tr>";
+
+          tableData += "</tbody>";
+          tableData += "</table>";
+          
+          $("#dataOrbito").show();
+          $("#dataOrbito").html('');
+          $("#dataOrbito").append(tableData);
+
         }        
       }
     });
