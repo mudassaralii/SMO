@@ -607,14 +607,14 @@ if ($sv == "yes") {
 	$startDateSV = date("d-m-Y", strtotime($startDate));
 	$endDateSV = date("d-m-Y", strtotime($endDate));
 
-	if ($searchByAOI == 'true')
-		$csv1_03 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.tbl_sv1_03 WHERE ((name between '" . $startDateSV . "' AND '" . $endDateSV . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . "))))";
-	else
-		$csv1_03 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.tbl_sv1_03 WHERE name between '" . $startDateSV . "' AND '" . $endDateSV . "')";
+	if ($searchByAOI == 'true') {
+		$csv1_03 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_sv1_03 WHERE ((name between '" . $startDateSV . "' AND '" . $endDateSV . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . "))))";
+		$csv2_gfdm =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_sv2_gfdm WHERE ((name between '" . $startDateSV . "' AND '" . $endDateSV . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . "))))";
+	} else {
+		$csv1_03 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_sv1_03 WHERE name between '" . $startDateSV . "' AND '" . $endDateSV . "')";
+		$csv2_gfdm =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_sv2_gfdm WHERE name between '" . $startDateSV . "' AND '" . $endDateSV . "'";
+	}
 
-
-	$csv1_03 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.tbl_sv1_03 WHERE name between \'' . $startDateSV . '\' AND \'' . $endDateSV . '\'';
-	$csv2_gfdm =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.tbl_sv2_gfdm WHERE name between \'' . $startDateSV . '\' AND \'' . $endDateSV . '\'';
 	//echo $edgec3A['date1'];
 	$querycsv1_03 = pg_query($db_pg, $csv1_03) or die('Query failed: ' . pg_last_error());
 	$querycsv2_gfdm = pg_query($db_pg, $csv2_gfdm) or die('Query failed: ' . pg_last_error());
@@ -672,10 +672,34 @@ if ($sv == "yes") {
 //taijing
 if ($taijing == "yes") {
 
+	if ($rollAngle == "5")
+		$bufferDistance = "1";
+	else if ($rollAngle == "10")
+		$bufferDistance = "2";
+	else if ($rollAngle == "15")
+		$bufferDistance = "3.52";
+	else if ($rollAngle == "20")
+		$bufferDistance = "4.89";
+	else if ($rollAngle == "25")
+		$bufferDistance = "6.16";
+	else if ($rollAngle == "30")
+		$bufferDistance = "7.41";
+	else if ($rollAngle == "35")
+		$bufferDistance = "8.62";
+	else if ($rollAngle == "40")
+		$bufferDistance = "9.84";
+	else if ($rollAngle == "45")
+		$bufferDistance = "11.05";
+
 	$startDateTaijing = date("d-m-Y", strtotime($startDate));
 	$endDateTaijing = date("d-m-Y", strtotime($endDate));
 
-	$cTaijing_4 =   'select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom,0.55)) AS buffer from public.tbl_taijing WHERE name between \'' . $startDateTaijing . '\' AND \'' . $endDateTaijing . '\'';
+	if ($searchByAOI == 'true') {
+		$cTaijing_4 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_taijing WHERE ((name between '" . $startDateTaijing . "' AND '" . $endDateTaijing . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . "))))";
+	} else {
+		$cTaijing_4 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_taijing WHERE name between '" . $startDateTaijing . "' AND '" . $endDateTaijing . "'";
+	}
+
 
 	//echo $edgec3A['date1'];
 	$querycTaijing_4 = pg_query($db_pg, $cTaijing_4) or die('Query failed: ' . pg_last_error());

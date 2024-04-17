@@ -2909,17 +2909,21 @@ function displayUpcomingAttempts(freshAngleUpperValue){
   if(satellite=='SV')
     sv='yes';
   
-  // //get activated polygon AOI
-  // var totalFeatures = vector.getSource().getFeatures();
-  // for (var i = 0; i < totalFeatures.length; i++) {
-  //   if (totalFeatures[i].get('count') == $("#polygons").val()) {
-  //     var wkt = format.writeGeometry(totalFeatures[i].getGeometry());
-  //     }
-  // }
-  // //console.log(wkt);
+ //get activated polygon AOI
+ var totalFeatures = vector.getSource().getFeatures();
+ for (var i = 0; i < totalFeatures.length; i++) {
+   if (totalFeatures[i].get('count') == $("#polygons").val()) {
+     var wkt = format.writeGeometry(totalFeatures[i].getGeometry());
+     }
+ }
+ // console.log(wkt);
+
+  //get roll angle
+  var rollAngle=document.getElementById('freshAngleUpper').value;
+  
 
   var testsourceOrbito = new ol.source.Vector({   
-    url: "server_scripts/azo.php?&startDate="+startDate+"&endDate="+endDate+ "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv=" + sv +"&pneo=" + pneo + "&taijing="+taijing,
+    url: "server_scripts/azo.php?geom="+wkt+"&searchByAOI=true&rollAngle="+rollAngle+"&startDate="+startDate+"&endDate="+endDate+ "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv=" + sv +"&pneo=" + pneo + "&taijing="+taijing,
     format: new ol.format.GeoJSON(),       
 });
 
@@ -5162,7 +5166,7 @@ function getOrbitoData(rollAngleValue){
   var sv=''; //SV1_03 (0.5m) and SV2_gfdm (.42)
   
 
-  var orbitoCriteria='';
+  //var orbitoCriteria='';
 
   if(satellites.includes('SPOT-6'))
     spot6='yes';
