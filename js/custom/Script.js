@@ -66,6 +66,12 @@ $(document).ready(function() {
       if (v > 45) this.value = 45;
 })
 
+  document.getElementById("dropDownOrbitoSatellites").addEventListener("change", function(){console.log(document.getElementById("dropDownOrbitoSatellites").selectedOptions.length);
+    let v = document.getElementById("dropDownOrbitoSatellites").selectedOptions.length;
+    if (v > 0) document.getElementById("btnSearchOrbito").disabled =false;
+    else  document.getElementById("btnSearchOrbito").disabled =true;
+  })
+
   });
 var areaDrawn = 0;
 var plieadesObj = [];
@@ -5187,13 +5193,15 @@ function getOrbitoData(rollAngleValue){
     sv='yes';
   
   //get activated polygon AOI
+  var wkt='';
+  //wkt='POLYGON((8147310.336884095 3987278.375566981,8297738.408549322 3987278.375566981,8297738.408549322 4092761.474600524,8147310.336884095 4092761.474600524,8147310.336884095 3987278.375566981))';
   var totalFeatures = vector.getSource().getFeatures();
   for (var i = 0; i < totalFeatures.length; i++) {
     if (totalFeatures[i].get('count') == $("#polygons").val()) {
-      var wkt = format.writeGeometry(totalFeatures[i].getGeometry());
+         wkt = format.writeGeometry(totalFeatures[i].getGeometry());
       }
   }
-  //console.log(wkt);
+  console.log(totalFeatures.length);
   
   //check search by AOI is checked or not
   var searchByAOI=document.getElementById('chkSearchByAOI').checked

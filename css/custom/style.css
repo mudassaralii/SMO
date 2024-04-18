@@ -1795,6 +1795,7 @@ table.dataTable td {
 
 .orbito-element .container{
   width: 18%;
+  display: inline-block;
 }
 
 .orbito-search-form .aoi-gestion {
@@ -1808,10 +1809,12 @@ table.dataTable td {
 }
 
 .aoi-select label{
-  width: 10%;
+  /* width: 10%; */
   font-weight: bold;
   line-height: 1.42857143;
   color: #333738;
+  vertical-align: top;
+  padding-top:0.6rem;
     
 }
 

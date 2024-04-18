@@ -151,17 +151,23 @@ if (!isset($_SESSION['Username_OMS'])) {
                         <form action="" class="orbito-search-form">
                             <div class="aoi-gestion orbito-element">
                                 <div class="aoi-select form-label">
-                                    <label for="">AOI</label>
-                                    <select name="" id="" class="drs-select">
+                                    <label for="">Search by AOI</label>
+                                    <!-- <select name="" id="" class="drs-select">
                                         <option value="">AOI:</option>
-                                    </select>
+                                    </select> -->
+                                    <div class="container">
+                                        <label class="switch" for="chkSearchByAOI" style=" float: left; margin-left: 8%;">
+                                            <input type="checkbox" id="chkSearchByAOI" unchecked />
+                                            <div class="sliderchk round"></div>
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="container">
+                                <!-- <div class="container">
                                     <label class="switch" for="chkSearchByAOI" style=" float: left; margin-left: 8%;">
                                         <input type="checkbox" id="chkSearchByAOI" unchecked />
                                         <div class="sliderchk round"></div>
                                     </label>
-                                </div>
+                                </div> -->
                             </div>
                             <!-- date section -->
                             <div class="orbito-date-column">
@@ -219,7 +225,7 @@ if (!isset($_SESSION['Username_OMS'])) {
                                     </span>
                                 </div>
                                 <div class="submit orbito-element orbito-action">
-                                    <button onclick="getOrbitoData(document.querySelector('#rollAngle').value)" class="search-button btn btnGetOrbitoData" type="button" name="search">Search</button>
+                                    <button onclick="getOrbitoData(document.querySelector('#rollAngle').value)" id="btnSearchOrbito" class="search-button btn btnGetOrbitoData" type="button" name="search" disabled>Search</button>
                                 </div>
                             </div>
                     </div>
