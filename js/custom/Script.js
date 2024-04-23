@@ -1795,8 +1795,7 @@ function showOrbitPath(row){
   var orbitoDataID = row.childNodes[0].innerText+"_"+row.childNodes[1].innerText+"_orbitoVisibility";
   //var orbitoCorridorDataID = row.childNodes[0].innerText+"_"+row.childNodes[1].innerText+"_corridorVisibility";
   //console.log(orbitoCorridorDataID);
-  var totalFeatures = resultVectorSatelliteOrbito.getSource().getFeatures();
-  var highlightedFeatureSPOT6;
+  var totalFeatures = resultVectorSatelliteOrbito.getSource().getFeatures();  
 
   //console.log(totalFeatures.length);
   //console.log(orbitoDataID);
@@ -1814,7 +1813,11 @@ function showOrbitPath(row){
   var satelliteName=row.childNodes[0].innerText;
   var orbitNumber=row.childNodes[1].innerText;
 
-  //console.log(rollAngle);
+ if(rollAngle == null)
+ {
+  rollAngle=document.selectElementbyid("freshAngleUpper").value;
+ }
+  console.log("Roll Angle is "+rollAngle);
   var bufferDistance=null;
   if(satelliteName==="SPOT6"){
     if(rollAngle=="5")
@@ -1979,7 +1982,7 @@ function hideOrbitPath(row){
     
     if(index == -1){
       var totalFeatures = resultVectorSatelliteOrbito.getSource().getFeatures();
-      var totalFeaturesCorridor = resultVectorSatelliteCorridor.getSource().getFeatures();
+      //var totalFeaturesCorridor = resultVectorSatelliteCorridor.getSource().getFeatures();
       //var highlightedFeatureSPOT6;
 
       //console.log(totalFeatures);
@@ -1995,14 +1998,14 @@ function hideOrbitPath(row){
     }
 
      //for corridor
-    if(indexCorridor == -1){ console.log("corridor section");  
+    if(indexCorridor == -1){  
       var totalFeaturesCorridor = resultVectorSatelliteCorridor.getSource().getFeatures();
       //var highlightedFeatureCorridor;
 
       //console.log(totalFeaturesCorridor);
     for (var i = 0; i < totalFeaturesCorridor.length; i++) {
       //console.log(corridorDataID);
-        if (totalFeaturesCorridor[i].get('satellite')+"_"+totalFeaturesCorridor[i].get('orbitNumber')+"_corridorVisibility" == corridorDataID) {console.log("corridor inner section");
+        if (totalFeaturesCorridor[i].get('satellite')+"_"+totalFeaturesCorridor[i].get('orbitNumber')+"_corridorVisibility" == corridorDataID) {
             highlightedFeature = totalFeaturesCorridor[i];
           
           if (!$('#btnToggleAllCorridors').hasClass("toggle-corridor-active")) //to check whether toggle all corridor button is clicked or not 
@@ -2070,97 +2073,16 @@ function toggleOrbito(val){
 }
 
 function toggleCorridor(val){
-  
-  var corridorDataID = val.toString();
-  var totalFeatures = resultVectorSatelliteOrbito.getSource().getFeatures();
-  var totalFeaturesCorridor = resultVectorSatelliteCorridor.getSource().getFeatures();
-  
-  var corridorDataID = val.toString();
-    if (!$('#' + val).hasClass("toggle-corridor-active")) {
-    $('#' + val).addClass('toggle-corridor-active');
-      //add this element to array
-      toggleOrbitCorridorSelected.push(corridorDataID);
-      
-      //toggleOrbitCorridorSelected.forEach((element) => console.log(element));   
 
+  if (!$('#' + val).hasClass("toggle-corridor-active")) {
+    $('#' + val).addClass('toggle-corridor-active');
   } else {
       $('#' + val).removeClass('toggle-corridor-active');
-          //remove this element from array
-          toggleOrbitCorridorSelected.splice(toggleOrbitCorridorSelected.indexOf(corridorDataID),1);
-          //console.log(toggleOrbitCorridorSelected);
   }
 
-  //console.log(totalFeaturesCorridor.length); 
+  var totalFeatures = resultVectorSatelliteOrbito.getSource().getFeatures();
+ 
 
-  var totalFeaturesCorridor = resultVectorSatelliteCorridor.getSource().getFeatures();//console.log(totalFeaturesCorridor);
-  var highlightedFeatureCorridor;
-  //console.log(corridorDataID);
-  for (var i = 0; i < totalFeaturesCorridor.length; i++) {
-    if (totalFeaturesCorridor[i].get('satellite')+"_"+totalFeaturesCorridor[i].get('orbitNumber')+"_corridorVisibility" == corridorDataID) {     
-
-      highlightedFeatureCorridor = totalFeaturesCorridor[i];
-      totalFeaturesCorridor[i].set("hidden", "true");
-    }
-    else{console.log("not found");}
-  } 
-  
-  //console.log(val.indexOf("corridorVisibility"));
-  if (val.indexOf("corridorVisibility") !== -1) {
-    for (var i = 0; i < totalFeaturesCorridor.length; i++) {
-      if (totalFeaturesCorridor[i] == highlightedFeatureCorridor) {
-        if ($($("#" + val)).attr('data-click-state') == 1) {
-          $($("#" + val)).attr('data-click-state', 0);
-          totalFeaturesCorridor[i].set("hidden", "true");
-
-          //remove this element from array
-          toggleOrbitCorridorSelected.splice(toggleOrbitCorridorSelected.indexOf(corridorDataID),1);
-          //console.log(toggleOrbitCorridorSelected);
-        } else {
-          $($("#" + val)).attr('data-click-state', 1);
-          totalFeaturesCorridor[i].set("hidden", "false");
-
-          //add this element to array
-          toggleOrbitCorridorSelected.push(corridorDataID);
-          console.log(toggleOrbitCorridorSelected);
-        }
-      }
-    }
-  } 
-
-  
-  // //get satellite path and generate corridor
-  // for (var i = 0; i < totalFeatures.length; i++) {
-  //   if (totalFeatures[i].get('satellite')+"_"+totalFeatures[i].get('orbitNumber')+"_orbitoVisibility" == orbitoDataID) {
-  //     highlightedFeature = totalFeatures[i];      
-      
-  //     //for corridor display
-  //     ftr=totalFeatures[i];
-  //     //totalFeatures[i].set("hidden", "false");
-  //   }
-  // }  
-  
-    // //for corridor dislay on mouse enter
-    // ftr.set("type", 'simpleline');
-    // var pp = (new ol.format.GeoJSON({
-    //   defaultDataProjection: 'EPSG:4326',
-    //   featureProjection: 'EPSG:3857'
-    // })).writeGeometry(ftr.getGeometry());
-    // var ppJson = JSON.parse(pp);
-    // var line = turf.lineString(ppJson.coordinates[0]);
-    // var buffered = turf.buffer(line, 50, {
-    //   units: 'kilometers'
-    // });
-    
-    // ftr = (new ol.format.GeoJSON({
-    //   defaultDataProjection: 'EPSG:4326',
-    //   featureProjection: 'EPSG:3857'
-    // })).readFeature(buffered);
-    // ftr.set("count", drawCount);
-
-    // var vectorSourceSPOT6corridor = new ol.source.Vector({
-    //   features: [ftr]
-    // });
-    // resultVectorSatelliteCorridor.setSource(vectorSourceSPOT6corridor);
 }
 
 function toggleAllOrbits(){
@@ -2193,15 +2115,6 @@ function toggleAllCorridors(){
       $('.toggle-corridor').removeClass('toggle-corridor-active');
   }
   
-  var totalFeaturesCorridor = resultVectorSatelliteCorridor.getSource().getFeatures();
-  //console.log(totalFeaturesCorridor.length);
-  for (var i = 0; i < totalFeaturesCorridor.length; i++) {    
-      highlightedFeature = totalFeaturesCorridor[i];
-      if($('#btnToggleAllCorridors').hasClass("toggle-corridor-active")){//console.log("ii")
-      totalFeaturesCorridor[i].set("hidden", "false"); }
-      else
-      totalFeaturesCorridor[i].set("hidden", "true"); 
-  } 
 }
 function functionalites(val) {
   if (!$('#' + val).hasClass("selectedIcon")) {
@@ -3034,14 +2947,13 @@ resultVectorSatelliteOrbito.setSource(testsourceOrbito);
       if (testsourceOrbito.getState() === 'ready') {
           //move(feature.getGeometry().getExtent());
          resultFeatures = testsourceOrbito.getFeatures(); 
-         //console.log(resultFeatures.length);        
-
-        
+         //console.log(resultFeatures.length);           
+         
          if (resultFeatures.length > 0) { 
           var info;
           var content;
           tableData = "";
-          tableData += '<div class="orbito-results-header" style="width:90%;margin:0 auto;margin-bottom:1rem"><div class="orbito-results-header-left"><div class="orbito-nb-items" style="font-size:1.3rem">'+resultFeatures.length+' items</div></div><div class="orbito-results-header-right" style="margin-right:3rem"><div class="orbito-export"><!--<button class="export-button" name="export" type="button" value="export" title="Launch export"><svg viewBox="0 0 32 32" class="pictos " style="width: 1.9rem; height: 1.9rem;"><g><path d="M22.491 13.166h-3.84v-6.583h-5.029v6.583h-3.749l6.309 6.309z"></path><path d="M28.709 18.834v0c-1.097 0-2.011 0.914-2.011 2.011v3.749h-21.303v-3.474c0-1.097-0.914-2.011-2.011-2.011s-2.011 0.914-2.011 2.011v7.589h29.44v-7.771c0-1.189-0.914-2.103-2.103-2.103z"></path></g></svg></button>--></div><div class="orbito-all-orbits"><button id="btnToggleAllOrbits" class="toggle-orbit" title="Toggle all orbits" onclick="toggleAllOrbits();"><svg viewBox="0 0 32 32" class="pictos " style="width: 1.9rem; height: 1.9rem;"><g><path d="M19.9,6.5c-2.7,0-5.4,1-7.3,2.7C12.3,9.1,11.9,9,11.4,9c-2,0-3.6,1.6-3.6,3.6c0,0.9,0.4,1.8,1,2.6 c-0.3,1.1-0.5,2.1-0.5,3c0,6.3,5.1,11.5,11.5,11.5s11.6-5.1,11.6-11.5S26.3,6.5,19.9,6.5z M19.9,27c-5,0-9.1-4-9.1-9 c0-0.5,0.1-1.1,0.2-1.6c0-0.2,0-0.3,0.1-0.5c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c5,0,9.1,4.1,9.1,9.1C29,23.1,24.9,27,19.9,27z"></path><path d="M3.7,11.8c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c1.1,0,2.1,0.2,3,0.5h0.1h0.1c1.1-0.2,2.3-0.4,3.3-0.4h0.7l-0.7-0.4c-1.9-1.4-4.2-2.1-6.7-2.1c-2.7,0-5.4,0.9-7.3,2.7 C4.8,4.9,4.4,4.9,4,4.9C2,4.9,0.5,6.4,0.5,8.3c0,0.9,0.4,1.8,1,2.6c-0.3,1-0.5,2-0.5,3c0,4.1,2.1,7.8,5.7,9.9l0.5,0.3l-0.2-1 c-0.2-0.7-0.3-1.5-0.4-2.1v-0.1l-0.1-0.1c-2-1.7-3.1-4.3-3.1-6.9c0-0.5,0.1-1.1,0.2-1.6C3.6,12.1,3.7,11.9,3.7,11.8z"></path></g></svg></button></div><div class="orbito-all-corridors"><button id="btnToggleAllCorridors" class="toggle-orbit" title="Toggle all corridors" onclick="toggleAllCorridors();"><svg viewBox="0 0 32 32" class="pictos " style="width: 1.9rem; height: 1.9rem;"><g><path d="M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z"></path><path d="M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z"></path><path d="M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z"></path><path d="M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z"></path></g></svg></button></div></div></div>';
+          tableData += '<div class="orbito-results-header" style="width:90%;margin:0 auto;margin-bottom:1rem"><div class="orbito-results-header-left"><div class="orbito-nb-items" style="font-size:1.3rem">'+resultFeatures.length+' items</div></div><div class="orbito-results-header-right" style="margin-right:3rem"><div class="orbito-export"><!--<button class="export-button" name="export" type="button" value="export" title="Launch export"><svg viewBox="0 0 32 32" class="pictos " style="width: 1.9rem; height: 1.9rem;"><g><path d="M22.491 13.166h-3.84v-6.583h-5.029v6.583h-3.749l6.309 6.309z"></path><path d="M28.709 18.834v0c-1.097 0-2.011 0.914-2.011 2.011v3.749h-21.303v-3.474c0-1.097-0.914-2.011-2.011-2.011s-2.011 0.914-2.011 2.011v7.589h29.44v-7.771c0-1.189-0.914-2.103-2.103-2.103z"></path></g></svg></button>--></div><div class="orbito-all-orbits"><button id="btnToggleAllOrbits" class="toggle-orbit" title="Toggle all orbits" onclick="toggleAllOrbits();"><svg viewBox="0 0 32 32" class="pictos " style="width: 1.9rem; height: 1.9rem;"><g><path d="M19.9,6.5c-2.7,0-5.4,1-7.3,2.7C12.3,9.1,11.9,9,11.4,9c-2,0-3.6,1.6-3.6,3.6c0,0.9,0.4,1.8,1,2.6 c-0.3,1.1-0.5,2.1-0.5,3c0,6.3,5.1,11.5,11.5,11.5s11.6-5.1,11.6-11.5S26.3,6.5,19.9,6.5z M19.9,27c-5,0-9.1-4-9.1-9 c0-0.5,0.1-1.1,0.2-1.6c0-0.2,0-0.3,0.1-0.5c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c5,0,9.1,4.1,9.1,9.1C29,23.1,24.9,27,19.9,27z"></path><path d="M3.7,11.8c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c1.1,0,2.1,0.2,3,0.5h0.1h0.1c1.1-0.2,2.3-0.4,3.3-0.4h0.7l-0.7-0.4c-1.9-1.4-4.2-2.1-6.7-2.1c-2.7,0-5.4,0.9-7.3,2.7 C4.8,4.9,4.4,4.9,4,4.9C2,4.9,0.5,6.4,0.5,8.3c0,0.9,0.4,1.8,1,2.6c-0.3,1-0.5,2-0.5,3c0,4.1,2.1,7.8,5.7,9.9l0.5,0.3l-0.2-1 c-0.2-0.7-0.3-1.5-0.4-2.1v-0.1l-0.1-0.1c-2-1.7-3.1-4.3-3.1-6.9c0-0.5,0.1-1.1,0.2-1.6C3.6,12.1,3.7,11.9,3.7,11.8z"></path></g></svg></button></div><div class="orbito-all-corridors"><!--<button id="btnToggleAllCorridors" class="toggle-orbit" title="Toggle all corridors" onclick="toggleAllCorridors();"><svg viewBox="0 0 32 32" class="pictos " style="width: 1.9rem; height: 1.9rem;"><g><path d="M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z"></path><path d="M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z"></path><path d="M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z"></path><path d="M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z"></path></g></svg></button>--></div></div></div>';
           tableData += '<table id="table_id" class="table table-striped table-bordered tablesorter" style="width:90%;margin:0 auto">';
           tableData += "<thead> <tr><th style='font-weight: bold;font-size: 1.5rem'>Satellite</th><th style='font-weight: bold;font-size: 1.5rem'>Orbit</th><th style='font-weight: bold;font-size: 1.5rem'>Date</th><th></th></tr> </thead>";
           tableData += "<tbody id='tablebody'>"; 
@@ -3075,7 +2987,7 @@ resultVectorSatelliteOrbito.setSource(testsourceOrbito);
           $satelliteNameTD +
             "<td style='color:#000 !important'>"+ resultFeatures[i].get("orbitNumber").bold() +"</td>" +
             "<td style='color:#000 !important'><strong>"+resultFeatures[i].get("date")+"</strong></td>" +            
-            "<td><button id='"+resultFeatures[i].get("satellite")+'_'+resultFeatures[i].get("orbitNumber")+"_orbitoVisibility' class='toggle-orbit toggleOrbit' title='Toggle orbit' onclick='toggleOrbito(this.id);'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><path d='M16.5,1c-3.7,0-7.1,1.4-9.8,3.6C6.2,4.3,5.5,4.1,4.9,4.1c-2.4,0-4.4,2-4.4,4.4C0.5,9.8,1,11,2,11.8 c-0.4,1.4-0.6,2.7-0.6,4.2c0,8.3,6.7,15,15,15s15.1-6.7,15.1-15S24.8,1,16.5,1z M16.5,28.5C9.6,28.5,4,22.9,4,16 c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,7.8,9,7,8.6,6.3c2.1-1.7,4.8-2.7,7.8-2.7 c6.8,0,12.5,5.6,12.5,12.5C28.9,22.8,23.3,28.5,16.5,28.5z' class='cz-color-3684147'></path></svg></button><button id='"+resultFeatures[i].get("satellite")+'_'+resultFeatures[i].get("orbitNumber")+"_corridorVisibility' class='toggle-corridor' title='Toggle corridor' onclick='toggleCorridor(this.id);'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><g class='cz-color-3684147'><path d='M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z' class='cz-color-3684147'></path><path d='M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z' class='cz-color-3684147'></path><path d='M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z' class='cz-color-3684147'></path><path d='M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z' class='cz-color-3684147'></path></g></svg></button></td>"
+            "<td><button id='"+resultFeatures[i].get("satellite")+'_'+resultFeatures[i].get("orbitNumber")+"_orbitoVisibility' class='toggle-orbit toggleOrbit' title='Toggle orbit' onclick='toggleOrbito(this.id);'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><path d='M16.5,1c-3.7,0-7.1,1.4-9.8,3.6C6.2,4.3,5.5,4.1,4.9,4.1c-2.4,0-4.4,2-4.4,4.4C0.5,9.8,1,11,2,11.8 c-0.4,1.4-0.6,2.7-0.6,4.2c0,8.3,6.7,15,15,15s15.1-6.7,15.1-15S24.8,1,16.5,1z M16.5,28.5C9.6,28.5,4,22.9,4,16 c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,7.8,9,7,8.6,6.3c2.1-1.7,4.8-2.7,7.8-2.7 c6.8,0,12.5,5.6,12.5,12.5C28.9,22.8,23.3,28.5,16.5,28.5z' class='cz-color-3684147'></path></svg></button><!--<button id='"+resultFeatures[i].get("satellite")+'_'+resultFeatures[i].get("orbitNumber")+"_corridorVisibility' class='toggle-corridor' title='Toggle corridor' onclick='toggleCorridor(this.id);'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><g class='cz-color-3684147'><path d='M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z' class='cz-color-3684147'></path><path d='M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z' class='cz-color-3684147'></path><path d='M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z' class='cz-color-3684147'></path><path d='M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z' class='cz-color-3684147'></path></g></svg></button>--></td>"
             "</tr>";
           }
           tableData += "</tbody>";
@@ -5324,85 +5236,92 @@ function getOrbitoData(rollAngleValue){
 });
 
 
-resultVectorSatelliteOrbito.setSource(testsourceOrbito);
-  testsourceOrbito.once('change', function(e) { 
-      if (testsourceOrbito.getState() === 'ready') {
-          $("#loadingIcon").hide();
-          //move(feature.getGeometry().getExtent());
-          resultFeatures = testsourceOrbito.getFeatures(); 
-          //console.log(resultFeatures);        
+  resultVectorSatelliteOrbito.setSource(testsourceOrbito);
+    testsourceOrbito.once('change', function(e) { 
+        if (testsourceOrbito.getState() === 'ready') {
+            $("#loadingIcon").hide();
+            //move(feature.getGeometry().getExtent());
+            resultFeatures = testsourceOrbito.getFeatures(); 
+            //console.log(resultFeatures);        
 
-        
-         if (resultFeatures.length > 0) {  //console.log(resultFeatures.length);
-          var info;
-          var content;
-          tableData = "";
-          tableData += '<div class="orbito-results-header"><div class="orbito-results-header-left"><div class="orbito-nb-items">'+resultFeatures.length+' items</div></div><div class="orbito-results-header-right"><div class="orbito-export"><!--<button class="export-button" name="export" type="button" value="export" title="Launch export"><svg viewBox="0 0 32 32" class="pictos " style="width: 1.9rem; height: 1.9rem;"><g><path d="M22.491 13.166h-3.84v-6.583h-5.029v6.583h-3.749l6.309 6.309z"></path><path d="M28.709 18.834v0c-1.097 0-2.011 0.914-2.011 2.011v3.749h-21.303v-3.474c0-1.097-0.914-2.011-2.011-2.011s-2.011 0.914-2.011 2.011v7.589h29.44v-7.771c0-1.189-0.914-2.103-2.103-2.103z"></path></g></svg></button>--></div><div class="orbito-all-orbits"><button id="btnToggleAllOrbits" class="toggle-orbit" title="Toggle all orbits" onclick="toggleAllOrbits();"><svg viewBox="0 0 32 32" class="pictos " style="width: 1.9rem; height: 1.9rem;"><g><path d="M19.9,6.5c-2.7,0-5.4,1-7.3,2.7C12.3,9.1,11.9,9,11.4,9c-2,0-3.6,1.6-3.6,3.6c0,0.9,0.4,1.8,1,2.6 c-0.3,1.1-0.5,2.1-0.5,3c0,6.3,5.1,11.5,11.5,11.5s11.6-5.1,11.6-11.5S26.3,6.5,19.9,6.5z M19.9,27c-5,0-9.1-4-9.1-9 c0-0.5,0.1-1.1,0.2-1.6c0-0.2,0-0.3,0.1-0.5c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c5,0,9.1,4.1,9.1,9.1C29,23.1,24.9,27,19.9,27z"></path><path d="M3.7,11.8c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c1.1,0,2.1,0.2,3,0.5h0.1h0.1c1.1-0.2,2.3-0.4,3.3-0.4h0.7l-0.7-0.4c-1.9-1.4-4.2-2.1-6.7-2.1c-2.7,0-5.4,0.9-7.3,2.7 C4.8,4.9,4.4,4.9,4,4.9C2,4.9,0.5,6.4,0.5,8.3c0,0.9,0.4,1.8,1,2.6c-0.3,1-0.5,2-0.5,3c0,4.1,2.1,7.8,5.7,9.9l0.5,0.3l-0.2-1 c-0.2-0.7-0.3-1.5-0.4-2.1v-0.1l-0.1-0.1c-2-1.7-3.1-4.3-3.1-6.9c0-0.5,0.1-1.1,0.2-1.6C3.6,12.1,3.7,11.9,3.7,11.8z"></path></g></svg></button></div><div class="orbito-all-corridors"><button id="btnToggleAllCorridors" class="toggle-corridor" title="Toggle all corridors" onclick="toggleAllCorridors();"><svg viewBox="0 0 32 32" class="pictos " style="width: 1.9rem; height: 1.9rem;"><g><path d="M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z"></path><path d="M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z"></path><path d="M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z"></path><path d="M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z"></path></g></svg></button></div></div></div>';
-          tableData += '<table id="table_id" class="table table-striped table-bordered tablesorter" style="width:100%">';
-          tableData += "<thead> <tr><th style='font-weight: bold;font-size: 1.5rem'>Satellite</th><th style='font-weight: bold;font-size: 1.5rem'>Orbit</th><th style='font-weight: bold;font-size: 1.5rem'>Date</th><th></th></tr> </thead>";
-          tableData += "<tbody id='tablebody'>"; 
-          
-          for (var i = 0; i < resultFeatures.length; i++) {//console.log(resultFeatures[i].get('satellite'));
-            if((resultFeatures[i].get('satellite')=='SPOT6')) //Orange
-            {
-              $satelliteNameTD="<td><span class='satellite-name' style='color: rgb(243, 110, 44); background-color: rgba(243, 110, 44, 0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>";
+          console.log("total results found= "+resultFeatures.length);
+          if (resultFeatures.length > 0) {  //console.log(resultFeatures.length);        
+            
+            
+            var info;
+            var content;
+            tableData = "";
+            tableData += '<div class="orbito-results-header"><div class="orbito-results-header-left"><div class="orbito-nb-items">'+resultFeatures.length+' items</div></div><div class="orbito-results-header-right"><div class="orbito-export"><!--<button class="export-button" name="export" type="button" value="export" title="Launch export"><svg viewBox="0 0 32 32" class="pictos " style="width: 1.9rem; height: 1.9rem;"><g><path d="M22.491 13.166h-3.84v-6.583h-5.029v6.583h-3.749l6.309 6.309z"></path><path d="M28.709 18.834v0c-1.097 0-2.011 0.914-2.011 2.011v3.749h-21.303v-3.474c0-1.097-0.914-2.011-2.011-2.011s-2.011 0.914-2.011 2.011v7.589h29.44v-7.771c0-1.189-0.914-2.103-2.103-2.103z"></path></g></svg></button>--></div><div class="orbito-all-orbits"><button id="btnToggleAllOrbits" class="toggle-orbit" title="Toggle all orbits" onclick="toggleAllOrbits();"><svg viewBox="0 0 32 32" class="pictos " style="width: 1.9rem; height: 1.9rem;"><g><path d="M19.9,6.5c-2.7,0-5.4,1-7.3,2.7C12.3,9.1,11.9,9,11.4,9c-2,0-3.6,1.6-3.6,3.6c0,0.9,0.4,1.8,1,2.6 c-0.3,1.1-0.5,2.1-0.5,3c0,6.3,5.1,11.5,11.5,11.5s11.6-5.1,11.6-11.5S26.3,6.5,19.9,6.5z M19.9,27c-5,0-9.1-4-9.1-9 c0-0.5,0.1-1.1,0.2-1.6c0-0.2,0-0.3,0.1-0.5c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c5,0,9.1,4.1,9.1,9.1C29,23.1,24.9,27,19.9,27z"></path><path d="M3.7,11.8c0.1,0,0.2,0,0.3,0c2,0,3.6-1.6,3.6-3.6c0-0.5-0.2-1.2-0.4-1.6c1.6-1.3,3.5-1.9,5.6-1.9 c1.1,0,2.1,0.2,3,0.5h0.1h0.1c1.1-0.2,2.3-0.4,3.3-0.4h0.7l-0.7-0.4c-1.9-1.4-4.2-2.1-6.7-2.1c-2.7,0-5.4,0.9-7.3,2.7 C4.8,4.9,4.4,4.9,4,4.9C2,4.9,0.5,6.4,0.5,8.3c0,0.9,0.4,1.8,1,2.6c-0.3,1-0.5,2-0.5,3c0,4.1,2.1,7.8,5.7,9.9l0.5,0.3l-0.2-1 c-0.2-0.7-0.3-1.5-0.4-2.1v-0.1l-0.1-0.1c-2-1.7-3.1-4.3-3.1-6.9c0-0.5,0.1-1.1,0.2-1.6C3.6,12.1,3.7,11.9,3.7,11.8z"></path></g></svg></button></div><div class="orbito-all-corridors"><!--<button id="btnToggleAllCorridors" class="toggle-corridor" title="Toggle all corridors" onclick="toggleAllCorridors();"><svg viewBox="0 0 32 32" class="pictos " style="width: 1.9rem; height: 1.9rem;"><g><path d="M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z"></path><path d="M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z"></path><path d="M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z"></path><path d="M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z"></path></g></svg></button>--></div></div></div>';
+            tableData += '<table id="table_id" class="table table-striped table-bordered tablesorter" style="width:100%">';
+            tableData += "<thead> <tr><th style='font-weight: bold;font-size: 1.5rem'>Satellite</th><th style='font-weight: bold;font-size: 1.5rem'>Orbit</th><th style='font-weight: bold;font-size: 1.5rem'>Date</th><th></th></tr> </thead>";
+            tableData += "<tbody id='tablebody'>";             
+            
+            for (var i = 0; i < resultFeatures.length; i++) {//console.log(resultFeatures[i].get('satellite'));             
+
+              if((resultFeatures[i].get('satellite')=='SPOT6')) //Orange
+              {
+                $satelliteNameTD="<td><span class='satellite-name' style='color: rgb(243, 110, 44); background-color: rgba(243, 110, 44, 0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>";
+              }
+              if((resultFeatures[i].get('satellite')=='Pleiades-1A') || (resultFeatures[i].get('satellite')=='Pleiades-1B')) //Pink
+              {
+                $satelliteNameTD="<td><span class='satellite-name' style='color: rgb(220, 12, 203); background-color: rgba(220, 12, 203, 0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>";
+              }
+              if((resultFeatures[i].get('satellite')=='PNEO3') || (resultFeatures[i].get('satellite')=='PNEO4')) //Purple
+              {
+                $satelliteNameTD="<td><span class='satellite-name' style='color: rgb(106, 49, 220); background-color: rgb(106, 49, 220,0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>";
+              }
+              if((resultFeatures[i].get('satellite')=='PRSS')) //Green
+              {
+                $satelliteNameTD="<td><span class='satellite-name' style='color: rgb(0,134,49); background-color: rgba(0,134,49, 0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>";
+              }
+              if((resultFeatures[i].get('satellite')=='Taijing')) //Black
+              {
+                $satelliteNameTD="<td><span class='satellite-name' style='color: rgb(0, 0, 0); background-color: rgba(0, 0, 0, 0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>";
+              }
+              if((resultFeatures[i].get('satellite')=='SuperView')) //Steel Blue
+              {
+                $satelliteNameTD="<td><span class='satellite-name' style='color: rgb(70, 130, 180); background-color: rgba(70, 130, 180, 0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>";
+              }
+            tableData += "<tr class='orbitoRowData' onmousemove='showOrbitPath(this)' onmouseleave='hideOrbitPath(this)'>" +
+            $satelliteNameTD +
+              "<td style='color:#000 !important'>"+ resultFeatures[i].get("orbitNumber").bold() +"</td>" +
+              "<td style='color:#000 !important'><strong>"+resultFeatures[i].get("date")+"</strong></td>" +            
+              "<td><button id='"+resultFeatures[i].get("satellite")+'_'+resultFeatures[i].get("orbitNumber")+"_orbitoVisibility' class='toggle-orbit toggleOrbit' title='Toggle orbit' onclick='toggleOrbito(this.id);'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><path d='M16.5,1c-3.7,0-7.1,1.4-9.8,3.6C6.2,4.3,5.5,4.1,4.9,4.1c-2.4,0-4.4,2-4.4,4.4C0.5,9.8,1,11,2,11.8 c-0.4,1.4-0.6,2.7-0.6,4.2c0,8.3,6.7,15,15,15s15.1-6.7,15.1-15S24.8,1,16.5,1z M16.5,28.5C9.6,28.5,4,22.9,4,16 c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,7.8,9,7,8.6,6.3c2.1-1.7,4.8-2.7,7.8-2.7 c6.8,0,12.5,5.6,12.5,12.5C28.9,22.8,23.3,28.5,16.5,28.5z' class='cz-color-3684147'></path></svg></button><!--<button id='"+resultFeatures[i].get("satellite")+'_'+resultFeatures[i].get("orbitNumber")+"_corridorVisibility' class='toggle-corridor' title='Toggle corridor' onclick='toggleCorridor(this.id);'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><g class='cz-color-3684147'><path d='M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z' class='cz-color-3684147'></path><path d='M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z' class='cz-color-3684147'></path><path d='M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z' class='cz-color-3684147'></path><path d='M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z' class='cz-color-3684147'></path></g></svg></button>--></td>"
+              "</tr>";
             }
-            if((resultFeatures[i].get('satellite')=='Pleiades-1A') || (resultFeatures[i].get('satellite')=='Pleiades-1B')) //Pink
-            {
-              $satelliteNameTD="<td><span class='satellite-name' style='color: rgb(220, 12, 203); background-color: rgba(220, 12, 203, 0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>";
-            }
-            if((resultFeatures[i].get('satellite')=='PNEO3') || (resultFeatures[i].get('satellite')=='PNEO4')) //Purple
-            {
-              $satelliteNameTD="<td><span class='satellite-name' style='color: rgb(106, 49, 220); background-color: rgb(106, 49, 220,0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>";
-            }
-            if((resultFeatures[i].get('satellite')=='PRSS')) //Green
-            {
-              $satelliteNameTD="<td><span class='satellite-name' style='color: rgb(0,134,49); background-color: rgba(0,134,49, 0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>";
-            }
-            if((resultFeatures[i].get('satellite')=='Taijing')) //Black
-            {
-              $satelliteNameTD="<td><span class='satellite-name' style='color: rgb(0, 0, 0); background-color: rgba(0, 0, 0, 0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>";
-            }
-            if((resultFeatures[i].get('satellite')=='SuperView')) //Steel Blue
-            {
-              $satelliteNameTD="<td><span class='satellite-name' style='color: rgb(70, 130, 180); background-color: rgba(70, 130, 180, 0.1);'>"+ resultFeatures[i].get('satellite').bold() +"</span></td>";
-            }
-          tableData += "<tr class='orbitoRowData' onmousemove='showOrbitPath(this)' onmouseleave='hideOrbitPath(this)'>" +
-          $satelliteNameTD +
-            "<td style='color:#000 !important'>"+ resultFeatures[i].get("orbitNumber").bold() +"</td>" +
-            "<td style='color:#000 !important'><strong>"+resultFeatures[i].get("date")+"</strong></td>" +            
-            "<td><button id='"+resultFeatures[i].get("satellite")+'_'+resultFeatures[i].get("orbitNumber")+"_orbitoVisibility' class='toggle-orbit toggleOrbit' title='Toggle orbit' onclick='toggleOrbito(this.id);'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><path d='M16.5,1c-3.7,0-7.1,1.4-9.8,3.6C6.2,4.3,5.5,4.1,4.9,4.1c-2.4,0-4.4,2-4.4,4.4C0.5,9.8,1,11,2,11.8 c-0.4,1.4-0.6,2.7-0.6,4.2c0,8.3,6.7,15,15,15s15.1-6.7,15.1-15S24.8,1,16.5,1z M16.5,28.5C9.6,28.5,4,22.9,4,16 c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,7.8,9,7,8.6,6.3c2.1-1.7,4.8-2.7,7.8-2.7 c6.8,0,12.5,5.6,12.5,12.5C28.9,22.8,23.3,28.5,16.5,28.5z' class='cz-color-3684147'></path></svg></button><button id='"+resultFeatures[i].get("satellite")+'_'+resultFeatures[i].get("orbitNumber")+"_corridorVisibility' class='toggle-corridor' title='Toggle corridor' onclick='toggleCorridor(this.id);'><svg viewBox='0 0 32 32' class='pictos cz-color-3684147' style='width: 1.9rem; height: 1.9rem;'><g class='cz-color-3684147'><path d='M22.2,0.7c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3c0.7,0,1.4-0.4,1.7-1 l15.8-26C23.5,2.6,23.2,1.3,22.2,0.7z' class='cz-color-3684147'></path><path d='M28.5,3.8L28.5,3.8c-1-0.6-2.2-0.3-2.8,0.7l-15.8,26c-0.6,1-0.3,2.2,0.7,2.8c0.3,0.2,0.7,0.3,1,0.3 c0.7,0,1.4-0.4,1.7-1l15.8-26C29.8,5.6,29.5,4.4,28.5,3.8z' class='cz-color-3684147'></path><path d='M4,17.2c0-1.1,0.2-2.1,0.4-3.1c0.2,0,0.4,0.1,0.5,0.1c2.5,0,4.4-1.9,4.4-4.4C9.3,9,9,8.2,8.6,7.5 c1.3-1.1,2.9-1.9,4.6-2.3L15,2.3c-3.1,0.3-6,1.6-8.3,3.5C6.2,5.5,5.5,5.3,4.9,5.3c-2.4,0-4.4,2-4.4,4.4C0.5,11,1,12.2,2,13 c-0.4,1.4-0.6,2.7-0.6,4.2c0,2,0.4,3.8,1.1,5.6l1.8-3C4.1,19,4,18.1,4,17.2z' class='cz-color-3684147'></path><path d='M30.4,11.5l-1.8,3c0.2,0.9,0.3,1.9,0.3,2.9c0,5.7-4,10.6-9.3,12l-1.7,2.8c7.6-0.7,13.6-7.1,13.6-14.9 C31.5,15.2,31.1,13.2,30.4,11.5z' class='cz-color-3684147'></path></g></svg></button></td>"
-            "</tr>";
+            tableData += "</tbody>";
+            tableData += "</table>";
+            
+            $("#dataOrbito").show();
+            $("#dataOrbito").html('');
+            $("#dataOrbito").append(tableData);
           }
-          tableData += "</tbody>";
-          tableData += "</table>";
+          else {
+            var info;
+            var content;
+            tableData = "";
+            tableData += '<div class="orbito-results-header"><div class="orbito-results-header-left"><div class="orbito-nb-items">'+resultFeatures.length+' items</div></div><div class="orbito-results-header-right"></div></div>';
+            tableData += '<table id="table_id" class="table table-striped table-bordered tablesorter" style="width:100%">';
+            tableData += "<thead> <tr><th style='font-weight: bold;font-size: 1.5rem'>Satellite</th><th style='font-weight: bold;font-size: 1.5rem'>Orbit</th><th style='font-weight: bold;font-size: 1.5rem'>Date</th><th></th></tr> </thead>";
+            tableData += "<tbody id='tablebody'>"; 
+            tableData += "<tr>" +    
+              "<td colspan='3' style='color:#000 !important'><strong>No data found.</strong></td>" +            
+              "<td>"
+              "</tr>";
+
+            tableData += "</tbody>";
+            tableData += "</table>";
+            
+            $("#dataOrbito").show();
+            $("#dataOrbito").html('');
+            $("#dataOrbito").append(tableData);
+
+          }  
           
-          $("#dataOrbito").show();
-          $("#dataOrbito").html('');
-          $("#dataOrbito").append(tableData);
         }
-        else {
-          var info;
-          var content;
-          tableData = "";
-          tableData += '<div class="orbito-results-header"><div class="orbito-results-header-left"><div class="orbito-nb-items">'+resultFeatures.length+' items</div></div><div class="orbito-results-header-right"></div></div>';
-          tableData += '<table id="table_id" class="table table-striped table-bordered tablesorter" style="width:100%">';
-          tableData += "<thead> <tr><th style='font-weight: bold;font-size: 1.5rem'>Satellite</th><th style='font-weight: bold;font-size: 1.5rem'>Orbit</th><th style='font-weight: bold;font-size: 1.5rem'>Date</th><th></th></tr> </thead>";
-          tableData += "<tbody id='tablebody'>"; 
-          tableData += "<tr>" +    
-            "<td colspan='3' style='color:#000 !important'><strong>No data found.</strong></td>" +            
-            "<td>"
-            "</tr>";
-
-          tableData += "</tbody>";
-          tableData += "</table>";
-          
-          $("#dataOrbito").show();
-          $("#dataOrbito").html('');
-          $("#dataOrbito").append(tableData);
-
-        }        
-      }
-    });
-  // console.log(orbitoCriteria);
+      });
+    // console.log(orbitoCriteria);
+    
+  
+ 
 }
