@@ -1813,10 +1813,6 @@ function showOrbitPath(row){
   var satelliteName=row.childNodes[0].innerText;
   var orbitNumber=row.childNodes[1].innerText;
 
- if(rollAngle == null)
- {
-  rollAngle=document.selectElementbyid("freshAngleUpper").value;
- }
   console.log("Roll Angle is "+rollAngle);
   var bufferDistance=null;
   if(satelliteName==="SPOT6"){
@@ -2931,10 +2927,6 @@ function displayUpcomingAttempts(freshAngleUpperValue){
      }
  }
  // console.log(wkt);
-
-  //get roll angle
-  var rollAngle=document.getElementById('freshAngleUpper').value;
-  
 
   var testsourceOrbito = new ol.source.Vector({   
     url: "server_scripts/azo.php?geom="+wkt+"&searchByAOI=true&rollAngle="+rollAngle+"&startDate="+startDate+"&endDate="+endDate+ "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv=" + sv +"&pneo=" + pneo + "&taijing="+taijing,
