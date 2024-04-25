@@ -722,16 +722,18 @@ var resultVectorSatelliteOrbito = new ol.layer.Vector({
         }),
         text: new ol.style.Text({
           font: '18px Calibri,sans-serif',
-          overflow:true,
+          //overflow:true,
           fill: new ol.style.Fill({
             color: textColor
           }),
           stroke: new ol.style.Stroke({
             color: textStrokeColor,
-            width: 3
+            width: 3            
           }), 
           text: satellite + "("+orbitId+")"        
-        })
+        }),
+        //minResolution: 0
+        // overflow:true
       })
 
   }
