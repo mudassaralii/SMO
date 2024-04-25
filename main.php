@@ -638,6 +638,9 @@ if (!isset($_SESSION['Username_OMS'])) {
                     </tbody>
                 </table>
             </div>
+            <div id="loadingIconUpcoming" style="display: none;">
+                <span style="margin:0 auto"><i style="font-size:40px" class="fas fa-solid fa-spinner fa-spin fa-5x"></i></span>
+            </div>
             <div id="dataOrbitoUpcoming">
             </div>
             <div id="dataOnDemand" style="display:none">
