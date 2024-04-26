@@ -20,6 +20,7 @@ $spotDays;
 $geom = $_GET['geom'];
 $searchByAOI = $_GET['searchByAOI'];
 $rollAngle = $_GET['rollAngle'];
+$upcomingAttempts = $_GET['upcomingAttempts'];
 $spot = $_GET['spot'];
 $startDate = $_GET['startDate'];
 $endDate = $_GET['endDate'];
@@ -35,6 +36,35 @@ $geojson = array(
 	'features'  => array()
 
 );
+
+//search from db - currently inprogres orders - to be display on map
+if ($upcomingAttempts == "yes") {
+	$queryInprogressOrders = "SELECT orderid,ST_AsGeoJSON(ST_GeomFromText(aoi)) as aoi FROM orders where (status_id = '2' AND aoi !='NULL') LIMIT 10"; //only select inProgress orders
+	$db_mysql = mysqli_connect('localhost', 'root', '', 'oms');
+	$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
+	while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
+		$feature = array(
+			'type' => 'Feature',
+			'geometry' => json_decode($edgec1InprogressOrder['aoi'], true),
+			'buffer' => "",
+			'crs' => array(
+				'type' => 'EPSG',
+				'properties' => array('code' => '4326')
+			),
+			'geometry_name' => 'geom',
+			'properties' => array(
+				'gid' => $edgec1InprogressOrder['orderid'],
+				'geom' => $edgec1InprogressOrder['aoi'],
+				'buffer' => "",
+				'orbitNumber' => "",
+				'satellite' => 'SPOT6',
+				'date' => "",
+				'hidden' => 'true',
+			)
+		);
+		array_push($geojson['features'], $feature);
+	}
+}
 
 if ($spot == "yes") {
 	if ($rollAngle == "5")

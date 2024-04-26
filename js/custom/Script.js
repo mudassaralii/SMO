@@ -1755,6 +1755,7 @@ function showOrbitPath(row){
       //for corridor display
       ftr=totalFeatures[i];      
       totalFeatures[i].set("hidden", "false");
+      console.log(totalFeatures[i]);
     }
   }  
   
@@ -2880,7 +2881,7 @@ function displayUpcomingAttempts(freshAngleUpperValue){
  // console.log(wkt);
 
   var testsourceOrbito = new ol.source.Vector({   
-    url: "server_scripts/azo.php?geom="+wkt+"&searchByAOI=true&rollAngle="+rollAngle+"&startDate="+startDate+"&endDate="+endDate+ "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv=" + sv +"&pneo=" + pneo + "&taijing="+taijing,
+    url: "server_scripts/azo.php?geom="+wkt+"&searchByAOI=true&rollAngle="+rollAngle+"&upcomingAttempts=yes"+"&startDate="+startDate+"&endDate="+endDate+ "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv=" + sv +"&pneo=" + pneo + "&taijing="+taijing,
     format: new ol.format.GeoJSON(),       
 });
 
@@ -5181,7 +5182,7 @@ function getOrbitoData(rollAngleValue){
   // //console.log(orbitoCriteria);
 
   var testsourceOrbito = new ol.source.Vector({   
-    url: "server_scripts/azo.php?geom="+wkt+"&searchByAOI="+searchByAOI+"&rollAngle="+rollAngle+"&startDate="+$("#orbitoStartDate").val()+"&endDate="+$("#orbitoEndDate").val()+ "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv=" + sv + "&pneo=" + pneo + "&taijing="+taijing,
+    url: "server_scripts/azo.php?geom="+wkt+"&searchByAOI="+searchByAOI+"&rollAngle="+rollAngle+"&upcomingAttempts=no"+"&startDate="+$("#orbitoStartDate").val()+"&endDate="+$("#orbitoEndDate").val()+ "&spot=" + spot6 + "&prss=" + prss + "&pleiades=" + pleiades + "&sv=" + sv + "&pneo=" + pneo + "&taijing="+taijing,
     format: new ol.format.GeoJSON(),       
 });
 
