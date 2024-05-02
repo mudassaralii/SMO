@@ -39,7 +39,9 @@ $geojson = array(
 
 //search from db - currently inprogres orders - to be display on map
 if ($upcomingAttempts == "yes") {
-	$queryInprogressOrders = "SELECT orderid,ST_AsGeoJSON(ST_GeomFromText(aoi)) as aoi FROM orders where (status_id = '2' AND aoi !='NULL') LIMIT 10"; //only select inProgress orders
+	//$queryInprogressOrders = "SELECT orderid,ST_AsGeoJSON(ST_GeomFromText(aoi)) as aoi FROM orders where (status_id = '2' AND aoi !='NULL' AND orderid='test_1577949910076_37_112020') LIMIT 10"; //only select inProgress orders
+	$queryInprogressOrders = "SELECT orderid,ST_AsGeoJSON(ST_GeomFromText(aoi)) as aoi FROM orders where (status_id = '2' AND aoi !='NULL' AND orderid='test2_1577949910076_37_112020') LIMIT 10"; //only select inProgress orders
+
 	$db_mysql = mysqli_connect('localhost', 'root', '', 'oms');
 	$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
 	while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
@@ -56,7 +58,7 @@ if ($upcomingAttempts == "yes") {
 				'gid' => $edgec1InprogressOrder['orderid'],
 				'geom' => $edgec1InprogressOrder['aoi'],
 				'buffer' => "",
-				'orbitNumber' => "",
+				'orbitNumber' => "U10",
 				'satellite' => 'SPOT6',
 				'date' => "",
 				'hidden' => 'true',

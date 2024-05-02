@@ -1737,7 +1737,7 @@ function getCenterOfExtent(Extent) {
   return [X, Y];
 }
 
-function showOrbitPath(row){
+function showOrbitPath(row){//console.log(row);
   //for corridor display
   var ftr=null;
   //console.log(row.childNodes[0].innerText+"_"+row.childNodes[1].innerText+"_orbitoVisibility");
@@ -1746,7 +1746,7 @@ function showOrbitPath(row){
   //console.log(orbitoCorridorDataID);
   var totalFeatures = resultVectorSatelliteOrbito.getSource().getFeatures();  
 
-  //console.log(totalFeatures.length);
+  console.log(totalFeatures.length);
   //console.log(orbitoDataID);
   for (var i = 0; i < totalFeatures.length; i++) {
     if (totalFeatures[i].get('satellite')+"_"+totalFeatures[i].get('orbitNumber')+"_orbitoVisibility" == orbitoDataID) {
@@ -1763,7 +1763,7 @@ function showOrbitPath(row){
   var satelliteName=row.childNodes[0].innerText;
   var orbitNumber=row.childNodes[1].innerText;
 
-  console.log("Roll Angle is "+rollAngle);
+  //console.log("Roll Angle is "+rollAngle);
   var bufferDistance=null;
   if(satelliteName==="SPOT6"){
     if(rollAngle=="5")
@@ -1905,7 +1905,7 @@ function showOrbitPath(row){
   ftr.set("count", drawCount);
   ftr.set("satellite", satelliteName); //setting satellite name to be used in styling 
   ftr.set("orbitNumber",orbitNumber);
-  //console.log(ftr);
+  //console.log("ftr="+ftr);
 
   var vectorSourceSatellitecorridor = new ol.source.Vector({
     features: [ftr]    
