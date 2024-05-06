@@ -6,7 +6,7 @@ session_start();
 $userid = $_SESSION['Username_OMS'];
 $queryLogin = "SELECT isLoggedIn FROM users where username = '$userid'";
 //$resultLogin = mysqli_query($db_mysql, $queryLogin);
-$db_mysql = mysqli_connect('localhost', 'root', '', 'oms');
+$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', '3306');
 $resultLogin = mysqli_query($db_mysql, $queryLogin);
 $resultLoginVar = mysqli_fetch_array($resultLogin);
 if ($resultLoginVar["isLoggedIn"] == 0) {
@@ -39,10 +39,10 @@ $geojson = array(
 
 //search from db - currently inprogres orders - to be display on map
 if ($upcomingAttempts == "yes") {
-	//$queryInprogressOrders = "SELECT orderid,ST_AsGeoJSON(ST_GeomFromText(aoi)) as aoi FROM orders where (status_id = '2' AND aoi !='NULL' AND orderid='test_1577949910076_37_112020') LIMIT 10"; //only select inProgress orders
-	$queryInprogressOrders = "SELECT orderid,ST_AsGeoJSON(ST_GeomFromText(aoi)) as aoi FROM orders where (status_id = '2' AND aoi !='NULL' AND orderid='test2_1577949910076_37_112020') LIMIT 10"; //only select inProgress orders
+	//$queryInprogressOrders = "SELECT orderid,ST_AsGeoJSON(ST_GeomFromText(aoi)) as aoi,ST_Transform(ST_GeomFromText(aoi, 3857), 4326) as geom FROM orders where (status_id = '2' AND aoi !='NULL') LIMIT 10"; //only select inProgress orders
+	$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi,ST_Transform(ST_GeomFromText(aoi, 3857), 4326) as geom FROM orders WHERE status_id = '2' AND aoi IS NOT NULL"; //only select inProgress orders
 
-	$db_mysql = mysqli_connect('localhost', 'root', '', 'oms');
+	$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', '3306');
 	$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
 	while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
 		$feature = array(
@@ -56,7 +56,7 @@ if ($upcomingAttempts == "yes") {
 			'geometry_name' => 'geom',
 			'properties' => array(
 				'gid' => $edgec1InprogressOrder['orderid'],
-				'geom' => $edgec1InprogressOrder['aoi'],
+				'geom' => $edgec1InprogressOrder['geom'],
 				'buffer' => "",
 				'orbitNumber' => "U10",
 				'satellite' => 'SPOT6',

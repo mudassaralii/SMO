@@ -5,7 +5,7 @@ session_start();
 $userid = $_SESSION['Username_OMS'];
 $queryLogin = "SELECT isLoggedIn FROM users where username = '$userid'";
 //$resultLogin = mysqli_query($db_mysql, $queryLogin);
-$db_mysql = mysqli_connect('localhost', 'root', '', 'oms');
+$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', 3306);
 $resultLogin = mysqli_query($db_mysql, $queryLogin);
 $resultLoginVar = mysqli_fetch_array($resultLogin);
 if ($resultLoginVar["isLoggedIn"] == 0) {
