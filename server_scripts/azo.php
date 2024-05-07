@@ -39,15 +39,18 @@ $geojson = array(
 
 //search from db - currently inprogres orders - to be display on map
 if ($upcomingAttempts == "yes") {
-	//$queryInprogressOrders = "SELECT orderid,ST_AsGeoJSON(ST_GeomFromText(aoi)) as aoi,ST_Transform(ST_GeomFromText(aoi, 3857), 4326) as geom FROM orders where (status_id = '2' AND aoi !='NULL') LIMIT 10"; //only select inProgress orders
-	$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi,ST_Transform(ST_GeomFromText(aoi, 3857), 4326) as geom FROM orders WHERE status_id = '2' AND aoi IS NOT NULL"; //only select inProgress orders
+	////get all results
+	//$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi,ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) as geom FROM orders";
+
+	//SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE aoi IS NOT NULL AND ST_Intersects(ST_Transform(ST_GeomFromText('POLYGON((7817093.163165005 3580862.4883529833,7857604.788156149 3580862.4883529833,7857604.788156149 3600277.493537418,7817093.163165005 3600277.493537418,7817093.163165005 3580862.4883529833))', 3857), 4326), ST_Transform(ST_GeomFromText(aoi, 3857), 4326));
+	$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE aoi IS NOT NULL AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857), 4326), ST_Transform(ST_GeomFromText(aoi, 3857), 4326))";
 
 	$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', '3306');
 	$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
 	while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
 		$feature = array(
 			'type' => 'Feature',
-			'geometry' => json_decode($edgec1InprogressOrder['aoi'], true),
+			'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
 			'buffer' => "",
 			'crs' => array(
 				'type' => 'EPSG',
@@ -55,10 +58,10 @@ if ($upcomingAttempts == "yes") {
 			),
 			'geometry_name' => 'geom',
 			'properties' => array(
-				'gid' => $edgec1InprogressOrder['orderid'],
-				'geom' => $edgec1InprogressOrder['geom'],
-				'buffer' => "",
-				'orbitNumber' => "U10",
+				'gid' => $edgec1InprogressOrder["orderid"],
+				'geom' => $edgec1InprogressOrder["aoi"],
+				'buffer' => '',
+				'orbitNumber' => $edgec1InprogressOrder["orderid"],
 				'satellite' => 'SPOT6',
 				'date' => "",
 				'hidden' => 'true',

@@ -2885,7 +2885,7 @@ function displayUpcomingAttempts(freshAngleUpperValue){
     format: new ol.format.GeoJSON(),       
 });
 
-//console.log(satellite);
+//console.log(testsourceOrbito);
 resultVectorSatelliteOrbito.setSource(testsourceOrbito);
   testsourceOrbito.once('change', function(e) {
       if (testsourceOrbito.getState() === 'ready') {
