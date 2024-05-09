@@ -37,39 +37,6 @@ $geojson = array(
 
 );
 
-//search from db - currently inprogres orders - to be display on map
-if ($upcomingAttempts == "yes") {
-	////get all results
-	//$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi,ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) as geom FROM orders";
-
-	//SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE aoi IS NOT NULL AND ST_Intersects(ST_Transform(ST_GeomFromText('POLYGON((7817093.163165005 3580862.4883529833,7857604.788156149 3580862.4883529833,7857604.788156149 3600277.493537418,7817093.163165005 3600277.493537418,7817093.163165005 3580862.4883529833))', 3857), 4326), ST_Transform(ST_GeomFromText(aoi, 3857), 4326));
-	$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE aoi IS NOT NULL AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857), 4326), ST_Transform(ST_GeomFromText(aoi, 3857), 4326))";
-
-	$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', '3306');
-	$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
-	while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
-		$feature = array(
-			'type' => 'Feature',
-			'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
-			'buffer' => "",
-			'crs' => array(
-				'type' => 'EPSG',
-				'properties' => array('code' => '4326')
-			),
-			'geometry_name' => 'geom',
-			'properties' => array(
-				'gid' => $edgec1InprogressOrder["orderid"],
-				'geom' => $edgec1InprogressOrder["aoi"],
-				'buffer' => '',
-				'orbitNumber' => $edgec1InprogressOrder["orderid"],
-				'satellite' => 'SPOT6',
-				'date' => "",
-				'hidden' => 'true',
-			)
-		);
-		array_push($geojson['features'], $feature);
-	}
-}
 
 if ($spot == "yes") {
 	if ($rollAngle == "5")
@@ -90,6 +57,122 @@ if ($spot == "yes") {
 		$bufferDistance = "5.619";
 	else if ($rollAngle == "45")
 		$bufferDistance = "6.875";
+} else if ($pleiades == "yes") {
+	if ($rollAngle == "5")
+		$bufferDistance = "0.55";
+	else if ($rollAngle == "10")
+		$bufferDistance = "1.132";
+	else if ($rollAngle == "15")
+		$bufferDistance = "1.732";
+	else if ($rollAngle == "20")
+		$bufferDistance = "2.36";
+	else if ($rollAngle == "25")
+		$bufferDistance = "3.034";
+	else if ($rollAngle == "30")
+		$bufferDistance = "3.781";
+	else if ($rollAngle == "35")
+		$bufferDistance = "4.652";
+	else if ($rollAngle == "40")
+		$bufferDistance = "5.619";
+	else if ($rollAngle == "45")
+		$bufferDistance = "6.875";
+} else if ($pneo == "yes") {
+	if ($rollAngle == "5")
+		$bufferDistance = "0.55";
+	else if ($rollAngle == "10")
+		$bufferDistance = "1.132";
+	else if ($rollAngle == "15")
+		$bufferDistance = "1.732";
+	else if ($rollAngle == "20")
+		$bufferDistance = "2.36";
+	else if ($rollAngle == "25")
+		$bufferDistance = "3.034";
+	else if ($rollAngle == "30")
+		$bufferDistance = "3.781";
+	else if ($rollAngle == "35")
+		$bufferDistance = "4.652";
+	else if ($rollAngle == "40")
+		$bufferDistance = "5.619";
+	else if ($rollAngle == "45")
+		$bufferDistance = "6.875";
+} else if ($prss == "yes") {
+
+	if ($rollAngle == "5")
+		$bufferDistance = "1";
+	else if ($rollAngle == "10")
+		$bufferDistance = "2";
+	else if ($rollAngle == "15")
+		$bufferDistance = "3.52";
+	else if ($rollAngle == "20")
+		$bufferDistance = "4.89";
+	else if ($rollAngle == "25")
+		$bufferDistance = "6.16";
+	else if ($rollAngle == "30")
+		$bufferDistance = "7.41";
+	else if ($rollAngle == "35")
+		$bufferDistance = "8.62";
+	else if ($rollAngle == "40")
+		$bufferDistance = "9.84";
+	else if ($rollAngle == "45")
+		$bufferDistance = "11.05";
+} else if ($sv == "yes") {
+
+	if ($rollAngle == "5")
+		$bufferDistance = "0.55";
+	else if ($rollAngle == "10")
+		$bufferDistance = "1.132";
+	else if ($rollAngle == "15")
+		$bufferDistance = "1.732";
+	else if ($rollAngle == "20")
+		$bufferDistance = "2.36";
+	else if ($rollAngle == "25")
+		$bufferDistance = "3.034";
+	else if ($rollAngle == "30")
+		$bufferDistance = "3.781";
+	else if ($rollAngle == "35")
+		$bufferDistance = "4.652";
+	else if ($rollAngle == "40")
+		$bufferDistance = "5.619";
+	else if ($rollAngle == "45")
+		$bufferDistance = "6.875";
+} else if ($taijing == "yes") {
+
+	if ($rollAngle == "5")
+		$bufferDistance = "1";
+	else if ($rollAngle == "10")
+		$bufferDistance = "2";
+	else if ($rollAngle == "15")
+		$bufferDistance = "3.52";
+	else if ($rollAngle == "20")
+		$bufferDistance = "4.89";
+	else if ($rollAngle == "25")
+		$bufferDistance = "6.16";
+	else if ($rollAngle == "30")
+		$bufferDistance = "7.41";
+	else if ($rollAngle == "35")
+		$bufferDistance = "8.62";
+	else if ($rollAngle == "40")
+		$bufferDistance = "9.84";
+	else if ($rollAngle == "45")
+		$bufferDistance = "11.05";
+}
+
+//search from db - currently inprogres orders - to be display on map
+if ($upcomingAttempts == "yes") {
+	////get all results
+	//$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi,ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) as geom FROM orders";
+
+	//SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE aoi IS NOT NULL AND ST_Intersects(ST_Transform(ST_GeomFromText('POLYGON((7817093.163165005 3580862.4883529833,7857604.788156149 3580862.4883529833,7857604.788156149 3600277.493537418,7817093.163165005 3600277.493537418,7817093.163165005 3580862.4883529833))', 3857), 4326), ST_Transform(ST_GeomFromText(aoi, 3857), 4326));
+	$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE aoi IS NOT NULL AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857), 4326), ST_Transform(ST_BUFFER(ST_GeomFromText(aoi, 3857)," . $bufferDistance . "),4326))";
+
+	$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', '3306');
+	$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
+}
+
+
+//calling DB part
+if ($spot == "yes") {
+
 	//$c1 = 'select "dayNumber" from public."tbl_days_cycle_SPOT6_2024" WHERE (' . $orbitoCriteria . ')';
 	//$c1 = 'select "dayNumber","date1","date2","date3","date4","date5","date6","date7","date8","date9","date10","date11","date12","date13","date14","date15" from public."tbl_days_cycle_SPOT6_2024" WHERE (' . $orbitoCriteria . ')';
 
@@ -139,11 +222,6 @@ if ($spot == "yes") {
 
 	$queryc1 = pg_query($db_pg, $c1); //or die('Query failed: ' . pg_last_error());
 
-	// //get date
-	// $counter = 1;
-
-
-
 	while ($edgec1 = pg_fetch_assoc($queryc1)) {
 
 		//getting dayNumber and calling DB to get orbit features
@@ -166,6 +244,7 @@ if ($spot == "yes") {
 
 
 		while ($edgec2 = pg_fetch_assoc($queryc2)) {
+
 			// if (($edgec1['date' . $counter] >= $startDate) && ($edgec1['date' . $counter] <= $endDate)) {
 			$feature = array(
 				'type' => 'Feature',
@@ -190,28 +269,37 @@ if ($spot == "yes") {
 
 			//}
 		}
+
+		//only show inprogress orders when SPOT orbits found
+		if (pg_num_rows($queryc2) > 0) {
+			while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
+				$feature = array(
+					'type' => 'Feature',
+					'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
+					'buffer' => "",
+					'crs' => array(
+						'type' => 'EPSG',
+						'properties' => array('code' => '4326')
+					),
+					'geometry_name' => 'geom',
+					'properties' => array(
+						'gid' => $edgec1InprogressOrder["orderid"],
+						'geom' => $edgec1InprogressOrder["aoi"],
+						'buffer' => '',
+						'orbitNumber' => $edgec1InprogressOrder["orderid"],
+						'satellite' => "inprogressOrders",
+						'date' => "",
+						'hidden' => 'false',
+					)
+				);
+				array_push($geojson['features'], $feature);
+			}
+		}
 	}
 }
 
 if ($pleiades == "yes") {
-	if ($rollAngle == "5")
-		$bufferDistance = "0.55";
-	else if ($rollAngle == "10")
-		$bufferDistance = "1.132";
-	else if ($rollAngle == "15")
-		$bufferDistance = "1.732";
-	else if ($rollAngle == "20")
-		$bufferDistance = "2.36";
-	else if ($rollAngle == "25")
-		$bufferDistance = "3.034";
-	else if ($rollAngle == "30")
-		$bufferDistance = "3.781";
-	else if ($rollAngle == "35")
-		$bufferDistance = "4.652";
-	else if ($rollAngle == "40")
-		$bufferDistance = "5.619";
-	else if ($rollAngle == "45")
-		$bufferDistance = "6.875";
+
 	//comprehensive query to get only day number and its date when it is passing
 	$c1A = "
 	SELECT *
@@ -375,24 +463,6 @@ FROM crosstab (
 }
 
 if ($pneo == "yes") {
-	if ($rollAngle == "5")
-		$bufferDistance = "0.55";
-	else if ($rollAngle == "10")
-		$bufferDistance = "1.132";
-	else if ($rollAngle == "15")
-		$bufferDistance = "1.732";
-	else if ($rollAngle == "20")
-		$bufferDistance = "2.36";
-	else if ($rollAngle == "25")
-		$bufferDistance = "3.034";
-	else if ($rollAngle == "30")
-		$bufferDistance = "3.781";
-	else if ($rollAngle == "35")
-		$bufferDistance = "4.652";
-	else if ($rollAngle == "40")
-		$bufferDistance = "5.619";
-	else if ($rollAngle == "45")
-		$bufferDistance = "6.875";
 
 	//comprehensive query to get only day number and its date when it is passing
 	$c3A = "
@@ -511,6 +581,31 @@ FROM crosstab (
 			);
 			array_push($geojson['features'], $feature);
 		}
+		//only show inprogress orders when PNEO03 orbits found
+		if (pg_num_rows($queryc33A) > 0) {
+			while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
+				$feature = array(
+					'type' => 'Feature',
+					'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
+					'buffer' => "",
+					'crs' => array(
+						'type' => 'EPSG',
+						'properties' => array('code' => '4326')
+					),
+					'geometry_name' => 'geom',
+					'properties' => array(
+						'gid' => $edgec1InprogressOrder["orderid"],
+						'geom' => $edgec1InprogressOrder["aoi"],
+						'buffer' => '',
+						'orbitNumber' => $edgec1InprogressOrder["orderid"],
+						'satellite' => "inprogressOrders",
+						'date' => "",
+						'hidden' => 'false',
+					)
+				);
+				array_push($geojson['features'], $feature);
+			}
+		}
 	}
 
 	//for PNEO4
@@ -549,29 +644,35 @@ FROM crosstab (
 
 			//}
 		}
+		//only show inprogress orders when PNEO04 orbits found
+		if (pg_num_rows($queryc44A) > 0) {
+			while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
+				$feature = array(
+					'type' => 'Feature',
+					'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
+					'buffer' => "",
+					'crs' => array(
+						'type' => 'EPSG',
+						'properties' => array('code' => '4326')
+					),
+					'geometry_name' => 'geom',
+					'properties' => array(
+						'gid' => $edgec1InprogressOrder["orderid"],
+						'geom' => $edgec1InprogressOrder["aoi"],
+						'buffer' => '',
+						'orbitNumber' => $edgec1InprogressOrder["orderid"],
+						'satellite' => "inprogressOrders",
+						'date' => "",
+						'hidden' => 'false',
+					)
+				);
+				array_push($geojson['features'], $feature);
+			}
+		}
 	}
 }
 
 if ($prss == "yes") {
-
-	if ($rollAngle == "5")
-		$bufferDistance = "1";
-	else if ($rollAngle == "10")
-		$bufferDistance = "2";
-	else if ($rollAngle == "15")
-		$bufferDistance = "3.52";
-	else if ($rollAngle == "20")
-		$bufferDistance = "4.89";
-	else if ($rollAngle == "25")
-		$bufferDistance = "6.16";
-	else if ($rollAngle == "30")
-		$bufferDistance = "7.41";
-	else if ($rollAngle == "35")
-		$bufferDistance = "8.62";
-	else if ($rollAngle == "40")
-		$bufferDistance = "9.84";
-	else if ($rollAngle == "45")
-		$bufferDistance = "11.05";
 
 	$startDateprss = date("d-m-Y", strtotime($startDate));
 	$endDateprss = date("d-m-Y", strtotime($endDate));
@@ -613,29 +714,35 @@ if ($prss == "yes") {
 
 		//}
 	}
+	//only show inprogress orders when PRSS orbits found
+	if (pg_num_rows($queryc1prss) > 0) {
+		while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
+			$feature = array(
+				'type' => 'Feature',
+				'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
+				'buffer' => "",
+				'crs' => array(
+					'type' => 'EPSG',
+					'properties' => array('code' => '4326')
+				),
+				'geometry_name' => 'geom',
+				'properties' => array(
+					'gid' => $edgec1InprogressOrder["orderid"],
+					'geom' => $edgec1InprogressOrder["aoi"],
+					'buffer' => '',
+					'orbitNumber' => $edgec1InprogressOrder["orderid"],
+					'satellite' => "inprogressOrders",
+					'date' => "",
+					'hidden' => 'false',
+				)
+			);
+			array_push($geojson['features'], $feature);
+		}
+	}
 }
 
 //SuperView
 if ($sv == "yes") {
-
-	if ($rollAngle == "5")
-		$bufferDistance = "0.55";
-	else if ($rollAngle == "10")
-		$bufferDistance = "1.132";
-	else if ($rollAngle == "15")
-		$bufferDistance = "1.732";
-	else if ($rollAngle == "20")
-		$bufferDistance = "2.36";
-	else if ($rollAngle == "25")
-		$bufferDistance = "3.034";
-	else if ($rollAngle == "30")
-		$bufferDistance = "3.781";
-	else if ($rollAngle == "35")
-		$bufferDistance = "4.652";
-	else if ($rollAngle == "40")
-		$bufferDistance = "5.619";
-	else if ($rollAngle == "45")
-		$bufferDistance = "6.875";
 
 	//comprehensive query to get only day number and its date when it is passing
 
@@ -702,29 +809,36 @@ if ($sv == "yes") {
 		);
 		array_push($geojson['features'], $feature);
 	}
+
+	//only show inprogress orders when SV1/SV2 orbits found
+	if ((pg_num_rows($querycsv1_03) > 0) || (pg_num_rows($querycsv2_gfdm) > 0)) {
+		while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
+			$feature = array(
+				'type' => 'Feature',
+				'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
+				'buffer' => "",
+				'crs' => array(
+					'type' => 'EPSG',
+					'properties' => array('code' => '4326')
+				),
+				'geometry_name' => 'geom',
+				'properties' => array(
+					'gid' => $edgec1InprogressOrder["orderid"],
+					'geom' => $edgec1InprogressOrder["aoi"],
+					'buffer' => '',
+					'orbitNumber' => $edgec1InprogressOrder["orderid"],
+					'satellite' => "inprogressOrders",
+					'date' => "",
+					'hidden' => 'false',
+				)
+			);
+			array_push($geojson['features'], $feature);
+		}
+	}
 }
 
 //taijing
 if ($taijing == "yes") {
-
-	if ($rollAngle == "5")
-		$bufferDistance = "1";
-	else if ($rollAngle == "10")
-		$bufferDistance = "2";
-	else if ($rollAngle == "15")
-		$bufferDistance = "3.52";
-	else if ($rollAngle == "20")
-		$bufferDistance = "4.89";
-	else if ($rollAngle == "25")
-		$bufferDistance = "6.16";
-	else if ($rollAngle == "30")
-		$bufferDistance = "7.41";
-	else if ($rollAngle == "35")
-		$bufferDistance = "8.62";
-	else if ($rollAngle == "40")
-		$bufferDistance = "9.84";
-	else if ($rollAngle == "45")
-		$bufferDistance = "11.05";
 
 	$startDateTaijing = date("d-m-Y", strtotime($startDate));
 	$endDateTaijing = date("d-m-Y", strtotime($endDate));
@@ -762,6 +876,32 @@ if ($taijing == "yes") {
 			)
 		);
 		array_push($geojson['features'], $feature);
+	}
+
+	//only show inprogress orders when taijing orbits found
+	if (pg_num_rows($querycTaijing_4) > 0) {
+		while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
+			$feature = array(
+				'type' => 'Feature',
+				'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
+				'buffer' => "",
+				'crs' => array(
+					'type' => 'EPSG',
+					'properties' => array('code' => '4326')
+				),
+				'geometry_name' => 'geom',
+				'properties' => array(
+					'gid' => $edgec1InprogressOrder["orderid"],
+					'geom' => $edgec1InprogressOrder["aoi"],
+					'buffer' => '',
+					'orbitNumber' => $edgec1InprogressOrder["orderid"],
+					'satellite' => "inprogressOrders",
+					'date' => "",
+					'hidden' => 'false',
+				)
+			);
+			array_push($geojson['features'], $feature);
+		}
 	}
 }
 
