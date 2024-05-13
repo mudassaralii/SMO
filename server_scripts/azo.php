@@ -1,12 +1,12 @@
 <?php
 
-//include('db_mysql.php');
+include('db_mysql.php');
 session_start();
 
 $userid = $_SESSION['Username_OMS'];
 $queryLogin = "SELECT isLoggedIn FROM users where username = '$userid'";
-//$resultLogin = mysqli_query($db_mysql, $queryLogin);
-$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', '3306');
+$resultLogin = mysqli_query($db_mysql, $queryLogin);
+//$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', '3306');
 $resultLogin = mysqli_query($db_mysql, $queryLogin);
 $resultLoginVar = mysqli_fetch_array($resultLogin);
 if ($resultLoginVar["isLoggedIn"] == 0) {
@@ -37,8 +37,16 @@ $geojson = array(
 
 );
 
+//db search column for satellite 
+$satelliteColumnName = '';
+$satelliteColumnValue = '';
+$satelliteColumnValue2 = '';
+
 
 if ($spot == "yes") {
+	$satelliteColumnName = 'spot';
+	$satelliteColumnValue = 'SPOT67';
+	$satelliteColumnValue2 = 'SPOT';
 	if ($rollAngle == "5")
 		$bufferDistance = "0.55";
 	else if ($rollAngle == "10")
@@ -58,6 +66,9 @@ if ($spot == "yes") {
 	else if ($rollAngle == "45")
 		$bufferDistance = "6.875";
 } else if ($pleiades == "yes") {
+	$satelliteColumnName = 'pleiades';
+	$satelliteColumnValue = 'Pleidas';
+	$satelliteColumnValue2 = 'Pleidas';
 	if ($rollAngle == "5")
 		$bufferDistance = "0.55";
 	else if ($rollAngle == "10")
@@ -77,6 +88,9 @@ if ($spot == "yes") {
 	else if ($rollAngle == "45")
 		$bufferDistance = "6.875";
 } else if ($pneo == "yes") {
+	$satelliteColumnName = 'pneo';
+	$satelliteColumnValue = 'PleiadesNeo';
+	$satelliteColumnValue2 = 'PleiadesNeo';
 	if ($rollAngle == "5")
 		$bufferDistance = "0.55";
 	else if ($rollAngle == "10")
@@ -96,7 +110,8 @@ if ($spot == "yes") {
 	else if ($rollAngle == "45")
 		$bufferDistance = "6.875";
 } else if ($prss == "yes") {
-
+	$satelliteColumnName = 'prss';
+	$satelliteColumnValue = 'PRSS';
 	if ($rollAngle == "5")
 		$bufferDistance = "1";
 	else if ($rollAngle == "10")
@@ -116,7 +131,9 @@ if ($spot == "yes") {
 	else if ($rollAngle == "45")
 		$bufferDistance = "11.05";
 } else if ($sv == "yes") {
-
+	$satelliteColumnName = 'sv';
+	$satelliteColumnValue = 'SV';
+	$satelliteColumnValue = 'SuperView';
 	if ($rollAngle == "5")
 		$bufferDistance = "0.55";
 	else if ($rollAngle == "10")
@@ -136,7 +153,9 @@ if ($spot == "yes") {
 	else if ($rollAngle == "45")
 		$bufferDistance = "6.875";
 } else if ($taijing == "yes") {
-
+	$satelliteColumnName = 'sar';
+	$satelliteColumnValue = 'SAR';
+	$satelliteColumnValue2 = 'SAR';
 	if ($rollAngle == "5")
 		$bufferDistance = "1";
 	else if ($rollAngle == "10")
@@ -163,9 +182,12 @@ if ($upcomingAttempts == "yes") {
 	//$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi,ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) as geom FROM orders";
 
 	//SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE aoi IS NOT NULL AND ST_Intersects(ST_Transform(ST_GeomFromText('POLYGON((7817093.163165005 3580862.4883529833,7857604.788156149 3580862.4883529833,7857604.788156149 3600277.493537418,7817093.163165005 3600277.493537418,7817093.163165005 3580862.4883529833))', 3857), 4326), ST_Transform(ST_GeomFromText(aoi, 3857), 4326));
-	$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE aoi IS NOT NULL AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857), 4326), ST_Transform(ST_BUFFER(ST_GeomFromText(aoi, 3857)," . $bufferDistance . "),4326))";
+	//$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE aoi IS NOT NULL AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857), 4326), ST_Transform(ST_BUFFER(ST_GeomFromText(aoi, 3857)," . $bufferDistance . "),4326))";
+	$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE ((aoi IS NOT NULL) AND (type='fresh') AND (status_id='2') AND ((" . $satelliteColumnName . "='" . $satelliteColumnValue . "') OR (" . $satelliteColumnName . "='" . $satelliteColumnValue2 . "')) AND (ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857), 4326), ST_Transform(ST_BUFFER(ST_GeomFromText(aoi, 3857)," . $bufferDistance . "),4326))))";
 
-	$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', '3306');
+	//echo $queryInprogressOrders;
+
+	//$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', '3306');
 	$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
 }
 

@@ -2098,6 +2098,16 @@ tr.orbitoRowData:hover{
   padding-top: 5rem;
 }
 
+.orbito-inprogressOrders-header{
+  width: 90%;
+  margin: 0 auto;
+  /* font-weight: bold; */
+  font-size: 1.6rem;
+  /* border: 1px solid; */
+  padding: 1.3rem;
+  color: red;
+}
+
 
 
 
