@@ -30,6 +30,8 @@ $pneo = $_GET['pneo'];
 $prss = $_GET['prss'];
 $sv = $_GET['sv'];
 $taijing = $_GET['taijing'];
+$resultInprogressOrders = '';
+
 
 $geojson = array(
 	'type'      => 'FeatureCollection',
@@ -176,20 +178,20 @@ if ($spot == "yes") {
 		$bufferDistance = "11.05";
 }
 
-//search from db - currently inprogres orders - to be display on map
-if ($upcomingAttempts == "yes") {
-	////get all results
-	//$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi,ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) as geom FROM orders";
+// //search from db - currently inprogres orders - to be display on map
+// if ($upcomingAttempts == "yes") {
+// 	////get all results
+// 	//$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi,ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) as geom FROM orders";
 
-	//SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE aoi IS NOT NULL AND ST_Intersects(ST_Transform(ST_GeomFromText('POLYGON((7817093.163165005 3580862.4883529833,7857604.788156149 3580862.4883529833,7857604.788156149 3600277.493537418,7817093.163165005 3600277.493537418,7817093.163165005 3580862.4883529833))', 3857), 4326), ST_Transform(ST_GeomFromText(aoi, 3857), 4326));
-	//$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE aoi IS NOT NULL AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857), 4326), ST_Transform(ST_BUFFER(ST_GeomFromText(aoi, 3857)," . $bufferDistance . "),4326))";
-	$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE ((aoi IS NOT NULL) AND (type='fresh') AND (status_id='2') AND ((" . $satelliteColumnName . "='" . $satelliteColumnValue . "') OR (" . $satelliteColumnName . "='" . $satelliteColumnValue2 . "')) AND (ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857), 4326), ST_Transform(ST_BUFFER(ST_GeomFromText(aoi, 3857)," . $bufferDistance . "),4326))))";
+// 	//SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE aoi IS NOT NULL AND ST_Intersects(ST_Transform(ST_GeomFromText('POLYGON((7817093.163165005 3580862.4883529833,7857604.788156149 3580862.4883529833,7857604.788156149 3600277.493537418,7817093.163165005 3600277.493537418,7817093.163165005 3580862.4883529833))', 3857), 4326), ST_Transform(ST_GeomFromText(aoi, 3857), 4326));
+// 	//$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE aoi IS NOT NULL AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857), 4326), ST_Transform(ST_BUFFER(ST_GeomFromText(aoi, 3857)," . $bufferDistance . "),4326))";
+// 	$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857), 4326)) AS aoi FROM orders WHERE ((aoi IS NOT NULL) AND (aoi not like ('%POLYGON Z%')) AND (type='fresh') AND (status_id='2') AND ((" . $satelliteColumnName . "='" . $satelliteColumnValue . "') OR (" . $satelliteColumnName . "='" . $satelliteColumnValue2 . "')) AND (ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857), 4326), ST_Transform(ST_BUFFER(ST_GeomFromText(aoi, 3857)," . $bufferDistance . "),4326))))";
 
-	//echo $queryInprogressOrders;
+// 	//echo $queryInprogressOrders;
 
-	//$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', '3306');
-	$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
-}
+// 	//$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', '3306');
+// 	$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
+// }
 
 
 //calling DB part
@@ -290,6 +292,14 @@ if ($spot == "yes") {
 			array_push($geojson['features'], $feature);
 
 			//}
+
+			//search from db - currently inprogres orders - to be display on map
+			if ($upcomingAttempts == "yes") {
+				$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec2['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+
+				//echo $queryInprogressOrders;
+				$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
+			}
 		}
 
 		//only show inprogress orders when SPOT orbits found
@@ -442,6 +452,14 @@ FROM crosstab (
 			array_push($geojson['features'], $feature);
 
 			//}
+
+			//search from db - currently inprogres orders - to be display on map
+			if ($upcomingAttempts == "yes") {
+				$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec2A['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+
+				//echo $queryInprogressOrders;
+				$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
+			}
 		}
 	}
 
@@ -480,6 +498,15 @@ FROM crosstab (
 			array_push($geojson['features'], $feature);
 
 			//}
+
+			//search from db - currently inprogres orders - to be display on map
+			if ($upcomingAttempts == "yes") {
+				$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec2B['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+
+				//echo $queryInprogressOrders;
+				//$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', '3306');
+				$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
+			}
 		}
 	}
 }
@@ -602,6 +629,14 @@ FROM crosstab (
 				)
 			);
 			array_push($geojson['features'], $feature);
+
+			//search from db - currently inprogres orders - to be display on map
+			if ($upcomingAttempts == "yes") {
+				$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec3B['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+
+				//echo $queryInprogressOrders;
+				$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
+			}
 		}
 		//only show inprogress orders when PNEO03 orbits found
 		if (pg_num_rows($queryc33A) > 0) {
@@ -665,6 +700,12 @@ FROM crosstab (
 			array_push($geojson['features'], $feature);
 
 			//}
+			if ($upcomingAttempts == "yes") {
+				$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec4B['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+
+				//echo $queryInprogressOrders;			
+				$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
+			}
 		}
 		//only show inprogress orders when PNEO04 orbits found
 		if (pg_num_rows($queryc44A) > 0) {
@@ -735,6 +776,13 @@ if ($prss == "yes") {
 		array_push($geojson['features'], $feature);
 
 		//}
+
+		if ($upcomingAttempts == "yes") {
+			$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec2prss['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+
+			//echo $queryInprogressOrders;			
+			$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
+		}
 	}
 	//only show inprogress orders when PRSS orbits found
 	if (pg_num_rows($queryc1prss) > 0) {
@@ -805,6 +853,14 @@ if ($sv == "yes") {
 			)
 		);
 		array_push($geojson['features'], $feature);
+
+		//search from db - currently inprogres orders - to be display on map
+		if ($upcomingAttempts == "yes") {
+			$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgecsv1_03['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+
+			//echo $queryInprogressOrders;			
+			$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
+		}
 	}
 
 
@@ -830,6 +886,14 @@ if ($sv == "yes") {
 			)
 		);
 		array_push($geojson['features'], $feature);
+
+		//search from db - currently inprogres orders - to be display on map
+		if ($upcomingAttempts == "yes") {
+			$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgecsv2_gfdm['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+
+			//echo $queryInprogressOrders;			
+			$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
+		}
 	}
 
 	//only show inprogress orders when SV1/SV2 orbits found
@@ -898,6 +962,14 @@ if ($taijing == "yes") {
 			)
 		);
 		array_push($geojson['features'], $feature);
+
+		//search from db - currently inprogres orders - to be display on map
+		if ($upcomingAttempts == "yes") {
+			$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "', 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgecTaijing_4['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+
+			//echo $queryInprogressOrders;			
+			$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
+		}
 	}
 
 	//only show inprogress orders when taijing orbits found
