@@ -637,12 +637,13 @@ if (!isset($_SESSION['Username_OMS'])) {
                         </tr>
                     </tbody>
                 </table>
+                <div id="loadingIconUpcoming" style="display:none">
+                    <span style="margin:0 auto"><i style="font-size:40px" class="fas fa-solid fa-spinner fa-spin fa-5x"></i></span>
+                </div>
+                <div id="dataOrbitoUpcoming">
+                </div>
             </div>
-            <div id="loadingIconUpcoming" style="display: none;">
-                <span style="margin:0 auto"><i style="font-size:40px" class="fas fa-solid fa-spinner fa-spin fa-5x"></i></span>
-            </div>
-            <div id="dataOrbitoUpcoming">
-            </div>
+
             <div id="dataOnDemand" style="display:none">
                 <table class="table table-striped table-bordered tablesorter" style="margin-top: 7%;">
                     <tbody>
@@ -906,7 +907,7 @@ if (!isset($_SESSION['Username_OMS'])) {
                                         </span>
                                         <label class="lblDate">End</label>
                                         <span style="float: left;">
-                                            <div id="datepicker2" class="input-group date" data-date-format="mm-dd-yyyy">
+                                            <div id="datepicker2" class="input-group date" data-date-format="dd-mm-yyyy">
                                                 <input id="enddate" class="form-control" type="text" style="height: 46px; font-size: 15px;" readonly />
                                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                             </div>

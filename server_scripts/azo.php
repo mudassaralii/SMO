@@ -299,32 +299,32 @@ if ($spot == "yes") {
 
 				//echo $queryInprogressOrders;
 				$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
-			}
-		}
 
-		//only show inprogress orders when SPOT orbits found
-		if (pg_num_rows($queryc2) > 0) {
-			while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
-				$feature = array(
-					'type' => 'Feature',
-					'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
-					'buffer' => "",
-					'crs' => array(
-						'type' => 'EPSG',
-						'properties' => array('code' => '4326')
-					),
-					'geometry_name' => 'geom',
-					'properties' => array(
-						'gid' => $edgec1InprogressOrder["orderid"],
-						'geom' => $edgec1InprogressOrder["aoi"],
-						'buffer' => '',
-						'orbitNumber' => $edgec1InprogressOrder["orderid"],
-						'satellite' => "inprogressOrders",
-						'date' => "",
-						'hidden' => 'false',
-					)
-				);
-				array_push($geojson['features'], $feature);
+				//only show inprogress orders when SPOT orbits found
+				if (pg_num_rows($queryc2) > 0) {
+					while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
+						$feature = array(
+							'type' => 'Feature',
+							'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
+							'buffer' => "",
+							'crs' => array(
+								'type' => 'EPSG',
+								'properties' => array('code' => '4326')
+							),
+							'geometry_name' => 'geom',
+							'properties' => array(
+								'gid' => $edgec1InprogressOrder["orderid"],
+								'geom' => $edgec1InprogressOrder["aoi"],
+								'buffer' => '',
+								'orbitNumber' => $edgec1InprogressOrder["orderid"],
+								'satellite' => "inprogressOrders",
+								'date' => "",
+								'hidden' => 'false',
+							)
+						);
+						array_push($geojson['features'], $feature);
+					}
+				}
 			}
 		}
 	}
@@ -636,31 +636,32 @@ FROM crosstab (
 
 				//echo $queryInprogressOrders;
 				$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
-			}
-		}
-		//only show inprogress orders when PNEO03 orbits found
-		if (pg_num_rows($queryc33A) > 0) {
-			while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
-				$feature = array(
-					'type' => 'Feature',
-					'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
-					'buffer' => "",
-					'crs' => array(
-						'type' => 'EPSG',
-						'properties' => array('code' => '4326')
-					),
-					'geometry_name' => 'geom',
-					'properties' => array(
-						'gid' => $edgec1InprogressOrder["orderid"],
-						'geom' => $edgec1InprogressOrder["aoi"],
-						'buffer' => '',
-						'orbitNumber' => $edgec1InprogressOrder["orderid"],
-						'satellite' => "inprogressOrders",
-						'date' => "",
-						'hidden' => 'false',
-					)
-				);
-				array_push($geojson['features'], $feature);
+
+				//only show inprogress orders when PNEO03 orbits found
+				if (pg_num_rows($queryc33A) > 0) {
+					while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
+						$feature = array(
+							'type' => 'Feature',
+							'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
+							'buffer' => "",
+							'crs' => array(
+								'type' => 'EPSG',
+								'properties' => array('code' => '4326')
+							),
+							'geometry_name' => 'geom',
+							'properties' => array(
+								'gid' => $edgec1InprogressOrder["orderid"],
+								'geom' => $edgec1InprogressOrder["aoi"],
+								'buffer' => '',
+								'orbitNumber' => $edgec1InprogressOrder["orderid"],
+								'satellite' => "inprogressOrders",
+								'date' => "",
+								'hidden' => 'false',
+							)
+						);
+						array_push($geojson['features'], $feature);
+					}
+				}
 			}
 		}
 	}
@@ -705,31 +706,32 @@ FROM crosstab (
 
 				//echo $queryInprogressOrders;			
 				$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
-			}
-		}
-		//only show inprogress orders when PNEO04 orbits found
-		if (pg_num_rows($queryc44A) > 0) {
-			while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
-				$feature = array(
-					'type' => 'Feature',
-					'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
-					'buffer' => "",
-					'crs' => array(
-						'type' => 'EPSG',
-						'properties' => array('code' => '4326')
-					),
-					'geometry_name' => 'geom',
-					'properties' => array(
-						'gid' => $edgec1InprogressOrder["orderid"],
-						'geom' => $edgec1InprogressOrder["aoi"],
-						'buffer' => '',
-						'orbitNumber' => $edgec1InprogressOrder["orderid"],
-						'satellite' => "inprogressOrders",
-						'date' => "",
-						'hidden' => 'false',
-					)
-				);
-				array_push($geojson['features'], $feature);
+
+				//only show inprogress orders when PNEO04 orbits found
+				if (pg_num_rows($queryc44A) > 0) {
+					while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
+						$feature = array(
+							'type' => 'Feature',
+							'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
+							'buffer' => "",
+							'crs' => array(
+								'type' => 'EPSG',
+								'properties' => array('code' => '4326')
+							),
+							'geometry_name' => 'geom',
+							'properties' => array(
+								'gid' => $edgec1InprogressOrder["orderid"],
+								'geom' => $edgec1InprogressOrder["aoi"],
+								'buffer' => '',
+								'orbitNumber' => $edgec1InprogressOrder["orderid"],
+								'satellite' => "inprogressOrders",
+								'date' => "",
+								'hidden' => 'false',
+							)
+						);
+						array_push($geojson['features'], $feature);
+					}
+				}
 			}
 		}
 	}
