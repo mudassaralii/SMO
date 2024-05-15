@@ -7,7 +7,7 @@
  * @Description: **
  * @FilePath: \server_scripts\db_mysql.php
  */
-$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', '3306');
+$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms2', '3306');
 // $db_mysql = new PDO('mysql:dbname=oms;host=localhost;charset=utf8', 'root', '7374');
 // $db_mysql->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 // $db_mysql->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -15,7 +15,7 @@ $db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', '3306');
 define('MYSQL_USER', 'root');
 define('MYSQL_PASSWORD', 'root');
 define('MYSQL_HOST', 'localhost');
-define('MYSQL_DATABASE', 'oms');
+define('MYSQL_DATABASE', 'oms2');
 
 $pdoOptions = array(
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

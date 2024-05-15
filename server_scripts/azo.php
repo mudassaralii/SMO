@@ -31,6 +31,7 @@ $prss = $_GET['prss'];
 $sv = $_GET['sv'];
 $taijing = $_GET['taijing'];
 $resultInprogressOrders = '';
+$bufferDistance = '';
 
 
 $geojson = array(
