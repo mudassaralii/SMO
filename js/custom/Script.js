@@ -2864,13 +2864,23 @@ function FreshOrder() {
 }
 
 //upcomiong attempts section
-function displayUpcomingAttempts(freshAngleUpperValue){
+function displayUpcomingAttempts(){
   $("#dataOrbitoUpcoming").hide();
   $("#loadingIconUpcoming").show();
   var satellite=$('#satSelect').val();
   var startDate=$('#freshStartDate').val().split('/')[2]+'-'+$('#freshStartDate').val().split('/')[1]+'-'+$('#freshStartDate').val().split('/')[0]; //changing date format from 02/04/2024' to 2024-04-02'
   var endDate=$('#freshEndDate').val().split('/')[2]+'-'+$('#freshEndDate').val().split('/')[1]+'-'+$('#freshEndDate').val().split('/')[0]; //changing date format from 02/04/2024' to 2024-04-02'
-  rollAngle=freshAngleUpperValue;
+  
+  //As there is different freshAngleUpper field in case of SAR-SAT1 satellite so
+  var tbl = $('#page1Fresh').clone();
+        if ($('#satSelect').val() !== "SAR") {
+          rollAngle=document.querySelector('#freshAngleUpper').value;
+        } 
+        else
+        rollAngle=document.querySelector('#freshAngleUpper2').value;
+  
+  //console.log("Roll Angle Value="+rollAngle);
+
 
   // console.log(satellite);
   // console.log(startDate);

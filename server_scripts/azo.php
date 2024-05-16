@@ -156,6 +156,7 @@ if ($spot == "yes") {
 	else if ($rollAngle == "45")
 		$bufferDistance = "6.875";
 } else if ($taijing == "yes") {
+	//echo 'Its Taijing Section';
 	$satelliteColumnName = 'sar';
 	$satelliteColumnValue = 'SAR';
 	$satelliteColumnValue2 = 'SAR';
@@ -785,31 +786,32 @@ if ($prss == "yes") {
 
 			//echo $queryInprogressOrders;			
 			$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
-		}
-	}
-	//only show inprogress orders when PRSS orbits found
-	if (pg_num_rows($queryc1prss) > 0) {
-		while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
-			$feature = array(
-				'type' => 'Feature',
-				'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
-				'buffer' => "",
-				'crs' => array(
-					'type' => 'EPSG',
-					'properties' => array('code' => '4326')
-				),
-				'geometry_name' => 'geom',
-				'properties' => array(
-					'gid' => $edgec1InprogressOrder["orderid"],
-					'geom' => $edgec1InprogressOrder["aoi"],
-					'buffer' => '',
-					'orbitNumber' => $edgec1InprogressOrder["orderid"],
-					'satellite' => "inprogressOrders",
-					'date' => "",
-					'hidden' => 'false',
-				)
-			);
-			array_push($geojson['features'], $feature);
+
+			//only show inprogress orders when PRSS orbits found
+			if (pg_num_rows($queryc1prss) > 0) {
+				while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
+					$feature = array(
+						'type' => 'Feature',
+						'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
+						'buffer' => "",
+						'crs' => array(
+							'type' => 'EPSG',
+							'properties' => array('code' => '4326')
+						),
+						'geometry_name' => 'geom',
+						'properties' => array(
+							'gid' => $edgec1InprogressOrder["orderid"],
+							'geom' => $edgec1InprogressOrder["aoi"],
+							'buffer' => '',
+							'orbitNumber' => $edgec1InprogressOrder["orderid"],
+							'satellite' => "inprogressOrders",
+							'date' => "",
+							'hidden' => 'false',
+						)
+					);
+					array_push($geojson['features'], $feature);
+				}
+			}
 		}
 	}
 }
@@ -896,38 +898,40 @@ if ($sv == "yes") {
 
 			//echo $queryInprogressOrders;			
 			$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
-		}
-	}
 
-	//only show inprogress orders when SV1/SV2 orbits found
-	if ((pg_num_rows($querycsv1_03) > 0) || (pg_num_rows($querycsv2_gfdm) > 0)) {
-		while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
-			$feature = array(
-				'type' => 'Feature',
-				'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
-				'buffer' => "",
-				'crs' => array(
-					'type' => 'EPSG',
-					'properties' => array('code' => '4326')
-				),
-				'geometry_name' => 'geom',
-				'properties' => array(
-					'gid' => $edgec1InprogressOrder["orderid"],
-					'geom' => $edgec1InprogressOrder["aoi"],
-					'buffer' => '',
-					'orbitNumber' => $edgec1InprogressOrder["orderid"],
-					'satellite' => "inprogressOrders",
-					'date' => "",
-					'hidden' => 'false',
-				)
-			);
-			array_push($geojson['features'], $feature);
+			//only show inprogress orders when SV1/SV2 orbits found
+			if ((pg_num_rows($querycsv1_03) > 0) || (pg_num_rows($querycsv2_gfdm) > 0)) {
+				while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
+					$feature = array(
+						'type' => 'Feature',
+						'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
+						'buffer' => "",
+						'crs' => array(
+							'type' => 'EPSG',
+							'properties' => array('code' => '4326')
+						),
+						'geometry_name' => 'geom',
+						'properties' => array(
+							'gid' => $edgec1InprogressOrder["orderid"],
+							'geom' => $edgec1InprogressOrder["aoi"],
+							'buffer' => '',
+							'orbitNumber' => $edgec1InprogressOrder["orderid"],
+							'satellite' => "inprogressOrders",
+							'date' => "",
+							'hidden' => 'false',
+						)
+					);
+					array_push($geojson['features'], $feature);
+				}
+			}
 		}
 	}
 }
 
 //taijing
 if ($taijing == "yes") {
+
+	//echo $bufferDistance;
 
 	$startDateTaijing = date("d-m-Y", strtotime($startDate));
 	$endDateTaijing = date("d-m-Y", strtotime($endDate));
@@ -939,7 +943,7 @@ if ($taijing == "yes") {
 	}
 
 
-	//echo $edgec3A['date1'];
+	//echo $cTaijing_4;
 	$querycTaijing_4 = pg_query($db_pg, $cTaijing_4) or die('Query failed: ' . pg_last_error());
 
 
@@ -972,32 +976,32 @@ if ($taijing == "yes") {
 
 			//echo $queryInprogressOrders;			
 			$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
-		}
-	}
 
-	//only show inprogress orders when taijing orbits found
-	if (pg_num_rows($querycTaijing_4) > 0) {
-		while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
-			$feature = array(
-				'type' => 'Feature',
-				'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
-				'buffer' => "",
-				'crs' => array(
-					'type' => 'EPSG',
-					'properties' => array('code' => '4326')
-				),
-				'geometry_name' => 'geom',
-				'properties' => array(
-					'gid' => $edgec1InprogressOrder["orderid"],
-					'geom' => $edgec1InprogressOrder["aoi"],
-					'buffer' => '',
-					'orbitNumber' => $edgec1InprogressOrder["orderid"],
-					'satellite' => "inprogressOrders",
-					'date' => "",
-					'hidden' => 'false',
-				)
-			);
-			array_push($geojson['features'], $feature);
+			//only show inprogress orders when taijing orbits found
+			if (pg_num_rows($querycTaijing_4) > 0) {
+				while ($edgec1InprogressOrder = mysqli_fetch_array($resultInprogressOrders)) {
+					$feature = array(
+						'type' => 'Feature',
+						'geometry' => json_decode($edgec1InprogressOrder["aoi"], true),
+						'buffer' => "",
+						'crs' => array(
+							'type' => 'EPSG',
+							'properties' => array('code' => '4326')
+						),
+						'geometry_name' => 'geom',
+						'properties' => array(
+							'gid' => $edgec1InprogressOrder["orderid"],
+							'geom' => $edgec1InprogressOrder["aoi"],
+							'buffer' => '',
+							'orbitNumber' => $edgec1InprogressOrder["orderid"],
+							'satellite' => "inprogressOrders",
+							'date' => "",
+							'hidden' => 'false',
+						)
+					);
+					array_push($geojson['features'], $feature);
+				}
+			}
 		}
 	}
 }
