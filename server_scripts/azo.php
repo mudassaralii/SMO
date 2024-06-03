@@ -748,9 +748,9 @@ if ($prss == "yes") {
 	// $endDateprss = '04-04-2024';
 
 	if ($searchByAOI == 'true')
-		$c1prss = "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_prss WHERE ((name between '" . $startDateprss . "' AND '" . $endDateprss . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . "))))";
+		$c1prss = "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_prss WHERE ((TO_DATE(name,'DD-MM-YYYY') between '" . $startDateprss . "' AND '" . $endDateprss . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . "))))";
 	else
-		$c1prss = "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_prss WHERE name between '" . $startDateprss . "' AND '" . $endDateprss . "'";
+		$c1prss = "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_prss WHERE TO_DATE(name,'DD-MM-YYYY') between '" . $startDateprss . "' AND '" . $endDateprss . "'";
 
 
 	//echo $c1prss;
@@ -825,11 +825,11 @@ if ($sv == "yes") {
 	$endDateSV = date("d-m-Y", strtotime($endDate));
 
 	if ($searchByAOI == 'true') {
-		$csv1_03 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_sv1_03 WHERE ((name between '" . $startDateSV . "' AND '" . $endDateSV . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . "))))";
-		$csv2_gfdm =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_sv2_gfdm WHERE ((name between '" . $startDateSV . "' AND '" . $endDateSV . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . "))))";
+		$csv1_03 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_sv1_03 WHERE ((TO_DATE(name,'DD-MM-YYYY') between '" . $startDateSV . "' AND '" . $endDateSV . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . "))))";
+		$csv2_gfdm =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_sv2_gfdm WHERE ((TO_DATE(name,'DD-MM-YYYY') between '" . $startDateSV . "' AND '" . $endDateSV . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . "))))";
 	} else {
-		$csv1_03 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_sv1_03 WHERE name between '" . $startDateSV . "' AND '" . $endDateSV . "'";
-		$csv2_gfdm =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_sv2_gfdm WHERE name between '" . $startDateSV . "' AND '" . $endDateSV . "'";
+		$csv1_03 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_sv1_03 WHERE TO_DATE(name,'DD-MM-YYYY') between '" . $startDateSV . "' AND '" . $endDateSV . "'";
+		$csv2_gfdm =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_sv2_gfdm WHERE TO_DATE(name,'DD-MM-YYYY') between '" . $startDateSV . "' AND '" . $endDateSV . "'";
 	}
 
 	//echo $csv1_03;
@@ -937,9 +937,9 @@ if ($taijing == "yes") {
 	$endDateTaijing = date("d-m-Y", strtotime($endDate));
 
 	if ($searchByAOI == 'true') {
-		$cTaijing_4 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_taijing WHERE ((name between '" . $startDateTaijing . "' AND '" . $endDateTaijing . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . "))))";
+		$cTaijing_4 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_taijing WHERE ((TO_DATE(name,'DD-MM-YYYY') between '" . $startDateTaijing . "' AND '" . $endDateTaijing . "') AND ST_Intersects(ST_Transform(ST_GeomFromText('" . $geom . "',3857),4326) , (ST_Buffer(geom," . $bufferDistance . "))))";
 	} else {
-		$cTaijing_4 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_taijing WHERE name between '" . $startDateTaijing . "' AND '" . $endDateTaijing . "'";
+		$cTaijing_4 =   "select *, ST_AsGeoJSON(geom) AS geojson,ST_AsGeoJSON(ST_Buffer(geom," . $bufferDistance . ")) AS buffer from public.tbl_taijing WHERE TO_DATE(name,'DD-MM-YYYY') between '" . $startDateTaijing . "' AND '" . $endDateTaijing . "'";
 	}
 
 
