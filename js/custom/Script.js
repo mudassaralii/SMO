@@ -5245,7 +5245,6 @@ function getOrbitoData(rollAngleValue) {
 
       // Check if the WKT string has Z coordinates
       var hasZCoordinates = wkt.toUpperCase().includes(' Z');
-      console.log(hasZCoordinates);
 
       if (hasZCoordinates) {
 
