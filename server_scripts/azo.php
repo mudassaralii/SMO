@@ -199,6 +199,9 @@ if ($spot == "yes") {
 //calling DB part
 if ($spot == "yes") {
 
+	$startDateSPOT = date("d-m-Y", strtotime($startDate));
+	$endDateSPOT = date("d-m-Y", strtotime($endDate));
+
 	//$c1 = 'select "dayNumber" from public."tbl_days_cycle_SPOT6_2024" WHERE (' . $orbitoCriteria . ')';
 	//$c1 = 'select "dayNumber","date1","date2","date3","date4","date5","date6","date7","date8","date9","date10","date11","date12","date13","date14","date15" from public."tbl_days_cycle_SPOT6_2024" WHERE (' . $orbitoCriteria . ')';
 
@@ -297,7 +300,9 @@ if ($spot == "yes") {
 
 			//search from db - currently inprogres orders - to be display on map
 			if ($upcomingAttempts == "yes") {
-				$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec2['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+				// $queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec2['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";				
+				$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec2['geojson'] . "'),3857)," . $bufferDistance . "),4326)) and ((STR_TO_DATE(".$startDateSPOT.", '%d-%m-%Y') BETWEEN start_date AND end_date) or ((STR_TO_DATE(".$endDateSPOT.", '%d-%m-%Y') BETWEEN start_date AND end_date))))";
+				
 
 				//echo $queryInprogressOrders;
 				$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
@@ -333,6 +338,9 @@ if ($spot == "yes") {
 }
 
 if ($pleiades == "yes") {
+
+	$startDatePleiades = date("d-m-Y", strtotime($startDate));
+	$endDatePleiades = date("d-m-Y", strtotime($endDate));
 
 	//comprehensive query to get only day number and its date when it is passing
 	$c1A = "
@@ -457,8 +465,9 @@ FROM crosstab (
 
 			//search from db - currently inprogres orders - to be display on map
 			if ($upcomingAttempts == "yes") {
-				$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec2A['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
-
+				//$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec2A['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+				$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec2A['geojson'] . "'),3857)," . $bufferDistance . "),4326)) and ((STR_TO_DATE(".$startDatePleiades.", '%d-%m-%Y') BETWEEN start_date AND end_date) or ((STR_TO_DATE(".$endDatePleiades.", '%d-%m-%Y') BETWEEN start_date AND end_date))))";
+				
 				//echo $queryInprogressOrders;
 				$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
 			}
@@ -503,8 +512,8 @@ FROM crosstab (
 
 			//search from db - currently inprogres orders - to be display on map
 			if ($upcomingAttempts == "yes") {
-				$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec2B['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
-
+				//$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec2B['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+				$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec2B['geojson'] . "'),3857)," . $bufferDistance . "),4326)) and ((STR_TO_DATE(".$startDatePleiades.", '%d-%m-%Y') BETWEEN start_date AND end_date) or ((STR_TO_DATE(".$endDatePleiades.", '%d-%m-%Y') BETWEEN start_date AND end_date))))";
 				//echo $queryInprogressOrders;
 				//$db_mysql = mysqli_connect('localhost', 'root', 'root', 'oms', '3306');
 				$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
@@ -514,6 +523,9 @@ FROM crosstab (
 }
 
 if ($pneo == "yes") {
+
+	$startDatePneo = date("d-m-Y", strtotime($startDate));
+	$endDatePneo = date("d-m-Y", strtotime($endDate));
 
 	//comprehensive query to get only day number and its date when it is passing
 	$c3A = "
@@ -634,7 +646,8 @@ FROM crosstab (
 
 			//search from db - currently inprogres orders - to be display on map
 			if ($upcomingAttempts == "yes") {
-				$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec3B['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+				// $queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec3B['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+				$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec3B['geojson'] . "'),3857)," . $bufferDistance . "),4326)) and ((STR_TO_DATE(".$startDatePneo.", '%d-%m-%Y') BETWEEN start_date AND end_date) or ((STR_TO_DATE(".$endDatePneo.", '%d-%m-%Y') BETWEEN start_date AND end_date))))";
 
 				//echo $queryInprogressOrders;
 				$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
@@ -704,7 +717,8 @@ FROM crosstab (
 
 			//}
 			if ($upcomingAttempts == "yes") {
-				$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec4B['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+				//$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec4B['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
+				$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec4B['geojson'] . "'),3857)," . $bufferDistance . "),4326)) and ((STR_TO_DATE(".$startDatePneo.", '%d-%m-%Y') BETWEEN start_date AND end_date) or ((STR_TO_DATE(".$endDatePneo.", '%d-%m-%Y') BETWEEN start_date AND end_date))))";
 
 				//echo $queryInprogressOrders;			
 				$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
@@ -783,7 +797,7 @@ if ($prss == "yes") {
 
 		if ($upcomingAttempts == "yes") {
 			// $queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec2prss['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
-			$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgecsv1_03['geojson'] . "'),3857)," . $bufferDistance . "),4326)) and ((STR_TO_DATE(".$startDateprss.", '%d-%m-%Y') BETWEEN start_date AND end_date) or ((STR_TO_DATE(".$endDateprss.", '%d-%m-%Y') BETWEEN start_date AND end_date))))";
+			$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgec2prss['geojson'] . "'),3857)," . $bufferDistance . "),4326)) and ((STR_TO_DATE(".$startDateprss.", '%d-%m-%Y') BETWEEN start_date AND end_date) or ((STR_TO_DATE(".$endDateprss.", '%d-%m-%Y') BETWEEN start_date AND end_date))))";
 
 			//echo $queryInprogressOrders;			
 			$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
@@ -898,7 +912,7 @@ if ($sv == "yes") {
 		//search from db - currently inprogres orders - to be display on map
 		if ($upcomingAttempts == "yes") {
 			// $queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgecsv2_gfdm['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
-			$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgecsv1_03['geojson'] . "'),3857)," . $bufferDistance . "),4326)) and ((STR_TO_DATE(".$startDateSV.", '%d-%m-%Y') BETWEEN start_date AND end_date) or ((STR_TO_DATE(".$endDateSV.", '%d-%m-%Y') BETWEEN start_date AND end_date))))";
+				 $queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgecsv2_gfdm['geojson'] . "'),3857)," . $bufferDistance . "),4326)) and ((STR_TO_DATE(".$startDateSV.", '%d-%m-%Y') BETWEEN start_date AND end_date) or ((STR_TO_DATE(".$endDateSV.", '%d-%m-%Y') BETWEEN start_date AND end_date))))";
 
 			//echo $queryInprogressOrders;			
 			$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
@@ -977,7 +991,7 @@ if ($taijing == "yes") {
 		//search from db - currently inprogres orders - to be display on map
 		if ($upcomingAttempts == "yes") {
 			// $queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgecTaijing_4['geojson'] . "'),3857)," . $bufferDistance . "),4326)))";
-			$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgecsv1_03['geojson'] . "'),3857)," . $bufferDistance . "),4326)) and ((STR_TO_DATE(".$startDateTaijing.", '%d-%m-%Y') BETWEEN start_date AND end_date) or ((STR_TO_DATE(".$endDateTaijing.", '%d-%m-%Y') BETWEEN start_date AND end_date))))";
+			$queryInprogressOrders = "SELECT orderid, ST_AsGeoJSON(ST_Transform(ST_GeomFromText(aoi, 3857),4326)) AS aoi FROM orders WHERE (aoi IS NOT NULL AND aoi NOT LIKE '%POLYGON Z%' AND type = 'fresh' AND status_id = '2' AND (" . $satelliteColumnName . " = '" . $satelliteColumnValue . "' OR " . $satelliteColumnName . " = '" . $satelliteColumnValue2 . "') AND ST_Intersects(ST_Transform(ST_GeomFromText(aoi, 3857),4326),ST_Transform(ST_Buffer(ST_Transform(ST_GeomFromGeoJSON('" . $edgecTaijing_4['geojson'] . "'),3857)," . $bufferDistance . "),4326)) and ((STR_TO_DATE(".$startDateTaijing.", '%d-%m-%Y') BETWEEN start_date AND end_date) or ((STR_TO_DATE(".$endDateTaijing.", '%d-%m-%Y') BETWEEN start_date AND end_date))))";
 
 			//echo $queryInprogressOrders;			
 			$resultInprogressOrders = mysqli_query($db_mysql, $queryInprogressOrders);
